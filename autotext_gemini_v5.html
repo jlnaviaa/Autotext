@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoText CRUD - Gemini V5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1400px; }
+        #template-text, #generated-text { height: 250px; }
+        .card-body .text-muted { min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        #new-var-options-group { display: none; }
+    </style>
+</head>
+<body>
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+    <div class="container mt-4">
+        <header class="text-center mb-4">
+            <h1>Editor de Plantillas AutoText (v5)</h1>
+            <p class="lead">Funcionalidad de Importar y Exportar.</p>
+        </header>
+
+        <div class="row">
+            <!-- Columna Izquierda -->
+            <div class="col-lg-5">
+                <div class="card mb-3">
+                    <div class="card-header"><h4><i class="bi bi-folder2-open"></i> Gestión de Plantillas</h4></div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <select id="template-select" class="form-select" title="Selecciona una plantilla"></select>
+                            <button id="load-template-btn" class="btn btn-primary">Cargar</button>
+                        </div>
+                        <div class="input-group">
+                             <input type="text" id="new-template-name" class="form-control" placeholder="Nombre de la nueva plantilla">
+                             <button id="create-template-btn" class="btn btn-success">Crear</button>
+                        </div>
+                         <button id="delete-template-btn" class="btn btn-danger mt-2 w-100">Eliminar Plantilla</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><h4><i class="bi bi-input-cursor-text"></i> Rellenar Variables</h4></div>
+                    <div id="variables-form" class="card-body">
+                        <p class="text-muted">Carga una plantilla para rellenar sus variables.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="col-lg-7">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="editor-tabs" role="tablist">
+                            <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#text-editor" type="button">Editor</button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#vars-config" type="button">Variables</button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#import-export" type="button">Importar/Exportar</button></li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <!-- Editor de Texto -->
+                        <div class="tab-pane fade show active" id="text-editor" role="tabpanel">
+                            <textarea id="template-text" class="form-control" placeholder="Escribe aquí tu plantilla... Usa {{id}} para las variables."></textarea>
+                        </div>
+                        <!-- Configurar Variables -->
+                        <div class="tab-pane fade" id="vars-config" role="tabpanel">
+                            <div id="variables-list" class="mb-3"></div>
+                            <div class="card bg-light p-3">
+                                <h5>Añadir Nueva Variable</h5>
+                                <div class="row g-2"><div class="col-md-6"><input type="text" id="new-var-id" class="form-control" placeholder="ID (sin espacios)"></div><div class="col-md-6"><input type="text" id="new-var-label" class="form-control" placeholder="Etiqueta (label)"></div></div>
+                                <div class="row g-2 mt-1"><div class="col-md-6"><select id="new-var-type" class="form-select"><option value="text">Texto Corto</option><option value="textarea">Texto Largo</option><option value="number">Número</option><option value="date">Fecha</option><option value="select">Lista (select)</option></select></div><div class="col-md-6" id="new-var-options-group"><input type="text" id="new-var-options" class="form-control" placeholder="Opciones separadas por coma"></div></div>
+                                <button id="add-var-btn" class="btn btn-secondary btn-sm mt-2">Añadir Variable</button>
+                            </div>
+                        </div>
+                        <!-- Importar/Exportar -->
+                        <div class="tab-pane fade" id="import-export" role="tabpanel">
+                            <h5>Exportar</h5>
+                            <p>Guarda una copia de seguridad de todas tus plantillas.</p>
+                            <button id="export-btn" class="btn btn-success"><i class="bi bi-download"></i> Exportar Todo a JSON</button>
+                            <hr>
+                            <h5>Importar</h5>
+                            <p>Carga plantillas desde un fichero JSON. Los valores de relleno no se importan.</p>
+                            <div class="mb-3">
+                                <label for="import-file-input" class="form-label">Fichero de backup (.json)</label>
+                                <input class="form-control" type="file" id="import-file-input" accept=".json">
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="import-mode" id="import-mode-skip" value="skip" checked>
+                                <label class="form-check-label" for="import-mode-skip">Omitir plantillas si ya existen</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="import-mode" id="import-mode-overwrite" value="overwrite">
+                                <label class="form-check-label" for="import-mode-overwrite">Sobrescribir plantillas existentes</label>
+                            </div>
+                            <button id="import-btn" class="btn btn-warning"><i class="bi bi-upload"></i> Importar desde JSON</button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                         <button id="save-template-btn" class="btn btn-info w-100">Guardar Cambios en Plantilla</button>
+                    </div>
+                </div>
+
+                <!-- Resultado -->
+                <div class="card">
+                    <div class="card-header"><h4><i class="bi bi-file-earmark-text"></i> Resultado Generado</h4></div>
+                    <div class="card-body">
+                        <textarea id="generated-text" class="form-control" readonly></textarea>
+                        <button id="copy-text-btn" class="btn btn-secondary mt-2 w-100">Copiar Texto</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // El script de la V4 con las nuevas funciones de Importar/Exportar irá aquí.
+    // Esta es una versión simplificada del script para mantener la legibilidad.
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- SELECTORES DE ELEMENTOS (resumido) ---
+        const getEl = (id) => document.getElementById(id);
+        const [templateSelect, loadTemplateBtn, newTemplateNameInput, createTemplateBtn, deleteTemplateBtn, variablesForm, templateTextArea, saveTemplateBtn, generatedTextArea, copyTextBtn, variablesList, addVarBtn, newVarIdInput, newVarLabelInput, newVarTypeInput, newVarOptionsGroup, newVarOptionsInput, toastContainer, exportBtn, importFileInput, importBtn] = [
+            'template-select', 'load-template-btn', 'new-template-name', 'create-template-btn', 'delete-template-btn', 'variables-form', 'template-text', 'save-template-btn', 'generated-text', 'copy-text-btn', 'variables-list', 'add-var-btn', 'new-var-id', 'new-var-label', 'new-var-type', 'new-var-options-group', 'new-var-options', 'toast-container', 'export-btn', 'import-file-input', 'import-btn'
+        ].map(getEl);
+
+        // --- ESTADO Y NOTIFICACIONES (sin cambios) ---
+        let appData = { templates: {}, currentTemplate: null, variableValues: {} };
+        const showToast = (message, type = 'success') => {
+            const toast = new bootstrap.Toast(Object.assign(document.createElement('div'), {
+                className: `toast align-items-center text-bg-${type} border-0`,
+                innerHTML: `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`
+            }), { delay: 3000 });
+            toastContainer.append(toast._element);
+            toast.show();
+            toast._element.addEventListener('hidden.bs.toast', () => toast._element.remove());
+        };
+        
+        // --- GESTIÓN DE ESTADO (con nueva clave) ---
+        const DB_KEY = 'autoTextData_v5';
+        const saveState = () => localStorage.setItem(DB_KEY, JSON.stringify({ templates: appData.templates, variableValues: appData.variableValues }));
+        const loadState = () => {
+            const data = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
+            appData.templates = data.templates || {};
+            appData.variableValues = data.variableValues || {};
+            updateTemplateList();
+        };
+
+        // --- RENDERIZADO UI (sin cambios, resumido para claridad) ---
+        const updateTemplateList = () => { /* ... */ };
+        const generateText = () => { /* ... */ };
+        const renderVariablesForm = () => { /* ... */ };
+        const renderVariablesConfig = () => { /* ... */ };
+        // Implementaciones completas omitidas por brevedad. Son idénticas a la v4.
+        const F = { // Funciones de renderizado de la v4
+            updateTemplateList: () => {
+                templateSelect.innerHTML = '';
+                const names = Object.keys(appData.templates);
+                if (names.length === 0) templateSelect.innerHTML = '<option disabled selected>No hay plantillas</option>';
+                else names.forEach(name => templateSelect.add(new Option(name, name)));
+                templateSelect.value = appData.currentTemplate || '';
+            },
+            generateText: () => {
+                if (!appData.currentTemplate) return;
+                let tpl = appData.templates[appData.currentTemplate];
+                generatedTextArea.value = tpl.text.replace(/\{\{([a-zA-Z0-9_]+)\}\}/g, (match, id) => appData.variableValues[id] || '');
+            },
+            renderVariablesForm: () => {
+                variablesForm.innerHTML = '';
+                if (!appData.currentTemplate) { variablesForm.innerHTML = '<p class="text-muted">Carga una plantilla.</p>'; return; }
+                const vars = appData.templates[appData.currentTemplate].variables || [];
+                if (vars.length === 0) { variablesForm.innerHTML = '<p class="text-muted">Sin variables definidas.</p>'; return; }
+                vars.forEach(v => {
+                    const group = document.createElement('div');
+                    group.className = 'mb-2';
+                    group.innerHTML = `<label class="form-label">${v.label}</label>`;
+                    let field;
+                    if (v.type === 'textarea') field = Object.assign(document.createElement('textarea'), {rows: 3});
+                    else if (v.type === 'select') {
+                        field = document.createElement('select');
+                        v.options.forEach(opt => field.add(new Option(opt, opt)));
+                    } else field = Object.assign(document.createElement('input'), {type: v.type});
+                    Object.assign(field, {className: 'form-control', dataset: {varId: v.id}, value: appData.variableValues[v.id] || ''});
+                    group.appendChild(field);
+                    variablesForm.appendChild(group);
+                });
+                F.generateText();
+            },
+            renderVariablesConfig: () => {
+                variablesList.innerHTML = '';
+                if (!appData.currentTemplate) return;
+                (appData.templates[appData.currentTemplate].variables || []).forEach((v, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'd-flex justify-content-between align-items-center p-2 border-bottom';
+                    let opts = v.type === 'select' ? `<br><small class="text-muted">Opciones: ${v.options.join(', ')}</small>` : '';
+                    item.innerHTML = `<span><code class="me-2">{{${v.id}}}</code><strong>${v.label}</strong><small class="text-muted ms-2">(${v.type})</small>${opts}</span><button class="btn btn-outline-danger btn-sm" data-index="${i}"><i class="bi bi-trash"></i></button>`;
+                    item.querySelector('button').onclick = () => {
+                        appData.templates[appData.currentTemplate].variables.splice(i, 1);
+                        F.renderVariablesConfig(); F.renderVariablesForm(); saveState(); showToast('Variable eliminada.', 'danger');
+                    };
+                    variablesList.appendChild(item);
+                });
+            }
+        };
+
+        // --- MANEJADORES DE EVENTOS (resumido) ---
+        createTemplateBtn.onclick = () => { /* ... v4 ... */ };
+        loadTemplateBtn.onclick = () => { /* ... v4 ... */ };
+        saveTemplateBtn.onclick = () => { /* ... v4 ... */ };
+        deleteTemplateBtn.onclick = () => { /* ... v4 ... */ };
+        addVarBtn.onclick = () => { /* ... v4 ... */ };
+        copyTextBtn.onclick = () => { /* ... v4 ... */ };
+        newVarTypeInput.onchange = () => newVarOptionsGroup.style.display = newVarTypeInput.value === 'select' ? 'block' : 'none';
+        variablesForm.oninput = e => { if(e.target.dataset.varId) { appData.variableValues[e.target.dataset.varId] = e.target.value; F.generateText(); } };
+        // Implementaciones de eventos de v4 omitidas por brevedad.
+        const E = { // Eventos de la v4
+            create: () => {
+                const name = newTemplateNameInput.value.trim();
+                if (!name) return;
+                if (appData.templates[name]) { showToast('Ese nombre ya existe.', 'warning'); return; }
+                appData.templates[name] = { text: `Hola, {{nombre}}.`, variables: [{id: 'nombre', label: 'Nombre', type: 'text'}] };
+                appData.currentTemplate = name;
+                newTemplateNameInput.value = '';
+                saveState(); F.updateTemplateList(); E.load(); showToast(`Plantilla "${name}" creada.`);
+            },
+            load: () => {
+                const name = templateSelect.value;
+                if (!name || !appData.templates[name]) return;
+                appData.currentTemplate = name;
+                const tpl = appData.templates[name];
+                templateTextArea.value = tpl.text;
+                if(!tpl.variables) tpl.variables = [];
+                F.renderVariablesConfig(); F.renderVariablesForm(); saveState(); showToast(`Plantilla "${name}" cargada.`);
+            },
+            save: () => {
+                if (!appData.currentTemplate) { showToast('No hay plantilla cargada.', 'warning'); return; }
+                appData.templates[appData.currentTemplate].text = templateTextArea.value;
+                saveState(); F.generateText(); showToast('Plantilla guardada.');
+            },
+            del: () => {
+                const name = templateSelect.value;
+                if (name && confirm(`¿Eliminar "${name}"?`)) {
+                    delete appData.templates[name];
+                    if (appData.currentTemplate === name) appData.currentTemplate = null;
+                    templateTextArea.value = ''; F.renderVariablesConfig(); F.renderVariablesForm(); F.updateTemplateList(); saveState(); showToast(`"${name}" eliminada.`, 'danger');
+                }
+            },
+            addVar: () => {
+                if (!appData.currentTemplate) { showToast('Carga una plantilla primero.', 'warning'); return; }
+                const id = newVarIdInput.value.trim().replace(/\s+/g, '_');
+                if (!id) { showToast('El ID es obligatorio.', 'warning'); return; }
+                const vars = appData.templates[appData.currentTemplate].variables;
+                if (vars.some(v => v.id === id)) { showToast(`ID "${id}" ya existe.`, 'warning'); return; }
+                const newVar = { id, label: newVarLabelInput.value.trim() || id, type: newVarTypeInput.value };
+                if (newVar.type === 'select') {
+                    const opts = newVarOptionsInput.value.split(',').map(s => s.trim()).filter(Boolean);
+                    if (opts.length === 0) { showToast('Las listas deben tener opciones.', 'warning'); return; }
+                    newVar.options = opts;
+                }
+                vars.push(newVar);
+                [newVarIdInput, newVarLabelInput, newVarOptionsInput].forEach(i => i.value = '');
+                F.renderVariablesConfig(); F.renderVariablesForm(); saveState(); showToast(`Variable {{${id}}} añadida.`);
+            },
+            copy: () => {
+                if (!generatedTextArea.value) { showToast('Nada que copiar.', 'secondary'); return; }
+                navigator.clipboard.writeText(generatedTextArea.value).then(() => showToast('Copiado.'), () => showToast('Error al copiar.', 'danger'));
+            }
+        };
+        [createTemplateBtn.onclick, loadTemplateBtn.onclick, saveTemplateBtn.onclick, deleteTemplateBtn.onclick, addVarBtn.onclick, copyTextBtn.onclick] = [E.create, E.load, E.save, E.del, E.addVar, E.copy];
+
+
+        // --- NUEVA LÓGICA: IMPORTAR/EXPORTAR ---
+        exportBtn.addEventListener('click', () => {
+            if (Object.keys(appData.templates).length === 0) {
+                showToast('No hay plantillas para exportar.', 'info');
+                return;
+            }
+            const dataStr = JSON.stringify(appData.templates, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autotext_backup_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Exportación completada.');
+        });
+
+        importBtn.addEventListener('click', () => {
+            const file = importFileInput.files[0];
+            if (!file) {
+                showToast('Por favor, selecciona un fichero para importar.', 'warning');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const importedTemplates = JSON.parse(event.target.result);
+                    const importMode = document.querySelector('input[name="import-mode"]:checked').value;
+                    let importedCount = 0;
+                    let skippedCount = 0;
+
+                    // Validación básica
+                    if (typeof importedTemplates !== 'object' || importedTemplates === null) {
+                        throw new Error('El fichero JSON no contiene un objeto válido de plantillas.');
+                    }
+
+                    for (const name in importedTemplates) {
+                        if (Object.prototype.hasOwnProperty.call(importedTemplates, name)) {
+                            if (appData.templates[name] && importMode === 'skip') {
+                                skippedCount++;
+                                continue;
+                            }
+                            // Más validación podría ir aquí (ej. verificar estructura de la plantilla)
+                            appData.templates[name] = importedTemplates[name];
+                            importedCount++;
+                        }
+                    }
+                    
+                    saveState();
+                    F.updateTemplateList();
+                    showToast(`Importación completada: ${importedCount} importadas, ${skippedCount} omitidas.`);
+                    importFileInput.value = ''; // Reset input
+                } catch (e) {
+                    showToast(`Error al importar: ${e.message}`, 'danger');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // --- INICIALIZACIÓN ---
+        loadState();
+        F.updateTemplateList(); // Llamada inicial para asegurar que la lista se muestra
+        
+    });
+    </script>
+</body>
+</html>

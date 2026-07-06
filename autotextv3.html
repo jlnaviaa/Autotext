@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS-AutoText Pro - Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+        }
+
+        .label-mini {
+            @apply text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 block;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .notification {
+            transition: all 0.3s ease-in-out;
+            transform: translate(-50%, 100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .notification.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        select, input, textarea {
+            @apply border border-slate-200 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-100 transition-all p-2.5 bg-white shadow-sm w-full;
+        }
+
+        /* Estilos específicos para inputs de color y rango para que encajen en el tema claro */
+        input[type="color"] { padding: 2px; height: 42px; cursor: pointer; }
+        input[type="range"] { padding: 0; box-shadow: none; accent-color: #2563eb; }
+    </style>
+</head>
+<body class="p-2 md:p-6 h-screen flex flex-col overflow-hidden">
+
+    <div class="max-w-7xl mx-auto w-full flex flex-col h-full">
+        <!-- Header -->
+        <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-6 gap-4 shrink-0">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full xl:w-auto">
+                <h1 class="text-xl font-black text-slate-800 flex items-center gap-2 shrink-0">
+                    <span class="bg-blue-600 text-white p-1.5 rounded-lg shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+                    VS-AutoText Pro
+                </h1>
+                
+                <!-- Selector de Plantillas Multi-Perfil -->
+                <div class="flex items-center bg-white border border-slate-200 rounded-xl p-1 shadow-sm shrink-0 w-full md:w-auto">
+                    <select id="profile-selector" onchange="switchProfile(this.value)" class="bg-transparent text-[13px] font-bold text-slate-700 py-1.5 px-2 outline-none cursor-pointer w-full md:w-56 text-ellipsis border-none shadow-none focus:ring-0 m-0">
+                        <!-- Generado Dinámicamente -->
+                    </select>
+                    <div class="w-px h-5 bg-slate-200 mx-1"></div>
+                    <button onclick="openSaveAsModal()" class="p-1.5 hover:bg-blue-50 rounded-lg text-slate-400 hover:text-blue-600 transition-colors" title="Guardar como nueva plantilla...">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                    </button>
+                    <button onclick="openDeleteModal()" class="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-500 transition-colors" title="Eliminar plantilla actual">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2 md:gap-3 w-full xl:w-auto">
+                <input type="file" id="file-upload-txt" accept=".txt" class="hidden" onchange="importTxt(event)">
+                <button onclick="document.getElementById('file-upload-txt').click()" class="flex-1 md:flex-none px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span class="hidden md:inline">IMPORTAR TXT</span>
+                </button>
+                <button onclick="toggleCSVModal()" class="flex-1 md:flex-none px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <span class="hidden md:inline">IMPORTAR CSV</span>
+                </button>
+                <div class="flex bg-slate-200 p-1 rounded-xl w-full md:w-auto justify-center">
+                    <button id="btn-mode-gen" onclick="setMode('gen')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all bg-white shadow-sm text-slate-800">GENERADOR</button>
+                    <button id="btn-mode-edit" onclick="setMode('edit')" class="px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800">PLANTILLA</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 overflow-hidden pb-4">
+            
+            <!-- Panel Izquierdo (Controles / Edición) -->
+            <div class="lg:col-span-6 flex flex-col h-full overflow-hidden">
+                
+                <!-- Vista: Generador -->
+                <div id="section-gen" class="glass-card p-5 rounded-2xl shadow-sm border-t-4 border-t-blue-500 flex flex-col h-full overflow-hidden">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <h2 class="font-bold text-slate-700 uppercase text-xs tracking-widest">Entrada de Datos</h2>
+                        <div class="flex gap-2">
+                            <button onclick="openAddVarModal()" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-full transition-colors font-bold uppercase">+ Variable</button>
+                            <button onclick="resetForm()" class="text-[10px] bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-full transition-colors font-bold uppercase">Limpiar</button>
+                        </div>
+                    </div>
+
+                    <div id="dynamic-form" class="flex-1 overflow-y-auto pr-2 custom-scrollbar pb-10">
+                        <!-- Generación dinámica -->
+                    </div>
+                </div>
+
+                <!-- Vista: Edición de Plantilla -->
+                <div id="section-edit" class="hidden glass-card p-5 rounded-2xl shadow-sm border-t-4 border-t-slate-800 flex flex-col h-full overflow-hidden">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <h2 class="font-bold text-slate-700 uppercase text-xs tracking-widest">Edición de Estructura</h2>
+                        <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-1 rounded">Usa {{id_variable}}</span>
+                    </div>
+                    <div class="flex-1 flex flex-col min-h-0">
+                        <label class="label-mini">Texto de la Plantilla</label>
+                        <textarea id="edit-template-text" oninput="updateTemplateState()" class="flex-1 w-full p-4 bg-slate-50 text-[13px] font-mono border-slate-200 resize-none custom-scrollbar" spellcheck="false"></textarea>
+                    </div>
+                    <div class="mt-4 shrink-0">
+                        <button onclick="syncTemplate()" class="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-black text-sm transition-all shadow-md active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            SINCRONIZAR CAMBIOS
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Derecho (Vista Previa y Copiar) -->
+            <div class="lg:col-span-6 flex flex-col h-full overflow-hidden">
+                <div class="glass-card p-5 rounded-2xl shadow-md flex flex-col h-full border-2 border-blue-50 relative">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
+                        <h2 class="font-bold text-slate-700 flex items-center gap-2 uppercase text-xs tracking-widest">
+                            Vista Previa del Informe
+                        </h2>
+                        <span id="char-count" class="text-[10px] font-black text-blue-500 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">0 CARACTERES</span>
+                    </div>
+
+                    <textarea id="output-text" readonly class="flex-1 w-full p-6 bg-slate-50 border border-slate-100 rounded-2xl text-slate-800 text-[13px] font-mono leading-relaxed focus:outline-none resize-none custom-scrollbar shadow-inner" placeholder="Complete los campos..."></textarea>
+                    
+                    <div class="mt-4 shrink-0">
+                        <button onclick="copyToClipboard()" class="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-sm transition-all shadow-lg shadow-blue-200 active:scale-95 group">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:rotate-12 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            COPIAR PARA PEGAR EN HISTORIA CLÍNICA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modales -->
+
+    <!-- Modal: Guardar Como -->
+    <div id="save-as-modal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 overflow-hidden flex flex-col transform transition-all scale-95 opacity-0 duration-200" id="save-as-box">
+            <div class="p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800 text-lg">Guardar Plantilla Como...</h3>
+            </div>
+            <div class="p-6">
+                <label class="label-mini">Nombre de la nueva plantilla</label>
+                <input type="text" id="new-profile-name" class="w-full" placeholder="Ej: Cotización Cirugía Láser" onkeyup="if(event.key === 'Enter') confirmSaveAs()">
+            </div>
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeSaveAsModal()" class="px-4 py-2 text-slate-500 hover:text-slate-800 text-sm font-medium">Cancelar</button>
+                <button onclick="confirmSaveAs()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-md">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Eliminar -->
+    <div id="delete-modal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 overflow-hidden flex flex-col transform transition-all scale-95 opacity-0 duration-200" id="delete-box">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+                <h3 class="font-bold text-slate-800 text-lg mb-2">¿Eliminar Plantilla?</h3>
+                <p class="text-sm text-slate-500" id="delete-confirm-text">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 text-slate-500 hover:text-slate-800 text-sm font-medium">Cancelar</button>
+                <button onclick="confirmDelete()" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-bold shadow-md shadow-red-200">Sí, Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nueva Variable -->
+    <div id="add-var-modal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden flex flex-col transform transition-all scale-95 opacity-0 duration-200" id="add-var-box">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-lg">Crear Nueva Variable</h3>
+                <button onclick="closeAddVarModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 flex-1 bg-white space-y-4">
+                <div>
+                    <label class="label-mini">ID de la variable (Ej: pupila_od)</label>
+                    <input type="text" id="new-var-id" class="w-full" placeholder="id_unico">
+                </div>
+                <div>
+                    <label class="label-mini">Etiqueta Visible</label>
+                    <input type="text" id="new-var-label" class="w-full" placeholder="Nombre para el formulario">
+                </div>
+                <div>
+                    <label class="label-mini">Tipo de Control</label>
+                    <select id="new-var-type" class="w-full" onchange="handleTypeChange()">
+                        <option value="text">Texto corto (Input)</option>
+                        <option value="textarea">Área de texto (Textarea)</option>
+                        <option value="select">Lista Desplegable (Select)</option>
+                        <option value="number">Número</option>
+                        <option value="date">Fecha</option>
+                        <option value="range">Rango / Slider</option>
+                        <option value="color">Color</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-mini">Valor por defecto</label>
+                    <input type="text" id="new-var-default" class="w-full" placeholder="Opcional">
+                </div>
+                <div id="new-var-options-container" class="hidden">
+                    <label class="label-mini">Opciones (Solo para Lista Desplegable)</label>
+                    <input type="text" id="new-var-options" class="w-full" placeholder="Opción 1, Opción 2, Opción 3 (separadas por coma)">
+                    <p class="text-[10px] text-slate-400 mt-1">Separa cada opción con una coma.</p>
+                </div>
+            </div>
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-end items-center gap-3">
+                <button onclick="closeAddVarModal()" class="px-4 py-2 text-slate-500 hover:text-slate-800 text-sm transition font-medium">Cancelar</button>
+                <button onclick="confirmAddVar()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition shadow-md shadow-blue-200">Guardar Variable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para CSV -->
+    <div id="csv-modal" class="fixed inset-0 bg-slate-900/40 hidden items-center justify-center z-50 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl border border-slate-200 overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-lg">Importar/Exportar Variables (CSV)</h3>
+                <button onclick="toggleCSVModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 flex-1 bg-white">
+                <p class="text-xs text-slate-500 mb-3 font-medium">Formato requerido: <code class="text-blue-600 bg-blue-50 px-1 rounded">id, label, type, value, options(separadas por |)</code></p>
+                <textarea id="csv-textarea" class="w-full h-48 bg-slate-50 text-slate-700 p-4 rounded-xl text-xs font-mono outline-none border border-slate-200 focus:border-blue-500 custom-scrollbar" placeholder="id, label, type, value, options..."></textarea>
+            </div>
+            <div class="p-5 border-t border-slate-100 bg-slate-50 flex justify-between items-center">
+                <button onclick="generateCSV()" class="px-4 py-2 border border-slate-300 text-slate-600 hover:bg-slate-100 rounded-lg text-sm transition font-medium">Extraer Actual a CSV</button>
+                <div class="space-x-3">
+                    <button onclick="toggleCSVModal()" class="px-4 py-2 text-slate-500 hover:text-slate-800 text-sm transition font-medium">Cancelar</button>
+                    <button onclick="importCSV()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition shadow-md shadow-blue-200">Sobrescribir Datos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="notification fixed bottom-10 left-1/2 bg-slate-800 text-white px-8 py-3 rounded-full shadow-2xl flex items-center gap-3 z-50 text-sm font-bold">
+        <span id="toast-msg">¡Listo para pegar!</span>
+    </div>
+
+    <script>
+        // --- Perfil Base por Defecto ---
+        const DEFAULT_PROFILE = {
+            id: 'perfil_oftalmo_base',
+            name: 'Examen Clínico (Por defecto)',
+            variables: [
+                { id: 'avl_sc_od', label: 'AV Lejos SC OD', type: 'text', value: '20/20', default: '20/20' },
+                { id: 'avl_sc_oi', label: 'AV Lejos SC OI', type: 'text', value: '20/20', default: '20/20' },
+                { id: 'avl_cc_od', label: 'AV Lejos CC OD', type: 'text', value: '20/20', default: '20/20' },
+                { id: 'avl_cc_oi', label: 'AV Lejos CC OI', type: 'text', value: '20/20', default: '20/20' },
+                { id: 'avc_sc_od', label: 'AV Cerca SC OD', type: 'text', value: 'J1', default: 'J1' },
+                { id: 'avc_sc_oi', label: 'AV Cerca SC OI', type: 'text', value: 'J1', default: 'J1' },
+                { id: 'auto_od', label: 'Autoref OD', type: 'text', value: '', default: '' },
+                { id: 'auto_oi', label: 'Autoref OI', type: 'text', value: '', default: '' },
+                { id: 'uso_od', label: 'Lentes en uso OD', type: 'text', value: 'Neutro', default: 'Neutro' },
+                { id: 'uso_oi', label: 'Lentes en uso OI', type: 'text', value: 'Neutro', default: 'Neutro' },
+                { id: 'mov_extra', label: 'Motilidad Extraocular', type: 'textarea', value: 'Hirschberg centrado. Ducciones normal. Cover test negativo.', default: 'Hirschberg centrado. Ducciones normal. Cover test negativo.' },
+                { id: 'ex_ext_od', label: 'Externo OD', type: 'text', value: 'Bordes libres normales. Pestañas bien.', default: 'Bordes libres normales. Pestañas bien.' },
+                { id: 'ex_ext_oi', label: 'Externo OI', type: 'text', value: 'Bordes libres normales. Pestañas bien.', default: 'Bordes libres normales. Pestañas bien.' },
+                { id: 'but_od', label: 'BUT OD (Seg)', type: 'number', value: '10', default: '10' },
+                { id: 'but_oi', label: 'BUT OI (Seg)', type: 'number', value: '10', default: '10' },
+                { id: 'camara_od', label: 'Cámara Ant. OD', type: 'select', value: 'IV', options: ['IV', 'III', 'II', 'I'], default: 'IV' },
+                { id: 'camara_oi', label: 'Cámara Ant. OI', type: 'select', value: 'IV', options: ['IV', 'III', 'II', 'I'], default: 'IV' },
+                { id: 'crist_od', label: 'Cristalino OD', type: 'text', value: 'Cristalino N0C0P0', default: 'Cristalino N0C0P0' },
+                { id: 'crist_oi', label: 'Cristalino OI', type: 'text', value: 'Cristalino N0C0P0', default: 'Cristalino N0C0P0' },
+                { id: 'exc_od', label: 'Excavación OD', type: 'text', value: '0.3', default: '0.3' },
+                { id: 'exc_oi', label: 'Excavación OI', type: 'text', value: '0.3', default: '0.3' },
+                { id: 'pio_od', label: 'PIO OD (mmHg)', type: 'number', value: '14', default: '14' },
+                { id: 'pio_oi', label: 'PIO OI (mmHg)', type: 'number', value: '14', default: '14' }
+            ],
+            template: `AGUDEZA VISUAL LEJOS
+SIN CORRECCIÓN   Ojo derecho {{avl_sc_od}}   Ojo izquierdo {{avl_sc_oi}}   
+CON CORRECCIÓN   Ojo derecho {{avl_cc_od}}   Ojo izquierdo {{avl_cc_oi}}
+
+AGUDEZA VISUAL CERCA
+SIN CORRECCIÓN   Ojo derecho {{avc_sc_od}}   Ojo izquierdo {{avc_sc_oi}}
+
+AUTORREFRACCIÓN
+Ojo derecho {{auto_od}}   Ojo izquierdo {{auto_oi}}
+
+REFRACCIÓN EN USO
+Ojo derecho {{uso_od}}   Ojo izquierdo {{uso_oi}}
+
+MOVIMIENTOS EXTRAOCULARES
+{{mov_extra}}
+
+EXAMEN EXTERNO
+OJO DERECHO. {{ex_ext_od}} 
+OJO IZQUIERDO. {{ex_ext_oi}}
+
+POLO ANTERIOR
+OJO DERECHO. Tiempo de ruptura película lagrimal {{but_od}} seg. Conjuntiva sana. Córnea trasparente. Endotelio de aspecto normal. Cámara anterior grado {{camara_od}}. Iris normal. {{crist_od}}.
+OJO IZQUIERDO. Tiempo de ruptura película lagrimal {{but_oi}} seg. Conjuntiva sana. Córnea trasparente. Endotelio de aspecto normal. Cámara anterior grado {{camara_oi}}. Iris normal. {{crist_oi}}.
+
+POLO POSTERIOR 
+OJO DERECHO. Vítreo trasparente. Retina adherida. Vasculatura de aspecto normal. Excavación {{exc_od}}
+OJO IZQUIERDO. Vítreo trasparente. Retina adherida. Vasculatura de aspecto normal. Excavación {{exc_oi}}
+
+PRESION INTRAOCULAR 
+OJO DERECHO {{pio_od}} mmHg       
+OJO IZQUIERDO {{pio_oi}} mmHg`
+        };
+
+        // --- Gestión de Memoria y Perfiles ---
+        let appData = JSON.parse(localStorage.getItem('vs_autotext_app_data_v1'));
+        let state; // Se declara aquí para evitar el error de inicialización
+
+        // Migración de datos si venimos de la versión de 1 sola plantilla
+        let needsInitialSave = false;
+        if (!appData) {
+            let legacyState = JSON.parse(localStorage.getItem('vs_autotext_blueprint_v4'));
+            if (legacyState) {
+                appData = {
+                    profiles: [{
+                        id: 'perfil_legacy_1',
+                        name: 'Examen Clínico (Migrado)',
+                        variables: legacyState.variables || DEFAULT_PROFILE.variables,
+                        template: legacyState.template || DEFAULT_PROFILE.template
+                    }],
+                    activeProfileId: 'perfil_legacy_1'
+                };
+            } else {
+                appData = {
+                    profiles: [DEFAULT_PROFILE],
+                    activeProfileId: DEFAULT_PROFILE.id
+                };
+            }
+            needsInitialSave = true;
+        }
+
+        // Puntero al perfil activo
+        state = appData.profiles.find(p => p.id === appData.activeProfileId);
+        if (!state) { // Seguro por si se corrompió
+            state = appData.profiles[0];
+            appData.activeProfileId = state.id;
+            needsInitialSave = true;
+        }
+
+        if (needsInitialSave) {
+            saveAppData(); // Ahora state está inicializado y es seguro llamar a la función
+        }
+
+        window.onload = () => {
+            updateProfileSelector();
+            document.getElementById('edit-template-text').value = state.template;
+            buildUI();
+        };
+
+        function saveAppData() {
+            if (state) {
+                // Actualizamos el objeto en el array asegurando persistencia real
+                const idx = appData.profiles.findIndex(p => p.id === appData.activeProfileId);
+                if (idx !== -1) {
+                    appData.profiles[idx].variables = state.variables;
+                    appData.profiles[idx].template = state.template;
+                }
+            }
+            localStorage.setItem('vs_autotext_app_data_v1', JSON.stringify(appData));
+        }
+
+        // --- Funciones de Multi-Perfil ---
+        function updateProfileSelector() {
+            const selector = document.getElementById('profile-selector');
+            selector.innerHTML = '';
+            appData.profiles.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.innerText = p.name;
+                if (p.id === appData.activeProfileId) {
+                    opt.selected = true;
+                }
+                selector.appendChild(opt);
+            });
+        }
+
+        function switchProfile(profileId) {
+            appData.activeProfileId = profileId;
+            state = appData.profiles.find(p => p.id === profileId);
+            saveAppData(); // Guarda el último perfil abierto
+            
+            document.getElementById('edit-template-text').value = state.template;
+            buildUI();
+            showToast(`Cargada: ${state.name}`);
+        }
+
+        // --- UI y Navegación Básica ---
+        function setMode(mode) {
+            const isGen = mode === 'gen';
+            document.getElementById('section-gen').classList.toggle('hidden', !isGen);
+            document.getElementById('section-edit').classList.toggle('hidden', isGen);
+            
+            document.getElementById('btn-mode-gen').className = isGen 
+                ? "px-5 py-2 rounded-lg text-xs font-bold transition-all bg-white shadow-sm text-slate-800" 
+                : "px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800";
+            
+            document.getElementById('btn-mode-edit').className = !isGen 
+                ? "px-5 py-2 rounded-lg text-xs font-bold transition-all bg-white shadow-sm text-slate-800" 
+                : "px-5 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-800";
+        }
+
+        // --- Motor de Renderizado (Blueprint Engine) ---
+        function buildUI() {
+            const container = document.getElementById('dynamic-form');
+            container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="form-grid"></div>';
+            const grid = document.getElementById('form-grid');
+
+            state.variables.forEach((v, index) => {
+                const wrap = document.createElement('div');
+                
+                const colSpan = (v.type === 'textarea' || v.type === 'range') ? 'md:col-span-2' : '';
+                wrap.className = `flex flex-col relative group bg-slate-50/50 p-3 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors ${colSpan}`;
+                
+                let inputHtml = '';
+                switch(v.type) {
+                    case 'select':
+                        const opts = v.options || [];
+                        inputHtml = `<select onchange="updateVar(${index}, this.value)">
+                            ${opts.map(opt => `<option value="${opt}" ${v.value === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                        </select>`;
+                        break;
+                    case 'range':
+                        inputHtml = `<div class="flex items-center gap-3 w-full bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm">
+                            <input type="range" min="0" max="100" value="${v.value}" oninput="updateVar(${index}, this.value); this.nextElementSibling.textContent=this.value+'%'">
+                            <span class="text-xs font-mono text-blue-600 w-10 text-right">${v.value}%</span>
+                        </div>`;
+                        break;
+                    case 'color':
+                        inputHtml = `<div class="flex items-center gap-2">
+                            <input type="color" value="${v.value}" oninput="updateVar(${index}, this.value)">
+                            <input type="text" value="${v.value}" oninput="updateVar(${index}, this.value); this.previousElementSibling.value=this.value" class="font-mono text-xs">
+                        </div>`;
+                        break;
+                    case 'textarea':
+                        inputHtml = `<textarea rows="2" oninput="updateVar(${index}, this.value)" class="resize-y">${v.value}</textarea>`;
+                        break;
+                    default: // text, number, date
+                        inputHtml = `<input type="${v.type}" value="${v.value}" oninput="updateVar(${index}, this.value)" placeholder="Ej: ${v.label}">`;
+                }
+
+                wrap.innerHTML = `
+                    <div class="flex justify-between items-end mb-1.5">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">${v.label} <span class="lowercase font-mono text-blue-400 font-normal">({{${v.id}}})</span></label>
+                        <button onclick="removeVar(${index})" class="text-slate-400 hover:text-red-500 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm">Eliminar</button>
+                    </div>
+                    ${inputHtml}
+                `;
+                grid.appendChild(wrap);
+            });
+            updatePreview();
+        }
+
+        function updateVar(index, val) {
+            state.variables[index].value = val;
+            saveAppData();
+            updatePreview();
+        }
+
+        function updateTemplateState() {
+            state.template = document.getElementById('edit-template-text').value;
+            saveAppData();
+            updatePreview();
+        }
+
+        function syncTemplate() {
+            updateTemplateState();
+            setMode('gen');
+            showToast("Plantilla sincronizada con éxito");
+        }
+
+        function removeVar(index) {
+            state.variables.splice(index, 1);
+            saveAppData();
+            buildUI();
+            showToast("Variable eliminada");
+        }
+
+        // --- Modales Estilo Nativo: Abrir / Cerrar ---
+        function animateModalOpen(containerId, boxId) {
+            const container = document.getElementById(containerId);
+            const box = document.getElementById(boxId);
+            container.classList.remove('hidden');
+            container.classList.add('flex');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function animateModalClose(containerId, boxId) {
+            const container = document.getElementById(containerId);
+            const box = document.getElementById(boxId);
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+            }, 200);
+        }
+
+        // Modal de Variables
+        function openAddVarModal() { animateModalOpen('add-var-modal', 'add-var-box'); handleTypeChange(); }
+        function closeAddVarModal() { animateModalClose('add-var-modal', 'add-var-box'); }
+        
+        // Modal Guardar Como
+        function openSaveAsModal() { 
+            document.getElementById('new-profile-name').value = state.name + ' (Copia)';
+            animateModalOpen('save-as-modal', 'save-as-box'); 
+            setTimeout(() => document.getElementById('new-profile-name').focus(), 100);
+        }
+        function closeSaveAsModal() { animateModalClose('save-as-modal', 'save-as-box'); }
+
+        // Modal Eliminar
+        function openDeleteModal() {
+            if (appData.profiles.length <= 1) {
+                showToast("⚠️ No puedes eliminar la única plantilla.");
+                return;
+            }
+            document.getElementById('delete-confirm-text').innerText = `Se borrará la plantilla "${state.name}".`;
+            animateModalOpen('delete-modal', 'delete-box');
+        }
+        function closeDeleteModal() { animateModalClose('delete-modal', 'delete-box'); }
+
+
+        // --- Lógica Guardar Como ---
+        function confirmSaveAs() {
+            const newName = document.getElementById('new-profile-name').value.trim();
+            if (!newName) return;
+            
+            const newId = 'profile_' + Date.now();
+            const newProfile = {
+                id: newId,
+                name: newName,
+                // Copia profunda para no vincular referencias a la plantilla anterior
+                variables: JSON.parse(JSON.stringify(state.variables)),
+                template: state.template
+            };
+            
+            appData.profiles.push(newProfile);
+            appData.activeProfileId = newId;
+            state = newProfile; // Cambiamos puntero al nuevo
+            
+            saveAppData();
+            updateProfileSelector();
+            
+            document.getElementById('edit-template-text').value = state.template;
+            buildUI();
+            closeSaveAsModal();
+            showToast("Plantilla Guardada");
+        }
+
+        // --- Lógica Eliminar Plantilla ---
+        function confirmDelete() {
+            appData.profiles = appData.profiles.filter(p => p.id !== state.id);
+            // Salta al primer perfil disponible
+            appData.activeProfileId = appData.profiles[0].id;
+            state = appData.profiles[0];
+            
+            saveAppData();
+            updateProfileSelector();
+            
+            document.getElementById('edit-template-text').value = state.template;
+            buildUI();
+            closeDeleteModal();
+            showToast("Plantilla eliminada");
+        }
+
+        // --- Lógica Nueva Variable ---
+        function handleTypeChange() {
+            const type = document.getElementById('new-var-type').value;
+            const optsContainer = document.getElementById('new-var-options-container');
+            if (type === 'select') {
+                optsContainer.classList.remove('hidden');
+            } else {
+                optsContainer.classList.add('hidden');
+            }
+        }
+
+        function confirmAddVar() {
+            const rawId = document.getElementById('new-var-id').value;
+            const id = rawId.trim().toLowerCase().replace(/\s+/g, '_');
+            const label = document.getElementById('new-var-label').value.trim();
+            const type = document.getElementById('new-var-type').value;
+            const defValue = document.getElementById('new-var-default').value;
+            const optionsStr = document.getElementById('new-var-options').value;
+            
+            if (!id || !label) {
+                showToast("⚠️ El ID y la Etiqueta son obligatorios.");
+                return;
+            }
+            
+            let options = [];
+            if (type === 'select' && optionsStr.trim() !== '') {
+                options = optionsStr.split(',').map(s => s.trim());
+            }
+            
+            state.variables.push({
+                id: id,
+                label: label,
+                type: type,
+                value: defValue,
+                default: defValue, // Guardar como valor por defecto
+                options: options
+            });
+            
+            saveAppData();
+            buildUI();
+            closeAddVarModal();
+            showToast("Variable añadida exitosamente");
+            
+            document.getElementById('new-var-id').value = '';
+            document.getElementById('new-var-label').value = '';
+            document.getElementById('new-var-default').value = '';
+            document.getElementById('new-var-options').value = '';
+        }
+
+        // --- Limpieza Restaurando Valores Por Defecto ---
+        function resetForm() {
+            state.variables.forEach(v => {
+                let def = v.default;
+                
+                // Lógica de retrocompatibilidad: si la variable no tiene 'default' asignado,
+                // tratamos de buscar si existía en el perfil base
+                if (def === undefined) {
+                    const baseVar = DEFAULT_PROFILE.variables.find(base => base.id === v.id);
+                    def = baseVar ? baseVar.default : undefined;
+                }
+
+                // Si hay un default definido, se restaura a ese
+                if (def !== undefined) {
+                    v.value = def;
+                } else {
+                    // Fallbacks si es una variable que no tenía valor inicial definido
+                    if (v.type === 'text' || v.type === 'textarea' || v.type === 'date' || v.type === 'number') {
+                        v.value = '';
+                    } else if (v.type === 'select' && v.options && v.options.length > 0) {
+                        v.value = v.options[0];
+                    } else if (v.type === 'range') {
+                        v.value = '0';
+                    } else if (v.type === 'color') {
+                        v.value = '#000000';
+                    }
+                }
+            });
+            saveAppData();
+            buildUI();
+            showToast("Formulario restaurado a valores por defecto");
+        }
+
+        function updatePreview() {
+            let text = state.template;
+            
+            state.variables.forEach(v => {
+                const regex = new RegExp(`{{${v.id}}}`, 'g');
+                const val = v.value.trim() !== '' ? v.value : `[${v.label}]`;
+                text = text.replace(regex, val);
+            });
+
+            const out = document.getElementById('output-text');
+            out.value = text;
+            document.getElementById('char-count').innerText = `${text.length} CARACTERES`;
+        }
+
+        // --- Exportar/Importar CSV Modal ---
+        const csvModal = document.getElementById('csv-modal');
+        const csvTextarea = document.getElementById('csv-textarea');
+
+        function toggleCSVModal() {
+            csvModal.classList.toggle('hidden');
+            csvModal.classList.toggle('flex');
+            if(!csvModal.classList.contains('hidden')) {
+                generateCSV();
+            }
+        }
+
+        function generateCSV() {
+            let csv = "id, label, type, value, options\n";
+            state.variables.forEach(v => {
+                const opts = v.options ? v.options.join('|') : '';
+                const safeVal = String(v.value).replace(/"/g, '""');
+                csv += `${v.id}, ${v.label}, ${v.type}, "${safeVal}", ${opts}\n`;
+            });
+            csvTextarea.value = csv;
+        }
+
+        function importCSV() {
+            const lines = csvTextarea.value.split('\n');
+            const newVars = [];
+            
+            for(let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if(!line) continue;
+                
+                const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
+                if (parts.length >= 3) {
+                    const id = parts[0]?.trim();
+                    const label = parts[1]?.trim();
+                    const type = parts[2]?.trim().toLowerCase();
+                    let value = parts[3]?.trim() || '';
+                    
+                    if(value.startsWith('"') && value.endsWith('"')) {
+                        value = value.substring(1, value.length - 1).replace(/""/g, '"');
+                    }
+
+                    const optionsStr = parts[4]?.trim() || '';
+                    const options = optionsStr ? optionsStr.split('|').map(o=>o.trim()) : [];
+
+                    newVars.push({ id, label, type, value, default: value, options });
+                }
+            }
+
+            if(newVars.length > 0) {
+                state.variables = newVars;
+                saveAppData();
+                buildUI();
+                toggleCSVModal();
+                showToast("CSV Importado a esta plantilla.");
+            } else {
+                showToast("⚠️ Error: Formato CSV inválido.");
+            }
+        }
+
+        // --- Importar Plantilla TXT ---
+        function importTxt(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                state.template = content;
+                document.getElementById('edit-template-text').value = content;
+                saveAppData();
+                updatePreview();
+                showToast("Texto TXT aplicado a la plantilla actual.");
+                event.target.value = ''; 
+            };
+            reader.readAsText(file);
+        }
+
+        // --- Utilidades ---
+        async function copyToClipboard() {
+            const text = document.getElementById('output-text').value;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast("¡Texto copiado sin formato!");
+            } catch (err) {
+                const out = document.getElementById('output-text');
+                out.select();
+                document.execCommand('copy');
+                showToast("Copiado al portapapeles");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>

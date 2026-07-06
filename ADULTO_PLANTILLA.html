@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Plantilla AutoText</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --focus-ring: rgba(79, 70, 229, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding: 15px;
+        }
+
+        /* Contenedor principal adaptativo a 3 columnas */
+        .container {
+            max-width: 100%;
+            height: calc(100vh - 90px); /* Deja espacio para el header */
+            display: grid;
+            grid-template-columns: 350px 1.2fr 1fr;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            height: 60px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .header-title-group span {
+            font-size: 1.3rem;
+        }
+
+        .template-title-input {
+            font-size: 1.15rem;
+            font-weight: 700;
+            border: 1px dashed transparent;
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: var(--text-color);
+            width: 80%;
+            background: transparent;
+        }
+
+        .template-title-input:hover {
+            border-color: var(--border-color);
+            background: var(--bg-color);
+        }
+
+        .template-title-input:focus {
+            border-color: var(--primary-color);
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0; /* Importante para flex y scroll interno */
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 48px;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto; /* Scroll independiente por panel */
+            min-height: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: #fff;
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #fff;
+            color: var(--danger-color);
+            border-color: var(--border-color);
+        }
+
+        .btn-danger:hover {
+            background: #fef2f2;
+            border-color: var(--danger-color);
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.725rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+            font-family: inherit;
+        }
+
+        /* Grid de dos columnas para el formulario dinámico */
+        .dynamic-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group.half-width {
+            grid-column: span 1;
+        }
+
+        .variables-config-list {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: #f8fafc;
+        }
+
+        .variable-config-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            background: #fff;
+        }
+
+        .variable-config-item:last-child {
+            border-bottom: none;
+        }
+
+        .var-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            width: 65%;
+        }
+
+        .var-info code {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .var-info span {
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .var-info small {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .var-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .add-var-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .add-var-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .add-var-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .result-textarea {
+            width: 100%;
+            flex-grow: 1;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            color: var(--text-color);
+            line-height: 1.5;
+            resize: none;
+            margin-bottom: 12px;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #334155;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .tab-content-panel {
+            display: none;
+        }
+
+        .tab-content-panel.active {
+            display: block;
+        }
+
+        .button-group-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Estilos específicos para la vista incrustada en Google Sites o pantalla completa sin edición */
+        body.in-iframe {
+            padding: 5px;
+            background-color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body.in-iframe .container {
+            height: 100vh;
+            grid-template-columns: 1.2fr 1fr; /* Formulario (Izquierda) | Resultado (Derecha) */
+            gap: 15px;
+        }
+
+        body.in-iframe .card {
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        body.in-iframe .card-header {
+            background: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Ajustes responsivos para tablets verticales y móviles */
+        @media (max-width: 950px) {
+            html, body {
+                height: auto;
+                overflow: auto;
+            }
+
+            .container {
+                height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            body.in-iframe .container {
+                height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                height: auto;
+            }
+
+            .card-body {
+                overflow-y: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <header id="app-header">
+            <div class="header-title-group">
+                <span>📄</span>
+                <input type="text" id="template-title" class="template-title-input" value="Examen Clínico de Adulto" placeholder="Nombre de la Plantilla">
+            </div>
+            <div>
+                <button id="save-app-btn" class="btn btn-success" title="Guarda esta plantilla permanentemente en un nuevo archivo HTML">💾 Guardar Plantilla</button>
+            </div>
+        </header>
+
+        <!-- COLUMNA 1: CONFIGURACIÓN (Se oculta en Google Sites) -->
+        <div class="card" id="config-card">
+            <div class="card-header">
+                <span class="card-title">Configuración</span>
+            </div>
+            <div class="card-body">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('editor-tab')">Editar Texto</button>
+                    <button class="tab-btn" onclick="switchTab('variables-tab')">Configurar Variables</button>
+                </div>
+
+                <!-- Panel 1: Editor de Texto -->
+                <div id="editor-tab" class="tab-content-panel active">
+                    <div class="form-group">
+                        <label for="template-text">Texto Base de la Plantilla</label>
+                        <textarea id="template-text" class="form-control" placeholder="Escribe el texto de la plantilla. Usa {{variable}} para insertar campos dinámicos."></textarea>
+                    </div>
+                </div>
+
+                <!-- Panel 2: Variables -->
+                <div id="variables-tab" class="tab-content-panel">
+                    <div class="variables-config-list" id="variables-config-list">
+                        <!-- Generado dinámicamente -->
+                    </div>
+
+                    <div class="add-var-box">
+                        <h4 id="form-action-title" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">Añadir Variable</h4>
+                        <div class="add-var-grid">
+                            <div class="form-group">
+                                <label for="new-var-id">ID Variable</label>
+                                <input type="text" id="new-var-id" class="form-control" placeholder="ej: nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-var-label">Etiqueta</label>
+                                <input type="text" id="new-var-label" class="form-control" placeholder="ej: Nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-var-type">Tipo</label>
+                                <select id="new-var-type" class="form-control">
+                                    <option value="text">Texto corto</option>
+                                    <option value="textarea">Texto largo</option>
+                                    <option value="number">Número</option>
+                                    <option value="date">Fecha</option>
+                                    <option value="select">Lista</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="options-group" style="display: none;">
+                                <label for="new-var-options">Opciones (,)</label>
+                                <input type="text" id="new-var-options" class="form-control" placeholder="Opción 1, Opción 2">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="new-var-default">Texto Preestablecido (Opcional)</label>
+                                <input type="text" id="new-var-default" class="form-control" placeholder="ej: Valor por defecto">
+                            </div>
+                        </div>
+                        <div class="button-group-row">
+                            <button id="add-var-btn" class="btn btn-primary btn-sm" style="flex: 2;">➕ Guardar</button>
+                            <button id="cancel-edit-btn" class="btn btn-danger btn-sm" style="flex: 1; display: none;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA 2: FORMULARIO DE Relleno -->
+        <div class="card" id="form-card">
+            <div class="card-header">
+                <span class="card-title">Formulario (Datos del Paciente)</span>
+            </div>
+            <div class="card-body">
+                <div class="dynamic-form-grid" id="dynamic-form">
+                    <!-- Se rellena dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA 3: RESULTADO GENERADO -->
+        <div class="card" id="result-card">
+            <div class="card-header">
+                <span class="card-title">Texto Generado</span>
+            </div>
+            <div class="card-body">
+                <div class="result-container">
+                    <textarea id="result-text" class="result-textarea" readonly></textarea>
+                    <div class="result-actions">
+                        <button id="copy-btn" class="btn btn-primary">📋 Copiar Texto</button>
+                        <button id="copy-upper-btn" class="btn">🔠 Copiar en MAYÚSCULAS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
+
+    <!-- DATOS DE LAS VARIABLES INYECTADOS -->
+    <script id="variables-data" type="application/json">
+[
+  {
+    "id": "od_av_sc_lejos",
+    "label": "AV lejos SC OD",
+    "type": "text",
+    "defaultValue": "20/20"
+  },
+  {
+    "id": "oi_av_sc_lejos",
+    "label": "AV lejos SC OI",
+    "type": "text",
+    "defaultValue": "20/20"
+  },
+  {
+    "id": "od_av_cc_lejos",
+    "label": "AV lejos CC OD",
+    "type": "text",
+    "defaultValue": "20/20"
+  },
+  {
+    "id": "oi_av_cc_lejos",
+    "label": "AV lejos CC OI",
+    "type": "text",
+    "defaultValue": "20/20"
+  },
+  {
+    "id": "od_av_sc_cerca",
+    "label": "AV cerca SC OD",
+    "type": "text",
+    "defaultValue": "J1"
+  },
+  {
+    "id": "oi_av_sc_cerca",
+    "label": "AV cerca SC OI",
+    "type": "text",
+    "defaultValue": "J1"
+  },
+  {
+    "id": "od_av_cc_cerca",
+    "label": "AV cerca CC OD",
+    "type": "text",
+    "defaultValue": "J1"
+  },
+  {
+    "id": "oi_av_cc_cerca",
+    "label": "AV cerca CC OI",
+    "type": "text",
+    "defaultValue": "J1"
+  },
+  {
+    "id": "od_autorrefraccion_esfera",
+    "label": "Autorref esfera OD",
+    "type": "text",
+    "defaultValue": "0.00"
+  },
+  {
+    "id": "od_autorrefraccion_cilindro",
+    "label": "Autorref cilindro OD",
+    "type": "text",
+    "defaultValue": "0.00"
+  },
+  {
+    "id": "od_autorrefraccion_eje",
+    "label": "Autorref eje OD",
+    "type": "text",
+    "defaultValue": "0"
+  },
+  {
+    "id": "oi_autorrefraccion_esfera",
+    "label": "Autorref esfera OI",
+    "type": "text",
+    "defaultValue": "0.00"
+  },
+  {
+    "id": "oi_autorrefraccion_cilindro",
+    "label": "Autorref cilindro OI",
+    "type": "text",
+    "defaultValue": "0.00"
+  },
+  {
+    "id": "oi_autorrefraccion_eje",
+    "label": "Autorref eje OI",
+    "type": "text",
+    "defaultValue": "0"
+  },
+  {
+    "id": "od_queratometria_plano",
+    "label": "K plano OD",
+    "type": "text",
+    "defaultValue": "43.00"
+  },
+  {
+    "id": "od_queratometria_curvo",
+    "label": "K curvo OD",
+    "type": "text",
+    "defaultValue": "43.50"
+  },
+  {
+    "id": "od_queratometria_eje",
+    "label": "K eje OD",
+    "type": "text",
+    "defaultValue": "0"
+  },
+  {
+    "id": "oi_queratometria_plano",
+    "label": "K plano OI",
+    "type": "text",
+    "defaultValue": "43.00"
+  },
+  {
+    "id": "oi_queratometria_curvo",
+    "label": "K curvo OI",
+    "type": "text",
+    "defaultValue": "43.50"
+  },
+  {
+    "id": "oi_queratometria_eje",
+    "label": "K eje OI",
+    "type": "text",
+    "defaultValue": "0"
+  },
+  {
+    "id": "mov_ext",
+    "label": "Movimientos extraoculares",
+    "type": "text",
+    "defaultValue": "Hirschberg centrado. Ducciones normales. Cover test negativo."
+  },
+  {
+    "id": "meibomio_od",
+    "label": "Meibomio OD",
+    "type": "text",
+    "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+  },
+  {
+    "id": "parpado_od",
+    "label": "Párpado OD",
+    "type": "text",
+    "defaultValue": "Bordes libres normales. Pestañas bien. Puntos lagrimales normales."
+  },
+  {
+    "id": "meibomio_oi",
+    "label": "Meibomio OI",
+    "type": "text",
+    "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+  },
+  {
+    "id": "parpado_oi",
+    "label": "Párpado OI",
+    "type": "text",
+    "defaultValue": "Bordes libres normales. Pestañas bien. Puntos lagrimales normales."
+  },
+  {
+    "id": "but_od",
+    "label": "BUT OD (seg)",
+    "type": "text",
+    "defaultValue": "10"
+  },
+  {
+    "id": "conjuntiva_od",
+    "label": "Conjuntiva OD",
+    "type": "text",
+    "defaultValue": "Conjuntiva sana."
+  },
+  {
+    "id": "cornea_od",
+    "label": "Córnea OD",
+    "type": "text",
+    "defaultValue": "Córnea transparente."
+  },
+  {
+    "id": "camara_od",
+    "label": "Cámara anterior OD",
+    "type": "select",
+    "options": [
+      "IV",
+      "III",
+      "II",
+      "I"
+    ],
+    "defaultValue": "IV"
+  },
+  {
+    "id": "iris_od",
+    "label": "Iris OD",
+    "type": "text",
+    "defaultValue": "Iris normal."
+  },
+  {
+    "id": "cristalino_od",
+    "label": "Cristalino OD",
+    "type": "text",
+    "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+  },
+  {
+    "id": "but_oi",
+    "label": "BUT OI (seg)",
+    "type": "text",
+    "defaultValue": "10"
+  },
+  {
+    "id": "conjuntiva_oi",
+    "label": "Conjuntiva OI",
+    "type": "text",
+    "defaultValue": "Conjuntiva sana."
+  },
+  {
+    "id": "cornea_oi",
+    "label": "Córnea OI",
+    "type": "text",
+    "defaultValue": "Córnea transparente."
+  },
+  {
+    "id": "camara_oi",
+    "label": "Cámara anterior OI",
+    "type": "select",
+    "options": [
+      "IV",
+      "III",
+      "II",
+      "I"
+    ],
+    "defaultValue": "IV"
+  },
+  {
+    "id": "iris_oi",
+    "label": "Iris OI",
+    "type": "text",
+    "defaultValue": "Iris normal."
+  },
+  {
+    "id": "cristalino_oi",
+    "label": "Cristalino OI",
+    "type": "text",
+    "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+  },
+  {
+    "id": "vitreo_od",
+    "label": "Vítreo OD",
+    "type": "text",
+    "defaultValue": "Vítreo transparente."
+  },
+  {
+    "id": "retina_od",
+    "label": "Retina OD",
+    "type": "text",
+    "defaultValue": "Retina adherida."
+  },
+  {
+    "id": "vasculatura_od",
+    "label": "Vasculatura OD",
+    "type": "text",
+    "defaultValue": "Vasculatura de aspecto normal."
+  },
+  {
+    "id": "excavacion_od",
+    "label": "Excavación OD",
+    "type": "text",
+    "defaultValue": "0.3"
+  },
+  {
+    "id": "vitreo_oi",
+    "label": "Vítreo OI",
+    "type": "text",
+    "defaultValue": "Vítreo transparente."
+  },
+  {
+    "id": "retina_oi",
+    "label": "Retina OI",
+    "type": "text",
+    "defaultValue": "Retina adherida."
+  },
+  {
+    "id": "vasculatura_oi",
+    "label": "Vasculatura OI",
+    "type": "text",
+    "defaultValue": "Vasculatura de aspecto normal."
+  },
+  {
+    "id": "excavacion_oi",
+    "label": "Excavación OI",
+    "type": "text",
+    "defaultValue": "0.3"
+  },
+  {
+    "id": "pio_od",
+    "label": "PIO OD (mmHg)",
+    "type": "text",
+    "defaultValue": "14"
+  },
+  {
+    "id": "pio_oi",
+    "label": "PIO OI (mmHg)",
+    "type": "text",
+    "defaultValue": "14"
+  }
+]
+</script>
+
+    <!-- TEXTO INICIAL DE LA PLANTILLA INYECTADO -->
+    <script id="template-text-data" type="text/plain">
+Agudeza visual lejos
+Sin corrección   Ojo derecho {{od_av_sc_lejos}} Ojo izquierdo {{oi_av_sc_lejos}}
+Con corrección   Ojo derecho {{od_av_cc_lejos}} Ojo izquierdo {{oi_av_cc_lejos}}
+
+Agudeza visual cerca
+Sin corrección   Ojo derecho {{od_av_sc_cerca}} Ojo izquierdo {{oi_av_sc_cerca}}  
+Con corrección   Ojo derecho {{od_av_cc_cerca}} Ojo izquierdo {{oi_av_cc_cerca}}
+
+Autorrefracción  Ojo derecho {{od_autorrefraccion_esfera}} {{od_autorrefraccion_cilindro}} {{od_autorrefraccion_eje}}  Ojo izquierdo {{oi_autorrefraccion_esfera}} {{oi_autorrefraccion_cilindro}} {{oi_autorrefraccion_eje}}
+
+Queratometría  Ojo derecho {{od_queratometria_plano}}/{{od_queratometria_curvo}} @ {{od_queratometria_eje}}  Ojo izquierdo {{oi_queratometria_plano}}/{{oi_queratometria_curvo}} @ {{oi_queratometria_eje}}
+
+Refracción en uso  Ojo derecho  Ojo izquierdo
+
+Movimientos extraoculares
+{{mov_ext}}
+
+Examen externo
+Ojo derecho. {{meibomio_od}}. {{parpado_od}}
+Ojo izquierdo. {{meibomio_oi}}. {{parpado_oi}}
+
+Polo anterior
+Ojo derecho. Tiempo de ruptura de la película lagrimal {{but_od}} segundos. {{conjuntiva_od}} {{cornea_od}} Cámara anterior grado {{camara_od}}. {{iris_od}} {{cristalino_od}}
+Ojo izquierdo. Tiempo de ruptura de la película lagrimal {{but_oi}} segundos. {{conjuntiva_oi}} {{cornea_oi}} Cámara anterior grado {{camara_oi}}. {{iris_oi}} {{cristalino_oi}}
+
+Gonioscopia
+Ojo derecho. Sin hallazgos relevantes.
+Ojo izquierdo. Sin hallazgos relevantes.
+
+Polo posterior 
+Ojo derecho. {{vitreo_od}} {{retina_od}} {{vasculatura_od}} Excavación {{excavacion_od}}
+Ojo izquierdo. {{vitreo_oi}} {{retina_oi}} {{vasculatura_oi}} Excavación {{excavacion_oi}}
+
+Presión intraocular 
+Ojo derecho {{pio_od}} mmHg       Ojo izquierdo {{pio_oi}} mmHg
+</script>
+
+    <script>
+        // LÓGICA DE LA APLICACIÓN
+        let variables = [];
+        let templateText = '';
+        let variableValues = {};
+        let editingIndex = null;
+
+        // Elementos del DOM
+        const elements = {
+            templateTitle: document.getElementById('template-title'),
+            templateText: document.getElementById('template-text'),
+            variablesConfigList: document.getElementById('variables-config-list'),
+            newVarId: document.getElementById('new-var-id'),
+            newVarLabel: document.getElementById('new-var-label'),
+            newVarType: document.getElementById('new-var-type'),
+            newVarOptions: document.getElementById('new-var-options'),
+            newVarDefault: document.getElementById('new-var-default'),
+            optionsGroup: document.getElementById('options-group'),
+            addVarBtn: document.getElementById('add-var-btn'),
+            cancelEditBtn: document.getElementById('cancel-edit-btn'),
+            formActionTitle: document.getElementById('form-action-title'),
+            dynamicForm: document.getElementById('dynamic-form'),
+            resultText: document.getElementById('result-text'),
+            copyBtn: document.getElementById('copy-btn'),
+            copyUpperBtn: document.getElementById('copy-upper-btn'),
+            saveAppBtn: document.getElementById('save-app-btn'),
+            toastMsg: document.getElementById('toast-msg'),
+            variablesData: document.getElementById('variables-data'),
+            templateTextData: document.getElementById('template-text-data')
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Detección inteligente de Iframe (Google Sites)
+            const isIframe = window.self !== window.top;
+            if (isIframe) {
+                document.body.classList.add('in-iframe');
+                document.getElementById('config-card').style.display = 'none';
+                document.getElementById('app-header').style.display = 'none';
+                document.getElementById('main-container').style.gridTemplateColumns = '1.2fr 1fr';
+            }
+
+            // Cargar datos inyectados
+            try {
+                variables = JSON.parse(elements.variablesData.textContent.trim());
+            } catch (e) {
+                variables = [];
+            }
+            templateText = elements.templateTextData.textContent.trim();
+            elements.templateText.value = templateText;
+
+            // Inicializar variableValues con los valores preestablecidos
+            variables.forEach(v => {
+                if (v.defaultValue !== undefined && v.defaultValue !== '') {
+                    variableValues[v.id] = v.defaultValue;
+                }
+            });
+
+            // Vincular eventos
+            elements.templateTitle.addEventListener('input', () => {
+                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+                document.title = `Plantilla: ${elements.templateTitle.value}`;
+            });
+
+            elements.templateText.addEventListener('input', () => {
+                templateText = elements.templateText.value;
+                elements.templateTextData.textContent = templateText;
+                elements.templateText.textContent = templateText;
+                renderForm();
+            });
+
+            elements.newVarType.addEventListener('change', () => {
+                elements.optionsGroup.style.display = elements.newVarType.value === 'select' ? 'block' : 'none';
+            });
+
+            elements.addVarBtn.addEventListener('click', saveVariableAction);
+            elements.cancelEditBtn.addEventListener('click', resetVariableForm);
+            elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.value));
+            elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.value.toUpperCase()));
+            elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
+
+            elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+            document.title = `Plantilla: ${elements.templateTitle.value}`;
+
+            renderVariablesConfig();
+            renderForm();
+        });
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(tabId));
+            });
+            document.querySelectorAll('.tab-content-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === tabId);
+            });
+        };
+
+        function showToast(message) {
+            elements.toastMsg.textContent = message;
+            elements.toastMsg.style.opacity = '1';
+            setTimeout(() => {
+                elements.toastMsg.style.opacity = '0';
+            }, 2500);
+        }
+
+        function renderVariablesConfig() {
+            elements.variablesConfigList.innerHTML = '';
+            if (variables.length === 0) {
+                elements.variablesConfigList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No hay variables.</div>';
+                return;
+            }
+
+            variables.forEach((v, index) => {
+                const item = document.createElement('div');
+                item.className = 'variable-config-item';
+                if (editingIndex === index) {
+                    item.style.backgroundColor = '#e0e7ff';
+                    item.style.borderLeft = '4px solid var(--primary-color)';
+                }
+                item.innerHTML = `
+                    <div class="var-info">
+                        <code>{{${v.id}}}</code>
+                        <span>${v.label}</span>
+                        ${v.defaultValue ? `<small style="color: var(--success-color); font-weight: 500;">Def: "${v.defaultValue}"</small>` : ''}
+                    </div>
+                    <div class="var-actions">
+                        <button class="btn btn-sm" onclick="startEditVariable(${index})">✏️</button>
+                        <button class="btn btn-sm" onclick="moveVariable(${index}, -1)" ${index === 0 ? 'disabled' : ''}>⬆️</button>
+                        <button class="btn btn-sm" onclick="moveVariable(${index}, 1)" ${index === variables.length - 1 ? 'disabled' : ''}>⬇️</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteVariable(${index})">🗑️</button>
+                    </div>
+                `;
+                elements.variablesConfigList.appendChild(item);
+            });
+
+            elements.variablesData.textContent = JSON.stringify(variables, null, 2);
+        }
+
+        function renderForm() {
+            elements.dynamicForm.innerHTML = '';
+            if (variables.length === 0) {
+                elements.dynamicForm.innerHTML = '<p style="color: var(--text-muted); font-size: 0.875rem; grid-column: 1/-1;">No hay campos para mostrar. Agrega variables en la configuración.</p>';
+                generateResult();
+                return;
+            }
+
+            variables.forEach(v => {
+                const idLower = v.id.toLowerCase();
+                const labelUpper = v.label.toUpperCase();
+                const isEyeVar = idLower.endsWith('_od') || 
+                                 idLower.endsWith('_oi') || 
+                                 idLower.endsWith('od') || 
+                                 idLower.endsWith('oi') || 
+                                 labelUpper.includes('OD') || 
+                                 labelUpper.includes('OI');
+                
+                const isFullWidth = !isEyeVar || v.type === 'textarea';
+
+                const group = document.createElement('div');
+                group.className = `form-group ${isFullWidth ? 'full-width' : 'half-width'}`;
+                
+                const label = document.createElement('label');
+                label.textContent = v.label;
+                group.appendChild(label);
+
+                let field;
+                if (v.type === 'textarea') {
+                    field = document.createElement('textarea');
+                    field.rows = 2;
+                } else if (v.type === 'select') {
+                    field = document.createElement('select');
+                    (v.options || []).forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        field.appendChild(option);
+                    });
+                } else {
+                    field = document.createElement('input');
+                    field.type = v.type;
+                }
+
+                field.className = 'form-control';
+                field.dataset.id = v.id;
+                
+                if (variableValues[v.id] === undefined) {
+                    variableValues[v.id] = v.defaultValue !== undefined ? v.defaultValue : '';
+                }
+                field.value = variableValues[v.id];
+
+                field.addEventListener('input', (e) => {
+                    variableValues[v.id] = e.target.value;
+                    generateResult();
+                });
+                if (v.type === 'select') {
+                    field.addEventListener('change', (e) => {
+                        variableValues[v.id] = e.target.value;
+                        generateResult();
+                    });
+                }
+
+                group.appendChild(field);
+                elements.dynamicForm.appendChild(group);
+            });
+
+            generateResult();
+        }
+
+        function generateResult() {
+            let result = templateText;
+            variables.forEach(v => {
+                const val = variableValues[v.id] !== undefined && variableValues[v.id] !== '' 
+                    ? variableValues[v.id] 
+                    : (v.defaultValue !== undefined && v.defaultValue !== '' ? v.defaultValue : `[${v.label}]`);
+                const regex = new RegExp(`\\{\\{${v.id}\\}\\}`, 'g');
+                result = result.replace(regex, val);
+            });
+            elements.resultText.value = result;
+        }
+
+        window.startEditVariable = function(index) {
+            editingIndex = index;
+            const v = variables[index];
+
+            elements.newVarId.value = v.id;
+            elements.newVarLabel.value = v.label;
+            elements.newVarType.value = v.type;
+            elements.newVarDefault.value = v.defaultValue || '';
+
+            if (v.type === 'select') {
+                elements.newVarOptions.value = (v.options || []).join(', ');
+                elements.optionsGroup.style.display = 'block';
+            } else {
+                elements.newVarOptions.value = '';
+                elements.optionsGroup.style.display = 'none';
+            }
+
+            elements.formActionTitle.textContent = 'Editar Variable';
+            elements.addVarBtn.textContent = '💾 Guardar';
+            elements.cancelEditBtn.style.display = 'block';
+
+            renderVariablesConfig();
+            elements.formActionTitle.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        function resetVariableForm() {
+            editingIndex = null;
+            elements.newVarId.value = '';
+            elements.newVarLabel.value = '';
+            elements.newVarOptions.value = '';
+            elements.newVarDefault.value = '';
+            elements.optionsGroup.style.display = 'none';
+            elements.newVarType.value = 'text';
+
+            elements.formActionTitle.textContent = 'Añadir Variable';
+            elements.addVarBtn.textContent = '➕ Guardar';
+            elements.cancelEditBtn.style.display = 'none';
+
+            renderVariablesConfig();
+        }
+
+        function saveVariableAction() {
+            const id = elements.newVarId.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+            const label = elements.newVarLabel.value.trim();
+            const type = elements.newVarType.value;
+            const defaultValue = elements.newVarDefault.value.trim();
+
+            if (!id) {
+                alert('ID de variable obligatorio y alfanumérico.');
+                return;
+            }
+
+            const isDuplicate = variables.some((v, idx) => v.id === id && idx !== editingIndex);
+            if (isDuplicate) {
+                alert('ID duplicado.');
+                return;
+            }
+
+            const varData = { id, label: label || id, type };
+
+            if (defaultValue) {
+                varData.defaultValue = defaultValue;
+            }
+
+            if (type === 'select') {
+                const optionsStr = elements.newVarOptions.value;
+                const options = optionsStr.split(',').map(o => o.trim()).filter(Boolean);
+                if (options.length === 0) {
+                    alert('Define al menos una opción.');
+                    return;
+                }
+                varData.options = options;
+            }
+
+            if (editingIndex !== null) {
+                const oldId = variables[editingIndex].id;
+                variables[editingIndex] = varData;
+                if (oldId !== id) {
+                    variableValues[id] = variableValues[oldId];
+                    delete variableValues[oldId];
+                }
+                if (defaultValue && (variableValues[id] === undefined || variableValues[id] === '')) {
+                    variableValues[id] = defaultValue;
+                }
+                showToast(`Variable {{${id}}} actualizada.`);
+            } else {
+                variables.push(varData);
+                if (defaultValue) {
+                    variableValues[id] = defaultValue;
+                }
+                showToast(`Variable {{${id}}} añadida.`);
+            }
+
+            resetVariableForm();
+            renderForm();
+        }
+
+        window.deleteVariable = function(index) {
+            if (editingIndex === index) {
+                resetVariableForm();
+            }
+            const removed = variables.splice(index, 1)[0];
+            delete variableValues[removed.id];
+            renderVariablesConfig();
+            renderForm();
+            showToast('Variable eliminada.');
+        };
+
+        window.moveVariable = function(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= variables.length) return;
+            if (editingIndex !== null) {
+                resetVariableForm();
+            }
+            const temp = variables[index];
+            variables[index] = variables[targetIndex];
+            variables[targetIndex] = temp;
+            renderVariablesConfig();
+            renderForm();
+        };
+
+        function copyToClipboard(text) {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('¡Texto copiado!');
+            }).catch(err => {
+                alert('Error al copiar: ' + err);
+            });
+        }
+
+        function saveTemplateAsFile() {
+            if (editingIndex !== null) {
+                resetVariableForm();
+            }
+            elements.variablesData.textContent = JSON.stringify(variables, null, 2);
+            elements.templateTextData.textContent = templateText;
+            elements.templateText.textContent = templateText;
+            elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+
+            const docHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const blob = new Blob([docHtml], { type: 'text/html' });
+            
+            let filename = elements.templateTitle.value.trim();
+            if (!filename) filename = 'Plantilla_AutoText';
+            filename = filename.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.html';
+
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+            showToast(`Archivo "${filename}" descargado.`);
+        }
+    </script>
+</body>
+</html>

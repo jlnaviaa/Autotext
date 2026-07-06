@@ -1,0 +1,35 @@
+AGUDEZA VISUAL LEJOS
+Sin corrección   Ojo derecho {{OD_AV_SC_lejos(texto corto)}} Ojo izquierdo {{OI_AV_SC_lejos(texto corto)}}
+Con corrección   Ojo derecho {{OD_AV_CC_lejos(texto corto)}} Ojo izquierdo {{OI_AV_CC_lejos(texto corto)}}
+
+AGUDEZA VISUAL CERCA
+Sin corrección   Ojo derecho {{OD_AV_SC_cerca(texto corto)}} Ojo izquierdo {{OI_AV_SC_cerca(texto corto)}}  
+Ojo derecho {{OD_AV_CC_cerca(texto corto)}} Ojo izquierdo {{OI_AV_CC_cerca(texto corto)}}    Ojo izquierdo
+
+AUTORREFRACCIÓN  Ojo derecho {{OD_autorrefraccion_esfera(número)}} {{OD_autorrefraccion_cilindro(número)}} {{OD_autorrefraccion_eje(número)}}  Ojo izquierdo {{OI_autorrefraccion_esfera(número)}} {{OI_autorrefraccion_cilindro(número)}} {{OI_autorrefraccion_eje(número)}}
+
+QUERATOMETRÍA  Ojo derecho {{OD_queratometria_plano(número)}}/{{OD_queratometria_curvo(número)}} @ {{OD_queratometria_eje(número)}}  Ojo izquierdo {{OI_queratometria_plano(número)}}/{{OI_queratometria_curvo(número)}} @ {{OI_queratometria_eje(número)}}
+
+REFRACCIÓN EN USO  Ojo derecho  Ojo izquierdo
+
+MOVIMIENTOS EXTRAOCULARES
+{{mov_ext(texto corto,"Hirschberg centrado. Ducciones normal. Cover test negativo.")}}
+
+EXAMEN EXTERNO
+Ojo derecho. {{meibomio_od(texto corto, "Secreción y posición normal de glándulas de Meibomio")}}. {{parpado_od(texto corto, "Bordes libres normales. Pestañas bien. Puntos lagrimales normales.")}} 
+Ojo izquierdo. {{meibomio_oi(texto corto, "Secreción y posición normal de glándulas de Meibomio")}}. {{parpado_oi(texto corto, "Bordes libres normales. Pestañas bien. Puntos lagrimales normales.")}} 
+
+POLO ANTERIOR
+Ojo derecho. Tiempo de ruptura de la película lagrimal {{BUT}} segundos. {{conjuntiva_od(texto corto, "Conjuntiva sana.")}} {{cornea_od(texto corto, "Córnea trasparente.")}} Cámara anterior grado {{I,II,III,IV}}. {{iris_od(texto corto, "Iris normal.")}} {{cristalino_od(texto corto, "Cristalino N0C0P0 en posición anatómica.")}}
+Ojo izquierdo. Tiempo de ruptura de la película lagrimal {{BUT}} segundos. {{conjuntiva_oi(texto corto, "Conjuntiva sana.")}}. {{cornea_oi(texto corto,"Córnea trasparente.")}} Cámara anterior grado {{I,II,III,IV}}. {{iris_oi(texto corto, "Iris normal.")}} {{cristalino_oi(texto corto, "Cristalino N0C0P0 en posición anatómica.")}}
+
+GONIOSCOPIA
+Ojo derecho. Sina hallazgos relevantes
+Ojo izquierdo. Sina hallazgos relevantes
+
+POLO POSTERIOR 
+Ojo derecho. {{vitreo_od(texto corto,"Vítreo transparente.")}} {{retina_od(texto corto,"Retina adherida.")}} {{vasculatura_od(texto corto,"Vasculatura de aspecto normal.")}} Excavación {{excavación(texto corto)}}
+Ojo izquierdo. {{vitreo_oi(texto corto,"Vítreo trasparente.")}} {{retina_oi(texto corto,"Retina adherida.")}} {{vasculatura_oi(texto corto,"Vasculatura de aspecto normal.")}} Excavación {{excavación(texto corto)}}
+
+PRESION INTRAOCULAR 
+Ojo derecho {{PIO(número entero)}} mmHg       Ojo izquierdo {{PIO(número entero)}} mmHg  
