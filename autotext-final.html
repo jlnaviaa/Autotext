@@ -393,6 +393,11 @@
             gap: 8px;
         }
 
+        /* Contenedor de Impresión (Oculto en pantalla) */
+        #print-area {
+            display: none;
+        }
+
         /* Estilos específicos para la vista incrustada en Google Sites o pantalla completa sin edición */
         body.in-iframe {
             padding: 5px;
@@ -440,6 +445,52 @@
 
             .card-body {
                 overflow-y: visible;
+            }
+        }
+
+        /* ==========================================
+           ESTILOS DE IMPRESIÓN (NATIVOS DE NAV)
+           ========================================== */
+        @media print {
+            html, body {
+                height: auto;
+                overflow: visible;
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+                margin: 0;
+            }
+
+            /* Ocultar toda la interfaz de la aplicación */
+            .container, header, .toast-msg, .card, #main-container {
+                display: none !important;
+            }
+
+            /* Mostrar y dar formato al área de impresión */
+            #print-area {
+                display: block !important;
+                position: relative;
+                width: 100%;
+                min-height: 100%;
+                font-family: inherit;
+                font-size: 11pt;
+                line-height: 1.6;
+                color: #000;
+                padding: 40px;
+                white-space: pre-wrap; /* Respeta los saltos de línea clínicos */
+            }
+
+            /* Posicionar la marca de agua en el centro */
+            .print-watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-30deg);
+                width: 60%;
+                height: auto;
+                opacity: 0.08; /* Tenue, no dificulta la lectura */
+                z-index: -1; /* Detrás del texto */
+                pointer-events: none;
             }
         }
     </style>
@@ -544,10 +595,17 @@
                     <div class="result-actions">
                         <button id="copy-btn" class="btn btn-primary">📋 Copiar Texto</button>
                         <button id="copy-upper-btn" class="btn">🔠 Copiar en MAYÚSCULAS</button>
+                        <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);">🖨️ Imprimir Documento</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- AREA DE IMPRESIÓN (Invisible en pantalla normal) -->
+    <div id="print-area">
+        <img src="Plantilla_Verum.svg" class="print-watermark" alt="Marca de Agua">
+        <div id="print-content"></div>
     </div>
 
     <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
@@ -586,6 +644,8 @@
             resultText: document.getElementById('result-text'),
             copyBtn: document.getElementById('copy-btn'),
             copyUpperBtn: document.getElementById('copy-upper-btn'),
+            printBtn: document.getElementById('print-btn'),
+            printContent: document.getElementById('print-content'),
             saveAppBtn: document.getElementById('save-app-btn'),
             toastMsg: document.getElementById('toast-msg'),
             variablesData: document.getElementById('variables-data'),
@@ -640,6 +700,7 @@
             elements.cancelEditBtn.addEventListener('click', resetVariableForm);
             elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.value));
             elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.value.toUpperCase()));
+            elements.printBtn.addEventListener('click', printDocument);
             elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
 
             elements.templateTitle.setAttribute('value', elements.templateTitle.value);
@@ -909,6 +970,16 @@
             }).catch(err => {
                 alert('Error al copiar: ' + err);
             });
+        }
+
+        function printDocument() {
+            const text = elements.resultText.value;
+            if (!text) {
+                alert('No hay texto generado para imprimir.');
+                return;
+            }
+            elements.printContent.textContent = text;
+            window.print();
         }
 
         function saveTemplateAsFile() {

@@ -41,6 +41,17 @@ El motor de plantillas cuenta con las siguientes características avanzadas:
 
 ## Historial de Cambios
 
+### 5 de julio de 2026
+
+-   **Integración de Control de Versiones (Git)**:
+    *   Inicialización del repositorio Git local en la rama principal `main` en la NAS.
+    *   Creación del archivo `.gitignore` para excluir archivos temporales de sistema, office y desarrollo local.
+    *   Realización del primer commit con la estructura limpia del motor de plantillas v12 y los archivos `.txt` de consulta.
+-   **Impresión Clínica con Marca de Agua**:
+    *   Incorporación de la hoja de estilo CSS `@media print` para ocultar la interfaz web y dar formato de carta limpio al texto del informe clínico al imprimir.
+    *   Adición del botón "Imprimir Documento" que sincroniza el texto generado y abre el diálogo nativo de impresión.
+    *   Integración de la marca de agua vectorial usando el logotipo corporativo `Plantilla_Verum.svg` posicionado en el centro de la página, rotado -30° y con opacidad del 8% para no interferir con la lectura del texto.
+
 ### 29 de junio de 2026
 
 -   **Mejora y Adaptación de Plantillas Clínicas**:
@@ -123,3 +134,7 @@ A partir del análisis de las necesidades del usuario, se establece el siguiente
     *   Aplica formato de **tipo oración / Phrase case** (capitalización donde solo la primera letra de cada frase inicia en mayúscula, respetando siglas médicas universales como *OD*, *OI*, *PIO*, *DNI*, *YAG* y nombres propios).
     *   Mantiene intacta la estructura original del texto (párrafos, saltos de línea, tabulaciones), evitando convertirlo a formato Markdown para no alterar la maquetación del usuario.
 3.  **Generación de la Aplicación**: La IA toma el motor limpio de [autotext-final.html](file:////NAS-760025/personal_folder/Proyectos/Autotext/autotext-final.html), deduce y configura las variables clínicas correspondientes (con sus opciones y textos preestablecidos normales) y genera un nuevo archivo HTML autocontenido en la NAS.
+
+## Identificador de conversación
+
+agy --conversation=d5aee722-c5cd-4507-862e-7679fad11722
