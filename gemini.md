@@ -52,7 +52,7 @@ El motor de plantillas cuenta con las siguientes características avanzadas:
 -   **Impresión Clínica con Marca de Agua**:
     *   Incorporación de la hoja de estilo CSS `@media print` para ocultar la interfaz web y dar formato de carta limpio al texto del informe clínico al imprimir.
     *   Adición del botón "Imprimir Documento" que sincroniza el texto generado y abre el diálogo nativo de impresión.
-    *   Integración de la marca de agua vectorial usando el logotipo corporativo `Plantilla_Verum.svg` posicionado en el centro de la página, sin rotación/inclinación, cubriendo la totalidad de la página (100% de alto y ancho en tamaño carta) con opacidad del 85% para asegurar su correcta visualización, configurando márgenes de página específicos (3 cm superior y 2 cm inferior, izquierdo y derecho).
+    *   Integración de la marca de agua vectorial usando el logotipo corporativo `Plantilla_Verum.svg` posicionado en el centro de la página, sin rotación/inclinación, cubriendo la totalidad de la página (100% de alto y ancho en tamaño carta) con opacidad del 85% para asegurar su correcta visualización, configurando márgenes de página específicos (3 cm superior y 3 cm inferior, e izquierdo y derecho de 2 cm).
 
 ### 29 de junio de 2026
 
