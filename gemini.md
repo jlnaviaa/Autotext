@@ -28,6 +28,8 @@ El motor de plantillas cuenta con las siguientes características avanzadas:
 
 -   **Auto-Edición en Caliente**: Permite editar el texto base de la plantilla y configurar sus variables en tiempo real. Al realizar cambios, la aplicación modifica su propio DOM y escribe su estado en un script JSON interno (`<script id="variables-data">`).
 -   **Guardado en el propio Archivo**: Al hacer "Guardar como" (Ctrl+S) en el navegador o pulsar "Guardar Plantilla", el archivo se descarga con la configuración de variables y textos permanentemente integrados en el código.
+-   **Editor de Resultado Interactivo**: La caja de texto generado es un contenedor interactivo (`contenteditable`) que funciona como un miniprocesador de textos. El médico puede escribir, borrar o modificar el informe generado en pantalla antes de copiarlo o imprimirlo.
+-   **Impresión Membretada (Fondo Fijo)**: La hoja membretada `Plantilla_Verum.svg` se establece como imagen de fondo del papel. Esto asegura que el logotipo de la clínica, los recuadros y los teléfonos inferiores nunca sean desplazados por el texto clínico, el cual se posiciona de forma absoluta por encima del diseño del membrete.
 -   **Configuración de Variables Avanzada**:
     -   Puedes **añadir, eliminar y editar** variables existentes mediante un botón ✏️ en la lista.
     -   Cada variable tiene un `id` único, una `label` descriptiva y un `type` específico (`text`, `textarea`, `number`, `date`, `select`).
