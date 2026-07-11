@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-Este proyecto consiste en una aplicación web autocontenida (se ejecuta directamente en el navegador sin necesidad de un servidor) que facilita la generación de documentos de texto a partir de plantillas predefinidas. El objetivo principal es agilizar la creación de informes clínicos, consentimientos informados y otros documentos repetitivos, permitiendo al usuario rellenar un formulario dinámico para generar un texto final listo para ser copiado y pegado en sistemas de historia clínica electrónica u otros editores.
+Este proyecto consiste en una aplicación web autocontenida (se ejecuta directamente en el navegador sin necesidad de un servidor) que facilita la generación de documentos de texto a partir de plantillas predefinidas. El objetivo principal es agilizar la creación de textos editados mediante variables, consentimientos informados y otros documentos repetitivos, permitiendo al usuario rellenar un formulario dinámico para generar un texto final listo para ser copiado y pegado en sistemas de historia clínica electrónica u otros editores.
 
 A partir de la versión v9, el proyecto adopta la estrategia de **un archivo HTML autocontenido por plantilla**. Cada archivo HTML contiene tanto el motor de renderizado como los datos de su propia plantilla y variables. Esto permite crear archivos de plantilla independientes (ej: `Consentimiento catarata.html` o `Consentimiento iridotomia.html`) que guardan su configuración directamente en su propio código fuente al ser guardados desde el navegador, eliminando la necesidad de servidores o bases de datos externas.
 
@@ -50,7 +50,7 @@ El motor de plantillas cuenta con las siguientes características avanzadas:
     *   Creación del archivo `.gitignore` para excluir archivos temporales de sistema, office y desarrollo local.
     *   Realización del primer commit con la estructura limpia del motor de plantillas v12 y los archivos `.txt` de consulta.
 -   **Impresión Clínica con Marca de Agua**:
-    *   Incorporación de la hoja de estilo CSS `@media print` para ocultar la interfaz web y dar formato de carta limpio al texto del informe clínico al imprimir.
+    *   Incorporación de la hoja de estilo CSS `@media print` para ocultar la interfaz web y dar formato de carta limpio al texto editado mediante variables al imprimir.
     *   Adición del botón "Imprimir Documento" que sincroniza el texto generado y abre el diálogo nativo de impresión.
     *   Integración de la marca de agua vectorial usando el logotipo corporativo `Plantilla_Verum.svg` posicionado en el centro de la página, sin rotación/inclinación, cubriendo la totalidad de la página (100% de alto y ancho en tamaño carta) con opacidad del 85% para asegurar su correcta visualización, configurando márgenes de página específicos (3 cm superior y 3 cm inferior, e izquierdo y derecho de 2 cm).
 
