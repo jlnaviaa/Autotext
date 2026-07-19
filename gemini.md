@@ -43,6 +43,13 @@ El motor de plantillas cuenta con las siguientes características avanzadas:
 
 ## Historial de Cambios
 
+### 19 de julio de 2026
+
+-   **Creación de Versiones de Producción (Subcarpeta `web`)**:
+    *   Se creó la rama `feature/web-version` y se duplicaron todas las plantillas HTML a una nueva subcarpeta `web/`.
+    *   Se eliminó por completo la interfaz de "Configuración" y el botón de "Guardar Plantilla" en estas versiones, así como la lógica JavaScript de autoedición de variables.
+    *   Se configuró un diseño fijo de dos columnas (Formulario y Resultado) para crear un entorno de uso clínico más limpio, mientras que en la carpeta principal se conservan las versiones originales completas como generadores de plantillas.
+
 ### 5 de julio de 2026
 
 -   **Integración de Control de Versiones (Git)**:
