@@ -25,6 +25,7 @@ A partir de la versión **v12**, el motor de la aplicación incrusta directament
 *   **[`ADULTO_PLANTILLA.html`](file:///E:/Proyectos/Autotext/ADULTO_PLANTILLA.html)**: Modelo clínico de referencia principal para exámenes extensos (47 variables autogestionadas con layout OD/OI).
 *   **[`CONSULTA_CATARATA_PREMIUM.html`](file:///E:/Proyectos/Autotext/CONSULTA_CATARATA_PREMIUM.html)**: Modelo de referencia principal para consentimientos y consultas quirúrgicas avanzadas.
 *   **`Plantilla_Verum.svg`**: Hoja membretada e imagen de fondo corporativo utilizada para la impresión clínica.
+*   **`web/`**: Subcarpeta que contiene versiones de producción de las plantillas (solo lectura/relleno). Estas versiones están libres de la interfaz de configuración (panel izquierdo y guardado) y fijadas en un diseño limpio de dos columnas.
 
 ---
 
