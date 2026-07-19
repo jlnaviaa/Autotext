@@ -20,12 +20,12 @@ A partir de la versión **v12**, el motor de la aplicación incrusta directament
 
 ## 📂 Archivos Principales del Proyecto
 
-*   **[`autotext-final.html`](file:///E:/Proyectos/Autotext/autotext-final.html)**: **El lienzo oficial en blanco.** Utilízalo para crear cualquier nueva plantilla desde cero. Escribe tu texto, define las variables y descárgalo con el nombre específico del documento.
-*   **[`autotext_v12_autoeditable.html`](file:///E:/Proyectos/Autotext/autotext_v12_autoeditable.html)**: El motor base en su versión 12 optimizado para oftalmología.
-*   **[`ADULTO_PLANTILLA.html`](file:///E:/Proyectos/Autotext/ADULTO_PLANTILLA.html)**: Modelo clínico de referencia principal para exámenes extensos (47 variables autogestionadas con layout OD/OI).
-*   **[`CONSULTA_CATARATA_PREMIUM.html`](file:///E:/Proyectos/Autotext/CONSULTA_CATARATA_PREMIUM.html)**: Modelo de referencia principal para consentimientos y consultas quirúrgicas avanzadas.
-*   **`Plantilla_Verum.svg`**: Hoja membretada e imagen de fondo corporativo utilizada para la impresión clínica.
-*   **`web/`**: Subcarpeta que contiene versiones de producción de las plantillas (solo lectura/relleno). Estas versiones están libres de la interfaz de configuración (panel izquierdo y guardado) y fijadas en un diseño limpio de dos columnas.
+*   **[Autotext_Final.html](./Autotext_Final.html)** - [▶️ Abrir Lienzo (App)](https://jlnaviaa.github.io/Autotext/Autotext_Final.html): **El lienzo oficial en blanco.** Utilízalo para crear cualquier nueva plantilla desde cero. Escribe tu texto, define las variables y descárgalo con el nombre específico del documento.
+*   **[ADULTO_PLANTILLA.html](./ADULTO_PLANTILLA.html)** - [▶️ Abrir Editor](https://jlnaviaa.github.io/Autotext/ADULTO_PLANTILLA.html) | [🌐 Versión Web Limpia](https://jlnaviaa.github.io/Autotext/web/ADULTO_PLANTILLA.html): Modelo clínico de referencia principal para exámenes extensos (47 variables autogestionadas con layout OD/OI).
+*   **[CONSULTA_CATARATA_PREMIUM.html](./CONSULTA_CATARATA_PREMIUM.html)** - [▶️ Abrir Editor](https://jlnaviaa.github.io/Autotext/CONSULTA_CATARATA_PREMIUM.html) | [🌐 Versión Web Limpia](https://jlnaviaa.github.io/Autotext/web/CONSULTA_CATARATA_PREMIUM.html): Modelo de referencia principal para consentimientos y consultas quirúrgicas avanzadas.
+*   **[CONSULTA_CATARATA.html](./CONSULTA_CATARATA.html)** - [▶️ Abrir Editor](https://jlnaviaa.github.io/Autotext/CONSULTA_CATARATA.html) | [🌐 Versión Web Limpia](https://jlnaviaa.github.io/Autotext/web/CONSULTA_CATARATA.html): Plantilla interactiva de la consulta de catarata.
+*   **[Plantilla_Verum.svg](./Plantilla_Verum.svg)**: Hoja membretada e imagen de fondo corporativo utilizada para la impresión clínica.
+*   **[web/](./web/)**: Subcarpeta que contiene versiones de producción de las plantillas (solo lectura/relleno). Estas versiones están libres de la interfaz de configuración (panel izquierdo y guardado) y fijadas en un diseño limpio de dos columnas.
 
 ---
 
@@ -37,7 +37,7 @@ A partir de la versión **v12**, el motor de la aplicación incrusta directament
     *   Aplica capitalización de **tipo oración / phrase case** (solo la primera letra de cada frase en mayúsculas, respetando siglas universales como *OD*, *OI*, *PIO*, *DNI*, *YAG* y nombres propios).
     *   Conserva saltos de línea y tabulaciones originales.
 3.  **Generación de la Plantilla**:
-    *   Abre **[`autotext-final.html`](file:///E:/Proyectos/Autotext/autotext-final.html)** en el navegador.
+    *   Abre **[Autotext_Final.html](https://jlnaviaa.github.io/Autotext/Autotext_Final.html)** en el navegador.
     *   Introduce el título de la plantilla.
     *   Copia y pega el texto depurado en la pestaña **"Editar Texto"** usando la sintaxis `{{nombre_variable}}`.
     *   Agrega y define las variables en la pestaña **"Configurar Variables"** (asigna tipos de datos, opciones para listas y valores por defecto).
@@ -48,11 +48,6 @@ A partir de la versión **v12**, el motor de la aplicación incrusta directament
 ## 💻 Desarrollo y Control de Versiones
 
 El proyecto cuenta con un repositorio Git local en la NAS (rama `main`). Para realizar tareas o restaurar conversaciones anteriores con la CLI de desarrollo de Gemini (**agy**), puedes ejecutar en la terminal de tu sistema:
-
-```bash
-# Para reanudar la última sesión de desarrollo con la IA:
-agy --conversation=d5aee722-c5cd-4507-862e-7679fad11722
-```
 
 ---
 *Desarrollado con amor por la práctica médica eficiente y sin servidores.*
