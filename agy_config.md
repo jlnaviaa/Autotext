@@ -1,3 +1,9 @@
+---
+name: Autotext
+description: Generador de Plantillas de Texto HTML Autocontenidas
+conversation_id: 69c48576-9066-4897-bdb8-ce55d221ac8d
+---
+
 # Proyecto AutoText - Generador de Plantillas de Texto
 
 ## Descripción General
@@ -147,3 +153,4 @@ A partir del análisis de las necesidades del usuario, se establece el siguiente
 ## Identificador de conversación
 
 agy --conversation=d5aee722-c5cd-4507-862e-7679fad11722
+agy --conversation=69c48576-9066-4897-bdb8-ce55d221ac8d # (2026-07-20 21:54)
