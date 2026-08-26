@@ -18,3 +18,57 @@ yarn-error.log*
 # Temporales de Git / Logs
 *.log
 .agents/
+
+
+# =========================
+# Standard .gitignore (Windows + NAS)
+# =========================
+# Windows / VS Code
+.vscode/
+.vs/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.BIN/
+
+# PowerShell
+*.ps1xml
+*.clixml
+*.psc1
+*.psm1
+*.psd1
+*.pssc
+*.psrc
+*.xml
+*.csv
+*.tsv
+*.txt
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp
+.pnp.js
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+env/
+.venv/
+
+# macOS (por si acaso se monta vía SMB en mac)
+.DS_Store
+.AppleDouble
+.LSOverride
