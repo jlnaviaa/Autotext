@@ -9,7 +9,7 @@ Guía operativa para agentes de IA en este repositorio.
 
 ## 2. Comandos Canónicos
 - Validar sintaxis: pwsh -File test-quality.ps1
-- Probar plantillas: Abrir index.html en navegador
+- Probar plantillas: Abrir Autotext_Final.html en navegador
 
 ## 3. Reglas Infranqueables de Seguridad y Rendimiento
 - Todos los recursos CSS/JS deben ser inline y autocontenidos.

@@ -5,10 +5,10 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 
 ## Estado Actual (snapshot)
 - **Fase**: mantenimiento
-- **Ultimo cambio**: 2026-07-19
-- **Proximo paso**: Crear nuevas plantillas a partir de archivos .txt del usuario
+- **Ultimo cambio**: 2026-11-02
+- **Proximo paso**: Crear nuevas plantillas HTML autocontenidas a partir de borradores .txt del usuario
 - **Bloqueadores**: ninguno
-- **Conversacion activa**: [8da28716](conversation://8da28716-a3be-4509-8ee9-d65f7801b971)
+- **Conversacion activa**: [558346d9](conversation://558346d9-155f-43d7-a0a1-b19e5a07962a)
 
 ## Flujo de Trabajo
 1. Usuario aporta borrador en `.txt`

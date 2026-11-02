@@ -33,12 +33,16 @@ Write-Host "   Directorio: $TargetDir" -ForegroundColor DarkCyan
 Write-Host "===========================================================" -ForegroundColor Cyan
 Write-Host ""
 
+# Recorrido único de archivos (optimizado para SMB y disco local)
+$allFiles = Get-ChildItem -Path $TargetDir -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -notmatch '\\(\.git|vendor|node_modules|__pycache__)\\' }
+
 # 1. Validación de Sintaxis PowerShell (.ps1)
 Write-Host "[1/5] Validando sintaxis de scripts PowerShell (.ps1)..." -ForegroundColor White
-$psScripts = Get-ChildItem -Path $TargetDir -Filter "*.ps1" -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|vendor|node_modules)\\' }
+$psScripts = $allFiles | Where-Object { $_.Extension -eq ".ps1" }
 
 foreach ($script in $psScripts) {
-    $content = Get-Content -Path $script.FullName -Raw
+    $content = Get-Content -Path $script.FullName -Raw -Encoding utf8
     $tokens = $null
     $errors = $null
     $null = [System.Management.Automation.Language.Parser]::ParseInput($content, [ref]$tokens, [ref]$errors)
@@ -55,12 +59,12 @@ foreach ($script in $psScripts) {
 # 2. Validación de Archivos JSON (.json)
 Write-Host ""
 Write-Host "[2/5] Validando formato de archivos JSON (.json)..." -ForegroundColor White
-$jsonFiles = Get-ChildItem -Path $TargetDir -Filter "*.json" -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|vendor|node_modules)\\' }
+$jsonFiles = $allFiles | Where-Object { $_.Extension -eq ".json" }
 
 foreach ($jsonFile in $jsonFiles) {
     $relPath = $jsonFile.FullName.Replace($TargetDir, "").TrimStart("\")
     try {
-        $content = Get-Content -Path $jsonFile.FullName -Raw
+        $content = Get-Content -Path $jsonFile.FullName -Raw -Encoding utf8
         $null = ConvertFrom-Json -InputObject $content -ErrorAction Stop
         Write-TestResult "JSON Parse: $relPath" $true
     } catch {
@@ -68,28 +72,30 @@ foreach ($jsonFile in $jsonFiles) {
     }
 }
 
-# 3. Auditoría de Seguridad (Búsqueda de Secretos en texto plano)
+# 3. Auditoría de Seguridad (Búsqueda de Secretos en texto plano en código y Markdown)
 Write-Host ""
 Write-Host "[3/5] Auditando presencia de secretos y credenciales..." -ForegroundColor White
 $sensitivePatterns = @(
-    'password\s*=\s*["''][^"'']{4,}["'']',
-    'api[_-]?key\s*=\s*["''][^"'']{8,}["'']',
-    'secret\s*=\s*["''][^"'']{8,}["'']',
-    'token\s*=\s*["''][^"'']{8,}["'']',
+    '(?i)password\s*=\s*["''][^"'']{4,}["'']',
+    '(?i)api[_-]?key\s*=\s*["''][^"'']{8,}["'']',
+    '(?i)secret\s*=\s*["''][^"'']{8,}["'']',
+    '(?i)token\s*=\s*["''][^"'']{8,}["'']',
+    '(?i)(contrase[ñn]a|password)\s*(permanente\s*)?[:=]?\s*[`"''''](?![<\$])[^`"'''']{4,}[`"'''']',
     'BEGIN (RSA|EC|OPENSSH) PRIVATE KEY'
 )
 
-$textFiles = Get-ChildItem -Path $TargetDir -Include "*.ps1","*.json","*.yml","*.yaml","*.md" -Recurse -File | 
-    Where-Object { $_.FullName -notmatch '\\(\.git|vendor|node_modules)\\' -and $_.Name -ne "test-quality.ps1" }
+$textExts = @(".ps1", ".json", ".yml", ".yaml", ".md", ".js", ".py")
+$textFiles = $allFiles | Where-Object { $textExts -contains $_.Extension -and $_.Name -ne "test-quality.ps1" }
 
 $secretViolations = 0
 foreach ($file in $textFiles) {
-    $content = Get-Content -Path $file.FullName -Raw
+    $content = Get-Content -Path $file.FullName -Raw -Encoding utf8
+    if ([string]::IsNullOrEmpty($content)) { continue }
     $relPath = $file.FullName.Replace($TargetDir, "").TrimStart("\")
     
     foreach ($pattern in $sensitivePatterns) {
         if ($content -match $pattern) {
-            Write-TestResult "Security Secret Leak: $relPath" $false "Posible secreto coincidente con regex: $pattern"
+            Write-TestResult "Security Secret Leak: $relPath" $false "Posible secreto detectado por regex: $pattern"
             $secretViolations++
             break
         }
@@ -99,17 +105,19 @@ if ($secretViolations -eq 0) {
     Write-TestResult "Seguridad: Cero secretos en texto plano" $true
 }
 
-# 4. Verificación de Límites de Contexto (Tokens Saver)
+# 4. Verificación de Límites de Contexto (Tokens Saver: AGENTS.md, agy_config.md, snapshot <= 8 líneas)
 Write-Host ""
 Write-Host "[4/5] Verificando límites de contexto (Economía de Tokens)..." -ForegroundColor White
 
 $agentsPath = Join-Path $TargetDir "AGENTS.md"
 if (Test-Path $agentsPath) {
     $size = (Get-Item $agentsPath).Length
-    if ($size -le 2048) {
-        Write-TestResult "AGENTS.md presente y compacto ($size bytes <= 2 KB)" $true
+    if ($size -le 1536) {
+        Write-TestResult "AGENTS.md presente y compacto ($size bytes <= 1.5 KB)" $true
+    } elseif ($size -le 2048) {
+        Write-TestWarn "AGENTS.md supera 1.5 KB ideal ($size bytes)" "Mantener < 1.5 KB según agent-constructor"
     } else {
-        Write-TestWarn "AGENTS.md excede tamaño recomendado" "Tamaño: $size bytes (Recomendado < 2 KB)"
+        Write-TestWarn "AGENTS.md excede tamaño recomendado" "Tamaño: $size bytes (Recomendado < 1.5 KB)"
     }
 } else {
     Write-TestWarn "AGENTS.md ausente" "Se recomienda crear AGENTS.md en la raíz del proyecto"
@@ -118,12 +126,22 @@ if (Test-Path $agentsPath) {
 $agyConfigPath = Join-Path $TargetDir "agy_config.md"
 if (Test-Path $agyConfigPath) {
     $size = (Get-Item $agyConfigPath).Length
-    $hasSnapshot = (Get-Content $agyConfigPath -Raw) -match '## Estado Actual \(snapshot\)'
+    $rawAgy = Get-Content $agyConfigPath -Raw -Encoding utf8
+    $hasSnapshot = $rawAgy -match '## Estado Actual \(snapshot\)'
     
-    if ($size -le 3500 -and $hasSnapshot) {
-        Write-TestResult "agy_config.md compacto y con snapshot ($size bytes)" $true
-    } elseif (-not $hasSnapshot) {
+    # Verificar longitud del bloque snapshot (máx 8 líneas según project-snapshot)
+    $snapshotLines = 0
+    if ($hasSnapshot -and $rawAgy -match '(?ms)^## Estado Actual \(snapshot\)\r?\n(.*?)(?=\r?\n## |\z)') {
+        $blockText = $Matches[0].TrimEnd()
+        $snapshotLines = ($blockText -split '\r?\n').Count
+    }
+
+    if (-not $hasSnapshot) {
         Write-TestResult "agy_config.md tiene bloque snapshot" $false "Falta el bloque '## Estado Actual (snapshot)'"
+    } elseif ($snapshotLines -gt 8) {
+        Write-TestWarn "Bloque snapshot en agy_config.md supera 8 líneas ($snapshotLines líneas)" "Reducir según project-snapshot"
+    } elseif ($size -le 3072) {
+        Write-TestResult "agy_config.md compacto ($size bytes <= 3 KB) y snapshot ($snapshotLines líneas <= 8)" $true
     } else {
         Write-TestWarn "agy_config.md excede 3 KB" "Tamaño: $size bytes (Aplica context-splitter)"
     }
@@ -132,11 +150,11 @@ if (Test-Path $agyConfigPath) {
 # 5. Compatibilidad ARM64 en Docker (NAS)
 Write-Host ""
 Write-Host "[5/5] Verificando compatibilidad de contenedores Docker (NAS ARM64)..." -ForegroundColor White
-$dockerFiles = Get-ChildItem -Path $TargetDir -Filter "*docker-compose*.yml" -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git)\\' }
+$dockerFiles = $allFiles | Where-Object { $_.Name -like "*docker-compose*.yml" }
 
 foreach ($dFile in $dockerFiles) {
     $relPath = $dFile.FullName.Replace($TargetDir, "").TrimStart("\")
-    $content = Get-Content -Path $dFile.FullName -Raw
+    $content = Get-Content -Path $dFile.FullName -Raw -Encoding utf8
     
     if ($content -match 'platform:\s*linux/amd64') {
         Write-TestWarn "Docker ARM64: $relPath" "Emulación forzada linux/amd64 detectada. Afectará el rendimiento del NAS."
