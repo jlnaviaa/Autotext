@@ -4,17 +4,17 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 ---
 
 ## Estado Actual (snapshot)
-- **Fase**: mantenimiento
-- **Ultimo cambio**: 2026-11-02
-- **Proximo paso**: Crear nuevas plantillas HTML autocontenidas a partir de borradores .txt del usuario
+- **Fase**: activo
+- **Ultimo cambio**: 2026-11-07
+- **Proximo paso**: Configurar Push Mirror a GitHub Pages para publicar index.html y plantillas web/
 - **Bloqueadores**: ninguno
-- **Conversacion activa**: [558346d9](conversation://558346d9-155f-43d7-a0a1-b19e5a07962a)
+- **Conversacion activa**: [2aefd4c7](conversation://2aefd4c7-e610-49bf-a31f-bf312b69d107)
 
 ## Flujo de Trabajo
-1. Usuario aporta borrador en `.txt`
-2. La IA aplica control de calidad del texto (ortografia, Phrase case, siglas medicas)
-3. La IA genera nuevo `.html` autocontenido usando `Autotext_Final.html` como base
-4. Guardar en `\\NAS-760025\Desarrollo\Proyectos\Autotext\`
+1. Usuario aporta borrador en `.txt` o edita en `Autotext_Final.html`.
+2. Ejecutar `python build_autotext.py` (o `--from-txt archivo.txt`) para sincronizar `web/` y regenerar el portal `index.html`.
+3. Verificar calidad con `pwsh -ExecutionPolicy Bypass -File .\test-quality.ps1`.
+4. Guardar en `\\NAS-760025\Desarrollo\Proyectos\Autotext\` y publicar en Gitea / GitHub Pages.
 
 > Para arquitectura detallada, variables clinicas e instrucciones de generacion:
 > leer `CONTEXT.md` en este mismo directorio.

@@ -51,3 +51,10 @@ El proyecto cuenta con un repositorio Git local en la NAS (rama `main`). Para re
 
 ---
 *Desarrollado con amor por la práctica médica eficiente y sin servidores.*
+
+---
+
+## 📋 Tareas Pendientes (Roadmap)
+- [ ] Publicar el repositorio en **GitHub Pages** (`https://jlnaviaa.github.io/Autotext/`) aprovechando el nuevo portal `index.html` y las 8 plantillas sincronizadas en `web/`.
+- [ ] Completar y parametrizar las variables clínicas de las plantillas compiladas desde borrador (`CIRUGIA.html` y `Descripcion_Recomendaciones_Formula.html`).
+- [ ] Integrar exportación de fórmulas médicas y recomendaciones postoperatorias con el diccionario FHIR de `AppsScript`.

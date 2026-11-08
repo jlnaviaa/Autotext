@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es"><head>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plantilla: Nueva Plantilla</title>
@@ -571,7 +572,9 @@
                 <span class="card-title">Formulario (Datos del Paciente)</span>
             </div>
             <div class="card-body">
-                <div class="dynamic-form-grid" id="dynamic-form"><div class="form-group full-width"><label>Nombres y Apellidos</label><input type="text" class="form-control" data-id="nombres_apellidos"></div><div class="form-group full-width"><label>Ojo intervenido</label><select class="form-control" data-id="ojo_intervenido"><option value="ojo derecho">ojo derecho</option><option value="ojo izquierdo">ojo izquierdo</option><option value="ambos ojos">ambos ojos</option></select></div><div class="form-group full-width"><label>Fecha</label><input type="date" class="form-control" data-id="fecha_control"></div><div class="form-group full-width"><label>Hora</label><input type="text" class="form-control" data-id="hora_control"></div><div class="form-group full-width"><label>Consultorio</label><select class="form-control" data-id="ubicacion_control"><option value="Edificio de Colores consultorio 1122 en Cali">Edificio de Colores consultorio 1122 en Cali</option><option value="Clínica Nuestra Señora del Palmar consultorio 104 en Palmira">Clínica Nuestra Señora del Palmar consultorio 104 en Palmira</option></select></div></div>
+                <div class="dynamic-form-grid" id="dynamic-form">
+                    <!-- Se rellena dinámicamente -->
+                </div>
             </div>
         </div>
 
@@ -582,7 +585,7 @@
             </div>
             <div class="card-body">
                 <div class="result-container">
-                    <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar.">Estimado/a jose luis navia avila.<br><br>Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular ambos ojos<br><br>1.  TRAER los frascos de las gotas formuladas el día del control de cirugía.<br>2.  Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.<br>3.  Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.<br>4.  Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional. <br>5.  NO deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.<br>6.  NO se frote los ojos.<br>7.  NO use parche ocular.<br>8.  Use gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere usar gafas oscuras para estar dentro de su casa ni para leer, ni ver televisión.<br>9.  Utilice siempre pañuelos desechables secos, NO pañuelos de tela ni paños húmedos para limpiar sus párpados.<br>10. Suspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales. <br>11. Conducir bicicleta, moto o carro puede realizarlo quince (15) días después de su cirugía.<br>12. Bañar en río, piscina o mar debe ser suspendido por noventa (90) días.<br>13. Si usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.<br>14. Puede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.<br>15. Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días.<br>16. Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.<br>17. Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.<br>18. Puede consumir cualquier alimento, no existe restricción.<br>19. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana,  miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados comuniquese al Whatsapp 316-4499355.<br><br>Tu próximo control es el día 2026-07-11 en el siguiente horario 3:30 pm en la ubicación Edificio de Colores consultorio 1122 en Cali. </div>
+                    <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar."></div>
                     <div class="result-actions">
                         <button id="copy-btn" class="btn btn-primary">📋 Copiar Texto</button>
                         <button id="copy-upper-btn" class="btn">🔠 Copiar en MAYÚSCULAS</button>
@@ -607,31 +610,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <div id="print-content">Estimado/a jose luis navia avila.
-
-Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular ambos ojos
-
-1.  TRAER los frascos de las gotas formuladas el día del control de cirugía.
-2.  Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.
-3.  Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.
-4.  Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional. 
-5.  NO deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.
-6.  NO se frote los ojos.
-7.  NO use parche ocular.
-8.  Use gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere usar gafas oscuras para estar dentro de su casa ni para leer, ni ver televisión.
-9.  Utilice siempre pañuelos desechables secos, NO pañuelos de tela ni paños húmedos para limpiar sus párpados.
-10. Suspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales. 
-11. Conducir bicicleta, moto o carro puede realizarlo quince (15) días después de su cirugía.
-12. Bañar en río, piscina o mar debe ser suspendido por noventa (90) días.
-13. Si usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.
-14. Puede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.
-15. Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días.
-16. Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.
-17. Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.
-18. Puede consumir cualquier alimento, no existe restricción.
-19. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana,  miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados comuniquese al Whatsapp 316-4499355.
-
-Tu próximo control es el día 2026-07-11 en el siguiente horario 3:30 pm en la ubicación Edificio de Colores consultorio 1122 en Cali. </div>
+                        <div id="print-content"></div>
                     </td>
                 </tr>
             </tbody>
@@ -645,10 +624,11 @@ Tu próximo control es el día 2026-07-11 en el siguiente horario 3:30 pm en la 
         </table>
     </div>
 
-    <div class="toast-msg" id="toast-msg" style="opacity: 0;">Variable {{ubicacion_control}} actualizada.</div>
+    <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
 
     <!-- DATOS DE LAS VARIABLES INYECTADOS -->
-    <script id="variables-data" type="application/json">[
+    <script id="variables-data" type="application/json">
+[
   {
     "id": "nombres_apellidos",
     "label": "Nombres y Apellidos",
@@ -688,10 +668,12 @@ Tu próximo control es el día 2026-07-11 en el siguiente horario 3:30 pm en la 
       "Clínica Nuestra Señora del Palmar consultorio 104 en Palmira"
     ]
   }
-]</script>
+]
+    </script>
 
     <!-- TEXTO INICIAL DE LA PLANTILLA INYECTADO -->
-    <script id="template-text-data" type="text/plain">Estimado/a {{nombres_apellidos}}.
+    <script id="template-text-data" type="text/plain">
+Estimado/a {{nombres_apellidos}}.
 
 Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular {{ojo_intervenido}}
 
@@ -715,7 +697,8 @@ Estas son las recomendaciones posteriores a la extracción de cristalino con imp
 18. Puede consumir cualquier alimento, no existe restricción.
 19. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana,  miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados comuniquese al Whatsapp 316-4499355.
 
-Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_control}} en la ubicación {{ubicacion_control}}. </script>
+Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_control}} en la ubicación {{ubicacion_control}}. 
+</script>
 
     <script>
         // LÓGICA DE LA APLICACIÓN
@@ -899,6 +882,5 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
         }
 
         </script>
-
-
-</body></html>
+</body>
+</html>
