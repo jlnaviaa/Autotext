@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_autotext.py — Compilador, Sincronizador de Producción (web/) y Generador de Portal (index.html)
-para el proyecto AutoText v12 (100% Offline + GitHub Pages Ready).
+build_autotext.py — Compilador, Normalizador Clínico, Sincronizador (raíz + web/)
+y Generador de Portal (index.html) para AutoText v12 (100% Offline + GitHub Pages Ready).
 """
 
 import argparse
@@ -59,12 +59,188 @@ STANDARD_OPHTHALMO_VARS = {
 }
 
 
+def derive_web_base_from_editor() -> str:
+    """Deriva web/Autotext_Final.html (Modo Consulta 2 columnas) desde Autotext_Final.html."""
+    WEB_DIR.mkdir(exist_ok=True)
+    editor_html = BASE_EDITOR.read_text(encoding="utf-8")
+
+    web_html = editor_html.replace(
+        "grid-template-columns: 350px 1.2fr 1fr;",
+        "grid-template-columns: 1.2fr 1fr;",
+    )
+    web_html = web_html.replace('href="index.html"', 'href="../index.html"')
+    web_html = re.sub(
+        r'\s*<button id="save-app-btn"[^>]*>.*?</button>',
+        "",
+        web_html,
+        flags=re.DOTALL,
+    )
+    web_html = re.sub(
+        r'<!-- COLUMNA 1: CONFIGURACIÓN -->.*?<!-- COLUMNA 2: FORMULARIO -->',
+        "<!-- COLUMNA 2: FORMULARIO -->",
+        web_html,
+        flags=re.DOTALL,
+    )
+    BASE_WEB.write_text(web_html, encoding="utf-8")
+    print("[BASE] web/Autotext_Final.html actualizado desde el motor maestro v12.")
+    return web_html
+
+
+def normalize_template_data(stem: str, title: str, variables: list, template_text: str) -> tuple[str, list, str]:
+    """Limpia erratas clínicas, elimina Markdown residual, corrige defaults y deduplica bloques."""
+    # 1. Títulos descriptivos
+    title_overrides = {
+        "RECOMENDACIONES_CATARATA": "Recomendaciones Postoperatorias de Catarata",
+        "CIRUGIA": "Descripción Quirúrgica y Fórmula de Facoemulsificación",
+        "Descripcion_Recomendaciones_Formula": "Descripción Quirúrgica, Recomendaciones y Fórmula Tórica",
+    }
+    if stem in title_overrides:
+        title = title_overrides[stem]
+
+    # 2. Deduplicar bloque repetido en Descripcion_Recomendaciones_Formula
+    if stem == "Descripcion_Recomendaciones_Formula":
+        dup_marker = "Facoemulsificación de cristalino con implante de lente intraocular ojo izquierdo"
+        if dup_marker in template_text:
+            template_text = template_text.split(dup_marker)[0].rstrip()
+
+        # Reemplazar Lugar:/Fecha:/Hora: vacíos por variables con valor por defecto
+        template_text = re.sub(
+            r"Lugar:\s*\r?\nFecha:\s*\r?\nHora:\s*",
+            "Lugar: {{ubicacion_control}}\nFecha: {{fecha_control}}\nHora: {{hora_control}}\n",
+            template_text,
+        )
+
+    # 3. Unir numeración suelta "1.\nTexto" -> "1. Texto" para texto plano limpio e impresión
+    template_text = re.sub(r"(?m)^(\d+)\.\s*\r?\n+\s*", r"\1. ", template_text)
+
+    # 4. Limpiar sintaxis Markdown residual en plantillas de historia clínica
+    clean_lines = []
+    for line in template_text.splitlines():
+        s = line.strip()
+        if re.match(r"^-{3,}$", s):
+            continue
+        # Quitar encabezados markdown ## o ###
+        line = re.sub(r"^\s*#{1,6}\s+", "", line)
+        # Convertir viñetas markdown "*   **Texto**:" o "*   Texto" a texto clínico plano
+        if re.match(r"^\s*\*\s+", line):
+            indent = len(line) - len(line.lstrip())
+            body = re.sub(r"^\s*\*\s+", "", line).replace("**", "")
+            if indent >= 4:
+                line = f"  {body}"
+            elif ":" in body and len(body) < 65:
+                line = body
+            else:
+                line = f"- {body}"
+        else:
+            line = line.replace("**", "")
+        clean_lines.append(line.rstrip())
+
+    template_text = "\n".join(clean_lines)
+    template_text = re.sub(r"\n{3,}", "\n\n", template_text).strip()
+
+    # 5. Correcciones ortográficas y clínicas
+    replacements = {
+        "N0CP0": "N0C0P0",
+        "retina adiherida": "retina adherida",
+        "Pueden ocurri en cirugías": "Pueden ocurrir en cirugías",
+        "enfermos morales": "enfermos mentales",
+        "el dia de la cirugía": "el día de la cirugía",
+        "comuniquese": "comuníquese",
+        "( OFTAMOX )": "(OFTAMOX)",
+        "( CORTIOFTAL )": "(CORTIOFTAL)",
+        "( NEPAOFTAL )": "(NEPAOFTAL)",
+        "Unidad Quirúrgica Calida) .": "Unidad Quirúrgica Calida).",
+    }
+    for bad, good in replacements.items():
+        template_text = template_text.replace(bad, good)
+
+    # 6. Normalizar variables y valores por defecto
+    existing_ids = {v.get("id") for v in variables}
+    for v in variables:
+        vid = v.get("id", "")
+        val = v.get("defaultValue", "")
+        if isinstance(val, str) and "N0CP0" in val:
+            v["defaultValue"] = val.replace("N0CP0", "N0C0P0")
+
+        if stem == "Prequirurgico" and vid == "camara_anterior":
+            v["options"] = ["IV", "III", "II", "I"]
+            v["defaultValue"] = "IV"
+
+        if stem == "RECOMENDACIONES_CATARATA":
+            if vid == "ojo_intervenido":
+                v["defaultValue"] = "ojo derecho"
+            elif vid == "fecha_control":
+                v["type"] = "text"
+                v["defaultValue"] = "en 24 a 48 horas"
+            elif vid == "hora_control":
+                v["defaultValue"] = "por confirmar"
+            elif vid == "ubicacion_control":
+                v["defaultValue"] = "Edificio de Colores consultorio 1122 en Cali"
+
+        if stem == "Descripcion_Recomendaciones_Formula":
+            defaults_map = {
+                "ojo_intervenido": "ojo derecho",
+                "lente": "plegable una sola pieza",
+                "principal": "2.5",
+                "principal_eje": "100",
+                "relajante": "1.0",
+                "relajante_eje": "10",
+                "poder_lente": "21.0",
+                "poder_cilindro": "0.0",
+                "eje_lente": "0",
+                "Hallazgos": "Sin hallazgos relevantes",
+                "Complicaciones": "Sin complicaciones",
+            }
+            if vid in defaults_map and not v.get("defaultValue"):
+                v["defaultValue"] = defaults_map[vid]
+
+        # Garantizar que cualquier select tenga un defaultValue válido de su lista de opciones
+        if v.get("type") == "select":
+            opts = v.get("options") or []
+            if opts and v.get("defaultValue") not in opts:
+                v["defaultValue"] = opts[0]
+
+    if stem == "Descripcion_Recomendaciones_Formula":
+        extra_vars = [
+            {
+                "id": "ubicacion_control",
+                "label": "Lugar del control",
+                "type": "select",
+                "options": [
+                    "Edificio de Colores consultorio 1122 en Cali",
+                    "Clínica Nuestra Señora del Palmar consultorio 104 en Palmira",
+                ],
+                "defaultValue": "Edificio de Colores consultorio 1122 en Cali",
+            },
+            {
+                "id": "fecha_control",
+                "label": "Fecha del control",
+                "type": "text",
+                "options": [],
+                "defaultValue": "en 24 a 48 horas",
+            },
+            {
+                "id": "hora_control",
+                "label": "Hora del control",
+                "type": "text",
+                "options": [],
+                "defaultValue": "por confirmar",
+            },
+        ]
+        for ev in extra_vars:
+            if ev["id"] not in existing_ids:
+                variables.append(ev)
+
+    return title, variables, template_text
+
+
 def extract_template_metadata(html_path: Path) -> dict:
     content = html_path.read_text(encoding="utf-8")
     title_match = re.search(r'id="template-title"[^>]*value="([^"]*)"', content)
     if not title_match:
         title_match = re.search(r"<title>(.*?)</title>", content)
     title = title_match.group(1).strip() if title_match else html_path.stem.replace("_", " ")
+    title = re.sub(r"^Plantilla:\s*", "", title).strip()
 
     vars_match = re.search(
         r'<script id="variables-data" type="application/json">\s*(.*?)\s*</script>',
@@ -84,6 +260,10 @@ def extract_template_metadata(html_path: Path) -> dict:
         re.DOTALL,
     )
     template_text = text_match.group(1).strip("\r\n") if text_match else ""
+
+    title, variables, template_text = normalize_template_data(
+        html_path.stem, title, variables, template_text
+    )
 
     return {
         "filename": html_path.name,
@@ -128,9 +308,9 @@ def inject_into_html(base_html: str, title: str, variables: list, template_text:
     return out
 
 
-def sync_web_directory() -> list:
-    WEB_DIR.mkdir(exist_ok=True)
-    base_web_html = BASE_WEB.read_text(encoding="utf-8")
+def sync_all_templates() -> list:
+    base_editor_html = BASE_EDITOR.read_text(encoding="utf-8")
+    base_web_html = derive_web_base_from_editor()
     templates_info = []
 
     for html_file in sorted(ROOT.glob("*.html")):
@@ -142,6 +322,17 @@ def sync_web_directory() -> list:
         if html_file.name == "Autotext_Final.html":
             continue
 
+        # Actualizar plantilla en raíz con el motor v12 unificado y marca de agua incrustada
+        rendered_editor = inject_into_html(
+            base_editor_html,
+            meta["title"],
+            meta["variables"],
+            meta["template_text"],
+            is_editor=True,
+        )
+        html_file.write_text(rendered_editor, encoding="utf-8")
+
+        # Actualizar plantilla en web/ (Modo Consulta limpio)
         web_target = WEB_DIR / html_file.name
         rendered_web = inject_into_html(
             base_web_html,
@@ -151,7 +342,7 @@ def sync_web_directory() -> list:
             is_editor=False,
         )
         web_target.write_text(rendered_web, encoding="utf-8")
-        print(f"[SYNC] web/{html_file.name} sincronizado ({len(meta['variables'])} variables)")
+        print(f"[SYNC] {html_file.name} + web/{html_file.name} sincronizados ({len(meta['variables'])} variables)")
 
     return templates_info
 
@@ -160,7 +351,7 @@ def classify_template(stem: str) -> str:
     s = stem.upper()
     if "CIRUGIA" in s or "PREQUIRURGICO" in s:
         return "Quirúrgico"
-    if "CATARATA" in s:
+    if "CATARATA" in s and "RECOMENDACIONES" not in s:
         return "Catarata / Faco"
     if "FORMULA" in s or "RECOMENDACIONES" in s:
         return "Fórmulas y Postoperatorio"
@@ -169,18 +360,26 @@ def classify_template(stem: str) -> str:
     return "Consulta General"
 
 
+def classify_workflow_badge(stem: str) -> str:
+    s = stem.upper()
+    if "FORMULA" in s or "RECOMENDACIONES" in s or "CIRUGIA" in s:
+        return "📋 HC + 🖨️ Impresión Verum"
+    return "📋 Historia Clínica + 🖨️ Verum"
+
+
 def generate_portal_index(templates_info: list) -> Path:
     cards_data = []
     for t in templates_info:
         if t["filename"] == "Autotext_Final.html":
             continue
-        preview = re.sub(r"\s+", " ", t["template_text"])[:160]
+        preview = re.sub(r"\s+", " ", t["template_text"])[:165]
         cards_data.append({
             "filename": t["filename"],
             "title": t["title"],
             "category": classify_template(t["stem"]),
+            "workflow": classify_workflow_badge(t["stem"]),
             "varCount": len(t["variables"]),
-            "preview": preview + ("..." if len(t["template_text"]) > 160 else ""),
+            "preview": preview + ("..." if len(t["template_text"]) > 165 else ""),
             "webUrl": f"web/{t['filename']}",
             "editorUrl": t["filename"],
         })
@@ -205,6 +404,7 @@ def generate_portal_index(templates_info: list) -> Path:
     --border: #e2e8f0;
     --badge-bg: #eef2ff;
     --badge-txt: #4338ca;
+    --kbd-bg: #f1f5f9;
   }}
   @media (prefers-color-scheme: dark) {{
     :root {{
@@ -217,6 +417,7 @@ def generate_portal_index(templates_info: list) -> Path:
       --border: #334155;
       --badge-bg: rgba(99, 102, 241, 0.18);
       --badge-txt: #a5b4fc;
+      --kbd-bg: #334155;
     }}
   }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -238,10 +439,33 @@ def generate_portal_index(templates_info: list) -> Path:
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.9rem;
   }}
   .brand h1 {{ font-size: 1.35rem; font-weight: 800; }}
   .brand p {{ font-size: 0.85rem; color: var(--muted); }}
+  .shortcuts-bar {{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }}
+  kbd {{
+    background: var(--kbd-bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.1rem 0.4rem;
+    font-family: monospace;
+    font-size: 0.76rem;
+    color: var(--text);
+    font-weight: 700;
+  }}
   .toolbar {{
     display: flex;
     gap: 0.75rem;
@@ -339,16 +563,25 @@ def generate_portal_index(templates_info: list) -> Path:
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas</h1>
-      <p>100% Offline & GitHub Pages Ready · Actualizado: {today}</p>
+      <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas y Quirúrgicas</h1>
+      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: {today}</p>
     </div>
     <div style="display:flex; gap:0.6rem;">
       <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">➕ Crear Nueva Plantilla (Lienzo)</a>
     </div>
   </header>
 
+  <div class="shortcuts-bar">
+    <span>⚡ <strong>Atajos rápidos dentro de cada plantilla:</strong></span>
+    <span><kbd>Alt+C</kbd> Copiar texto plano HC</span>
+    <span><kbd>Alt+M</kbd> Copiar en MAYÚSCULAS</span>
+    <span><kbd>Alt+P</kbd> Imprimir con Marca de Agua Verum</span>
+    <span><kbd>Alt+R</kbd> Botón Restablecer</span>
+    <span><kbd>Ctrl+S</kbd> Guardar plantilla HTML</span>
+  </div>
+
   <div class="toolbar">
-    <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido..." oninput="render()">
+    <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido clínico..." oninput="render()">
     <button class="filter-btn active" onclick="setCat('ALL', this)">Todas ({len(cards_data)})</button>
     <button class="filter-btn" onclick="setCat('Consulta General', this)">Consulta</button>
     <button class="filter-btn" onclick="setCat('Catarata / Faco', this)">Catarata</button>
@@ -359,7 +592,7 @@ def generate_portal_index(templates_info: list) -> Path:
   <div id="grid" class="grid"></div>
 
   <footer>
-    AutoText v12 · Motor HTML Autocontenido con Impresión Membretada · Sincronizado con NAS-760025 y GitHub Pages
+    AutoText v12 · 100% Offline & Autocontenido · Impresión Membretada Verum · Sincronizado con NAS-760025 y GitHub Pages
   </footer>
 </div>
 
@@ -392,16 +625,16 @@ def generate_portal_index(templates_info: list) -> Path:
       card.className = 'card';
       card.innerHTML = `
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem; flex-wrap:wrap;">
             <span class="badge">${{it.category}}</span>
-            <span style="font-size:0.75rem; color:var(--muted); font-weight:600;">⚙️ ${{it.varCount}} variables</span>
+            <span style="font-size:0.73rem; color:var(--muted); font-weight:600;">${{it.workflow}} · ⚙️ ${{it.varCount}} vars</span>
           </div>
           <h2>${{it.title}}</h2>
           <div style="font-size:0.74rem; color:var(--muted); margin-bottom:0.5rem;">📄 ${{it.filename}}</div>
           <div class="preview">${{it.preview}}</div>
         </div>
         <div class="actions">
-          <a class="btn btn-primary" href="${{it.webUrl}}">🌐 Modo Consulta (Limpio)</a>
+          <a class="btn btn-primary" href="${{it.webUrl}}">🌐 Modo Consulta / Imprimir</a>
           <a class="btn" href="${{it.editorUrl}}">✏️ Modo Editor</a>
         </div>
       `;
@@ -425,14 +658,15 @@ def build_from_txt(txt_path: Path, output_name: str = "") -> None:
     raw_text = txt_path.read_text(encoding="utf-8").strip()
     found_ids = []
     for m in re.finditer(r"\{\{([a-zA-Z0-9_]+)\}\}", raw_text):
-        vid = m.group(1).lower()
+        vid = m.group(1)
         if vid not in found_ids:
             found_ids.append(vid)
 
     variables = []
     for vid in found_ids:
-        if vid in STANDARD_OPHTHALMO_VARS:
-            spec = STANDARD_OPHTHALMO_VARS[vid]
+        low_id = vid.lower()
+        if low_id in STANDARD_OPHTHALMO_VARS:
+            spec = STANDARD_OPHTHALMO_VARS[low_id]
             variables.append({
                 "id": vid,
                 "label": spec["label"],
@@ -452,9 +686,11 @@ def build_from_txt(txt_path: Path, output_name: str = "") -> None:
 
     stem = Path(output_name).stem if output_name else txt_path.stem
     title = stem.replace("_", " ").title()
+    title, variables, raw_text = normalize_template_data(stem, title, variables, raw_text)
     editor_out = ROOT / f"{stem}.html"
     web_out = WEB_DIR / f"{stem}.html"
 
+    derive_web_base_from_editor()
     editor_html = inject_into_html(
         BASE_EDITOR.read_text(encoding="utf-8"),
         title,
@@ -475,7 +711,7 @@ def build_from_txt(txt_path: Path, output_name: str = "") -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Automatizador de AutoText v12 (Sync web/ + Portal index.html + Compilador .txt)")
+    parser = argparse.ArgumentParser(description="Automatizador de AutoText v12 (Sync raíz/web/ + Portal index.html + Compilador .txt)")
     parser.add_argument("--from-txt", metavar="ARCHIVO_TXT", help="Compila un archivo .txt con {{variables}} a HTML (raíz y web/)")
     parser.add_argument("--output", default="", help="Nombre de salida opcional para --from-txt")
     args = parser.parse_args()
@@ -483,7 +719,7 @@ def main() -> int:
     if args.from_txt:
         build_from_txt(Path(args.from_txt), args.output)
 
-    templates_info = sync_web_directory()
+    templates_info = sync_all_templates()
     generate_portal_index(templates_info)
     return 0
 

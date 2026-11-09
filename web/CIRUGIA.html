@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plantilla: CIRUGIA</title>
+    <title>Plantilla: Descripción Quirúrgica y Fórmula de Facoemulsificación</title>
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -525,15 +525,88 @@
             }
 
             #print-content {
-                font-family: inherit;
-                font-size: 11pt;
-                line-height: 1.6;
-                color: #000000;
-                padding-left: 1.5cm; /* Margen izquierdo clínico */
-                padding-right: 1.5cm; /* Margen derecho clínico */
-                white-space: pre-wrap; /* Respeta los saltos de línea clínicos */
+                font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+                font-size: 10.5pt;
+                line-height: 1.48;
+                color: #0f172a;
+                padding-left: 1.6cm; /* Margen izquierdo clínico */
+                padding-right: 1.6cm; /* Margen derecho clínico */
+                white-space: normal;
                 box-sizing: border-box;
                 overflow: visible;
+            }
+
+            .print-doc-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                border-bottom: 1.5px solid #334155;
+                padding-bottom: 4px;
+                margin-bottom: 10px;
+            }
+
+            .print-doc-title {
+                font-size: 11.5pt;
+                font-weight: 700;
+                color: #0f172a;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+            }
+
+            .print-doc-date {
+                font-size: 9pt;
+                color: #475569;
+                font-weight: 500;
+            }
+
+            .print-section-title {
+                font-size: 10pt;
+                font-weight: 700;
+                color: #0f172a;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                margin-top: 9px;
+                margin-bottom: 3px;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #cbd5e1;
+                page-break-after: avoid;
+            }
+
+            .print-paragraph {
+                margin-bottom: 4px;
+                text-align: justify;
+            }
+
+            .print-rx-item {
+                margin-bottom: 5px;
+                padding: 4px 8px;
+                border-left: 3px solid #334155;
+                page-break-inside: avoid;
+                text-align: justify;
+            }
+
+            .print-list-item {
+                margin-bottom: 3.5px;
+                padding-left: 4px;
+                page-break-inside: avoid;
+                text-align: justify;
+            }
+
+            .print-signature-block {
+                margin-top: 1.1cm;
+                page-break-inside: avoid;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .print-signature-inner {
+                width: 6.5cm;
+                text-align: center;
+                border-top: 1px solid #0f172a;
+                padding-top: 4px;
+                font-size: 9.5pt;
+                line-height: 1.35;
+                color: #0f172a;
             }
 
             /* Elemento de fondo para la marca de agua/membrete */
@@ -559,17 +632,83 @@
     <div class="container" id="main-container">
         <header id="app-header">
             <div class="header-title-group">
+                <a href="../index.html" class="btn btn-sm" title="Volver al Portal de Plantillas" style="text-decoration: none;">🏠 Portal</a>
                 <span>📄</span>
-                <input type="text" id="template-title" class="template-title-input" value="CIRUGIA" placeholder="Nombre de la Plantilla">
+                <input type="text" id="template-title" class="template-title-input" value="Descripción Quirúrgica y Fórmula de Facoemulsificación" placeholder="Nombre de la Plantilla">
             </div>
-            
+            <div>
+            </div>
         </header>
 
         <!-- COLUMNA 1: CONFIGURACIÓN (Se oculta en Google Sites) -->
+        <div class="card" id="config-card">
+            <div class="card-header">
+                <span class="card-title">Configuración</span>
+            </div>
+            <div class="card-body">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('editor-tab')">Editar Texto</button>
+                    <button class="tab-btn" onclick="switchTab('variables-tab')">Configurar Variables</button>
+                </div>
+
+                <!-- Panel 1: Editor de Texto -->
+                <div id="editor-tab" class="tab-content-panel active">
+                    <div class="form-group">
+                        <label for="template-text">Texto Base de la Plantilla</label>
+                        <textarea id="template-text" class="form-control" placeholder="Escribe el texto de la plantilla. Usa {{variable}} para insertar campos dinámicos."></textarea>
+                    </div>
+                </div>
+
+                <!-- Panel 2: Variables -->
+                <div id="variables-tab" class="tab-content-panel">
+                    <div class="variables-config-list" id="variables-config-list">
+                        <!-- Generado dinámicamente -->
+                    </div>
+
+                    <div class="add-var-box">
+                        <h4 id="form-action-title" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">Añadir Variable</h4>
+                        <div class="add-var-grid">
+                            <div class="form-group">
+                                <label for="new-var-id">ID Variable</label>
+                                <input type="text" id="new-var-id" class="form-control" placeholder="ej: nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-var-label">Etiqueta</label>
+                                <input type="text" id="new-var-label" class="form-control" placeholder="ej: Nombre">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-var-type">Tipo</label>
+                                <select id="new-var-type" class="form-control">
+                                    <option value="text">Texto corto</option>
+                                    <option value="textarea">Texto largo</option>
+                                    <option value="number">Número</option>
+                                    <option value="date">Fecha</option>
+                                    <option value="select">Lista</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="options-group" style="display: none;">
+                                <label for="new-var-options">Opciones (,)</label>
+                                <input type="text" id="new-var-options" class="form-control" placeholder="Opción 1, Opción 2">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="new-var-default">Texto Preestablecido (Opcional)</label>
+                                <input type="text" id="new-var-default" class="form-control" placeholder="ej: Valor por defecto">
+                            </div>
+                        </div>
+                        <div class="button-group-row">
+                            <button id="add-var-btn" class="btn btn-primary btn-sm" style="flex: 2;">➕ Guardar</button>
+                            <button id="cancel-edit-btn" class="btn btn-danger btn-sm" style="flex: 1; display: none;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- COLUMNA 2: FORMULARIO DE Relleno -->
         <div class="card" id="form-card">
             <div class="card-header">
                 <span class="card-title">Formulario (Datos del Paciente)</span>
+                <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
             </div>
             <div class="card-body">
                 <div class="dynamic-form-grid" id="dynamic-form">
@@ -582,14 +721,23 @@
         <div class="card" id="result-card">
             <div class="card-header">
                 <span class="card-title">Editor de Resultado</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar | Alt+M Mayúsculas | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
             </div>
             <div class="card-body">
                 <div class="result-container">
                     <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar."></div>
                     <div class="result-actions">
-                        <button id="copy-btn" class="btn btn-primary">📋 Copiar Texto</button>
-                        <button id="copy-upper-btn" class="btn">🔠 Copiar en MAYÚSCULAS</button>
-                        <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);">🖨️ Imprimir Documento</button>
+                        <button id="copy-btn" class="btn btn-primary" title="Copia texto 100% plano para pegar en Historia Clínica (Alt+C)">📋 Copiar Texto</button>
+                        <button id="copy-upper-btn" class="btn" title="Copia texto 100% plano en MAYÚSCULAS para Historia Clínica (Alt+M)">🔠 Copiar en MAYÚSCULAS</button>
+                        <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);" title="Imprime con marca de agua personal y formato clínico (Alt+P)">🖨️ Imprimir Documento</button>
+                        <div style="display: flex; gap: 12px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
+                            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="print-header-chk" checked> Encabezado y fecha
+                            </label>
+                            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="print-sign-chk" checked> Firma médica al imprimir
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -687,14 +835,14 @@ Lavado de manos
  Protección
  {{complicaciones}}
  Se entregan recomendaciones, signos de alarma, fórmula médica (corticoide y antibiótico tópicos).
- 
+
 Recomendaciones posteriores a la cirugía de catarata
 TRAER los frascos de las gotas formuladas el día del control de cirugía.
 Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.
 Asistir con los documentos que se le entregaron el día del procedimiento.
 Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.
-Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional. 
-En casos muy puntuales puede apreciar una burbuja de aire dentro del ojo que con el paso del tiempo desaparece sin dejar ningún tipo de alteración a su visión. 
+Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional.
+En casos muy puntuales puede apreciar una burbuja de aire dentro del ojo que con el paso del tiempo desaparece sin dejar ningún tipo de alteración a su visión.
 No deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.
 No se frote los ojos.
 No use parche ocular.
@@ -709,10 +857,10 @@ Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días
 Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.
 Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.
 Puede consumir cualquier alimento, no existe restricción.
-Cita optometría. Llamar o solicitar la consulta de control presencial en el primer piso de la institución (Unidad Quirúrgica Calida). 
+Cita optometría. Llamar o solicitar la consulta de control presencial en el primer piso de la institución (Unidad Quirúrgica Calida).
 Incapacidad. Aplica solo para cotizantes, no aplica para subsidiado ni beneficiarios.
 Signos de alarma.  Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana, miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados asista al servicio de urgencias de su eps para ser remitido a especialista de oftalmología.
- 
+
 Medicamentos
 Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
  No requiere levantarse en la noche para aplicar la medicación.
@@ -731,26 +879,82 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
         // Elementos del DOM
         const elements = {
             templateTitle: document.getElementById('template-title'),
+            templateText: document.getElementById('template-text'),
+            variablesConfigList: document.getElementById('variables-config-list'),
+            newVarId: document.getElementById('new-var-id'),
+            newVarLabel: document.getElementById('new-var-label'),
+            newVarType: document.getElementById('new-var-type'),
+            newVarOptions: document.getElementById('new-var-options'),
+            newVarDefault: document.getElementById('new-var-default'),
+            optionsGroup: document.getElementById('options-group'),
+            addVarBtn: document.getElementById('add-var-btn'),
+            cancelEditBtn: document.getElementById('cancel-edit-btn'),
+            formActionTitle: document.getElementById('form-action-title'),
             dynamicForm: document.getElementById('dynamic-form'),
+            resetFormBtn: document.getElementById('reset-form-btn'),
             resultText: document.getElementById('result-text'),
             copyBtn: document.getElementById('copy-btn'),
             copyUpperBtn: document.getElementById('copy-upper-btn'),
             printBtn: document.getElementById('print-btn'),
+            printHeaderChk: document.getElementById('print-header-chk'),
+            printSignChk: document.getElementById('print-sign-chk'),
             printContent: document.getElementById('print-content'),
+            saveAppBtn: document.getElementById('save-app-btn'),
             toastMsg: document.getElementById('toast-msg'),
             variablesData: document.getElementById('variables-data'),
             templateTextData: document.getElementById('template-text-data')
         };
 
+        function getTodayISO() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getInitialValueForVar(v) {
+            if (v.type === 'date') {
+                const def = (v.defaultValue || '').trim();
+                if (!def || /^(hoy|today)$/i.test(def) || !/^\d{4}-\d{2}-\d{2}$/.test(def)) {
+                    return getTodayISO();
+                }
+                return def;
+            }
+            if (v.type === 'select' && Array.isArray(v.options) && v.options.length > 0) {
+                if (v.defaultValue && v.options.includes(v.defaultValue)) {
+                    return v.defaultValue;
+                }
+                return v.options[0];
+            }
+            return v.defaultValue !== undefined ? v.defaultValue : '';
+        }
+
+        function initVariableValues() {
+            variableValues = {};
+            variables.forEach(v => {
+                variableValues[v.id] = getInitialValueForVar(v);
+            });
+        }
+
+        function resetFormValues() {
+            initVariableValues();
+            renderForm();
+            showToast('🔄 Valores restablecidos a valores normales.');
+        }
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Detección inteligente de Iframe (Google Sites)
+            // 1. Detección inteligente de Iframe (Google Sites) — Null-safe
             const isIframe = window.self !== window.top;
             if (isIframe) {
                 document.body.classList.add('in-iframe');
-                document.getElementById('config-card').style.display = 'none';
-                document.getElementById('app-header').style.display = 'none';
-                document.getElementById('main-container').style.gridTemplateColumns = '1.2fr 1fr';
+                const cfgCard = document.getElementById('config-card');
+                if (cfgCard) cfgCard.style.display = 'none';
+                const appHdr = document.getElementById('app-header');
+                if (appHdr) appHdr.style.display = 'none';
+                const mainCont = document.getElementById('main-container');
+                if (mainCont) mainCont.style.gridTemplateColumns = '1.2fr 1fr';
             }
 
             // Cargar datos inyectados
@@ -760,38 +964,82 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
                 variables = [];
             }
             templateText = elements.templateTextData.textContent.trim();
-            
+            if (elements.templateText) {
+                elements.templateText.value = templateText;
+            }
 
             // Inicializar variableValues con los valores preestablecidos
-            variables.forEach(v => {
-                if (v.defaultValue !== undefined && v.defaultValue !== '') {
-                    variableValues[v.id] = v.defaultValue;
+            initVariableValues();
+
+            // Vincular eventos
+            if (elements.templateTitle) {
+                elements.templateTitle.addEventListener('input', () => {
+                    elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+                    document.title = `Plantilla: ${elements.templateTitle.value}`;
+                });
+                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+                document.title = `Plantilla: ${elements.templateTitle.value}`;
+            }
+
+            if (elements.templateText) {
+                elements.templateText.addEventListener('input', () => {
+                    templateText = elements.templateText.value;
+                    elements.templateTextData.textContent = templateText;
+                    elements.templateText.textContent = templateText;
+                    renderForm();
+                });
+            }
+
+            if (elements.newVarType) {
+                elements.newVarType.addEventListener('change', () => {
+                    elements.optionsGroup.style.display = elements.newVarType.value === 'select' ? 'block' : 'none';
+                });
+            }
+
+            if (elements.addVarBtn) elements.addVarBtn.addEventListener('click', saveVariableAction);
+            if (elements.cancelEditBtn) elements.cancelEditBtn.addEventListener('click', resetVariableForm);
+            if (elements.resetFormBtn) elements.resetFormBtn.addEventListener('click', resetFormValues);
+            if (elements.copyBtn) elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, false));
+            if (elements.copyUpperBtn) elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, true));
+            if (elements.printBtn) elements.printBtn.addEventListener('click', printDocument);
+            if (elements.saveAppBtn) elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
+
+            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R y Ctrl+S)
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    if (elements.saveAppBtn) {
+                        e.preventDefault();
+                        saveTemplateAsFile();
+                    }
+                } else if (e.altKey && e.key.toLowerCase() === 'c') {
+                    e.preventDefault();
+                    copyToClipboard(elements.resultText.innerText, false);
+                } else if (e.altKey && e.key.toLowerCase() === 'm') {
+                    e.preventDefault();
+                    copyToClipboard(elements.resultText.innerText, true);
+                } else if (e.altKey && e.key.toLowerCase() === 'p') {
+                    e.preventDefault();
+                    printDocument();
+                } else if (e.altKey && e.key.toLowerCase() === 'r') {
+                    e.preventDefault();
+                    resetFormValues();
                 }
             });
 
-            // Vincular eventos
-            elements.templateTitle.addEventListener('input', () => {
-                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
-                document.title = `Plantilla: ${elements.templateTitle.value}`;
-            });
-
-            
-
-            
-
-            
-            
-            elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText));
-            elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText.toUpperCase()));
-            elements.printBtn.addEventListener('click', printDocument);
-            
-
-            elements.templateTitle.setAttribute('value', elements.templateTitle.value);
-            document.title = `Plantilla: ${elements.templateTitle.value}`;
-
-            
+            if (elements.variablesConfigList) {
+                renderVariablesConfig();
+            }
             renderForm();
         });
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(tabId));
+            });
+            document.querySelectorAll('.tab-content-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === tabId);
+            });
+        };
 
         function showToast(message) {
             elements.toastMsg.textContent = message;
@@ -799,6 +1047,40 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
             setTimeout(() => {
                 elements.toastMsg.style.opacity = '0';
             }, 2500);
+        }
+
+        function renderVariablesConfig() {
+            if (!elements.variablesConfigList) return;
+            elements.variablesConfigList.innerHTML = '';
+            if (variables.length === 0) {
+                elements.variablesConfigList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No hay variables.</div>';
+                return;
+            }
+
+            variables.forEach((v, index) => {
+                const item = document.createElement('div');
+                item.className = 'variable-config-item';
+                if (editingIndex === index) {
+                    item.style.backgroundColor = '#e0e7ff';
+                    item.style.borderLeft = '4px solid var(--primary-color)';
+                }
+                item.innerHTML = `
+                    <div class="var-info">
+                        <code>{{${v.id}}}</code>
+                        <span>${v.label}</span>
+                        ${v.defaultValue ? `<small style="color: var(--success-color); font-weight: 500;">Def: "${v.defaultValue}"</small>` : ''}
+                    </div>
+                    <div class="var-actions">
+                        <button class="btn btn-sm" onclick="startEditVariable(${index})">✏️</button>
+                        <button class="btn btn-sm" onclick="moveVariable(${index}, -1)" ${index === 0 ? 'disabled' : ''}>⬆️</button>
+                        <button class="btn btn-sm" onclick="moveVariable(${index}, 1)" ${index === variables.length - 1 ? 'disabled' : ''}>⬇️</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteVariable(${index})">🗑️</button>
+                    </div>
+                `;
+                elements.variablesConfigList.appendChild(item);
+            });
+
+            elements.variablesData.textContent = JSON.stringify(variables, null, 2);
         }
 
         function renderForm() {
@@ -809,15 +1091,13 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
                 return;
             }
 
+            const eyeTokenRegex = /(^|[\s_\-\(\/])(od|oi)($|[\s_\-\)\/\.,:])/i;
+
             variables.forEach(v => {
-                const idLower = v.id.toLowerCase();
-                const labelUpper = v.label.toUpperCase();
-                const isEyeVar = idLower.endsWith('_od') || 
-                                 idLower.endsWith('_oi') || 
-                                 idLower.endsWith('od') || 
-                                 idLower.endsWith('oi') || 
-                                 labelUpper.includes('OD') || 
-                                 labelUpper.includes('OI');
+                const isEyeVar = /_(od|oi)$/i.test(v.id) ||
+                                 /^(od|oi)_/i.test(v.id) ||
+                                 eyeTokenRegex.test(v.id) ||
+                                 eyeTokenRegex.test(v.label);
                 
                 const isFullWidth = !isEyeVar || v.type === 'textarea';
 
@@ -848,8 +1128,8 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
                 field.className = 'form-control';
                 field.dataset.id = v.id;
                 
-                if (variableValues[v.id] === undefined) {
-                    variableValues[v.id] = v.defaultValue !== undefined ? v.defaultValue : '';
+                if (variableValues[v.id] === undefined || (v.type === 'select' && Array.isArray(v.options) && !v.options.includes(variableValues[v.id]))) {
+                    variableValues[v.id] = getInitialValueForVar(v);
                 }
                 field.value = variableValues[v.id];
 
@@ -874,34 +1154,275 @@ Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
         function generateResult() {
             let result = templateText;
             variables.forEach(v => {
-                const val = variableValues[v.id] !== undefined && variableValues[v.id] !== '' 
-                    ? variableValues[v.id] 
-                    : (v.defaultValue !== undefined && v.defaultValue !== '' ? v.defaultValue : `[${v.label}]`);
+                const currentVal = variableValues[v.id];
+                const fallbackVal = getInitialValueForVar(v);
+                const val = (currentVal !== undefined && currentVal !== '')
+                    ? currentVal
+                    : (fallbackVal !== '' ? fallbackVal : `[${v.label}]`);
                 const regex = new RegExp(`\\{\\{${v.id}\\}\\}`, 'g');
                 result = result.replace(regex, val);
             });
             elements.resultText.innerText = result;
         }
 
-        function copyToClipboard(text) {
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('¡Texto copiado!');
+        window.startEditVariable = function(index) {
+            editingIndex = index;
+            const v = variables[index];
+
+            elements.newVarId.value = v.id;
+            elements.newVarLabel.value = v.label;
+            elements.newVarType.value = v.type;
+            elements.newVarDefault.value = v.defaultValue || '';
+
+            if (v.type === 'select') {
+                elements.newVarOptions.value = (v.options || []).join(', ');
+                elements.optionsGroup.style.display = 'block';
+            } else {
+                elements.newVarOptions.value = '';
+                elements.optionsGroup.style.display = 'none';
+            }
+
+            elements.formActionTitle.textContent = 'Editar Variable';
+            elements.addVarBtn.textContent = '💾 Guardar';
+            elements.cancelEditBtn.style.display = 'block';
+
+            renderVariablesConfig();
+            elements.formActionTitle.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        function resetVariableForm() {
+            editingIndex = null;
+            elements.newVarId.value = '';
+            elements.newVarLabel.value = '';
+            elements.newVarOptions.value = '';
+            elements.newVarDefault.value = '';
+            elements.optionsGroup.style.display = 'none';
+            elements.newVarType.value = 'text';
+
+            elements.formActionTitle.textContent = 'Añadir Variable';
+            elements.addVarBtn.textContent = '➕ Guardar';
+            elements.cancelEditBtn.style.display = 'none';
+
+            renderVariablesConfig();
+        }
+
+        function saveVariableAction() {
+            const id = elements.newVarId.value.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+            const label = elements.newVarLabel.value.trim();
+            const type = elements.newVarType.value;
+            const defaultValue = elements.newVarDefault.value.trim();
+
+            if (!id) {
+                alert('ID de variable obligatorio y alfanumérico.');
+                return;
+            }
+
+            const isDuplicate = variables.some((v, idx) => v.id === id && idx !== editingIndex);
+            if (isDuplicate) {
+                alert('ID duplicado.');
+                return;
+            }
+
+            const varData = { id, label: label || id, type };
+
+            if (defaultValue) {
+                varData.defaultValue = defaultValue;
+            }
+
+            if (type === 'select') {
+                const optionsStr = elements.newVarOptions.value;
+                const options = optionsStr.split(',').map(o => o.trim()).filter(Boolean);
+                if (options.length === 0) {
+                    alert('Define al menos una opción.');
+                    return;
+                }
+                varData.options = options;
+            }
+
+            if (editingIndex !== null) {
+                const oldId = variables[editingIndex].id;
+                variables[editingIndex] = varData;
+                if (oldId !== id) {
+                    variableValues[id] = variableValues[oldId];
+                    delete variableValues[oldId];
+                }
+                if (defaultValue && (variableValues[id] === undefined || variableValues[id] === '')) {
+                    variableValues[id] = defaultValue;
+                }
+                showToast(`Variable {{${id}}} actualizada.`);
+            } else {
+                variables.push(varData);
+                variableValues[id] = getInitialValueForVar(varData);
+                showToast(`Variable {{${id}}} añadida.`);
+            }
+
+            resetVariableForm();
+            renderForm();
+        }
+
+        window.deleteVariable = function(index) {
+            if (editingIndex === index) {
+                resetVariableForm();
+            }
+            const removed = variables.splice(index, 1)[0];
+            delete variableValues[removed.id];
+            renderVariablesConfig();
+            renderForm();
+            showToast('Variable eliminada.');
+        };
+
+        window.moveVariable = function(index, direction) {
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= variables.length) return;
+            if (editingIndex !== null) {
+                resetVariableForm();
+            }
+            const temp = variables[index];
+            variables[index] = variables[targetIndex];
+            variables[targetIndex] = temp;
+            renderVariablesConfig();
+            renderForm();
+        };
+
+        // Garantiza texto 100% plano y limpio para el software de Historia Clínica (sin Markdown)
+        function toPlainClinicalText(raw) {
+            return (raw || '')
+                .replace(/^#{1,6}\s+/gm, '')
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/^\s*---\s*$/gm, '')
+                .replace(/^\s*\*\s+/gm, '- ')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+        }
+
+        function copyToClipboard(text, toUpper = false) {
+            const cleanText = toPlainClinicalText(text);
+            if (!cleanText) return;
+            const finalStr = toUpper ? cleanText.toUpperCase() : cleanText;
+            navigator.clipboard.writeText(finalStr).then(() => {
+                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULAS copiado para HC!' : '📋 ¡Texto plano copiado para HC!');
             }).catch(err => {
                 alert('Error al copiar: ' + err);
             });
         }
 
+        function escapeHtml(str) {
+            return (str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Formateador editorial para Impresión con Marca Personal (Plantilla_Verum.svg)
+        function formatTextForPrint(rawText) {
+            const clean = toPlainClinicalText(rawText);
+            const lines = clean.split(/\r?\n/);
+            const htmlParts = [];
+
+            const includeHeader = !elements.printHeaderChk || elements.printHeaderChk.checked;
+            const includeSign = !elements.printSignChk || elements.printSignChk.checked;
+
+            if (includeHeader) {
+                const docTitle = elements.templateTitle ? elements.templateTitle.value.trim() : document.title.replace(/^Plantilla:\s*/i, '');
+                const dateFormatted = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+                htmlParts.push(`
+                    <div class="print-doc-header">
+                        <span class="print-doc-title">${escapeHtml(docTitle)}</span>
+                        <span class="print-doc-date">Fecha: ${escapeHtml(dateFormatted)}</span>
+                    </div>
+                `);
+            }
+
+            const sectionHeaderRegex = /^(?:\d+\.\s*)?(?:Historia Clínica|Motivo de consulta|Enfermedad actual|Antecedentes|Examen Oftalmológico|Agudeza visual(?:\s+lejos|\s+cerca)?|Autorrefracción|Queratometría|Refracción en uso|Movimientos extraoculares|Motilidad ocular|Examen externo|Polo anterior|Biomicroscop[íi]a(?:\s*\(Polo anterior\))?|Gonioscopia|Polo posterior(?:\s*\(Fondo de ojo\))?|Presi[óo]n intraocular(?:\s*\(PIO\))?|An[áa]lisis(?:\s+y\s+Plan\s+Terap[ée]utico)?|Descripci[óo]n quir[úu]rgica|Recomendaciones(?:\s+posteriores.*)?|Informaci[óo]n(?:\s+complementaria.*|\s+sobre\s+la\s+intervenci[óo]n)?|Beneficios|Riesgos(?:\s+de\s+la\s+intervenci[óo]n|\s+de\s+la\s+anestesia)?|Medicamentos|Pr[óo]ximo control.*)$/i;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // Ignorar número aislado como "1." si la siguiente línea tiene el contenido
+                if (/^\d+\.$/.test(line) && i + 1 < lines.length && lines[i + 1].trim()) {
+                    lines[i + 1] = `${line} ${lines[i + 1].trim()}`;
+                    continue;
+                }
+
+                const escaped = escapeHtml(line);
+
+                if (sectionHeaderRegex.test(line) && line.length <= 85) {
+                    htmlParts.push(`<div class="print-section-title">${escaped}</div>`);
+                } else if (/^(?:\d+\.\s*)?\(\s*[A-ZÁÉÍÓÚÑ\s]+\s*\)/.test(line)) {
+                    // Bloque de medicamento (ej. (OFTAMOX) Moxifloxacino...)
+                    const formattedRx = escaped
+                        .replace(/(\(\s*[A-ZÁÉÍÓÚÑ\s]+\s*\))/, '<strong>$1</strong>')
+                        .replace(/\b(NO|NUEVOS|TRAER)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-rx-item">${formattedRx}</div>`);
+                } else if (/^\d+\.\s+/.test(line) || /^-\s+/.test(line)) {
+                    const formattedItem = escaped
+                        .replace(/^(\d+\.|-)\s+/, '<strong>$1</strong> ')
+                        .replace(/^(<strong>\d+\.<\/strong>\s+)(Signos de alarma\.|Cita optometr[íi]a\.|Incapacidad\.)/i, '$1<strong>$2</strong>')
+                        .replace(/\b(TRAER|NUEVOS|NO)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-list-item">${formattedItem}</div>`);
+                } else {
+                    const formattedPara = escaped
+                        .replace(/^(Ojo derecho\.|Ojo izquierdo\.|Signos de alarma\.|Cita optometr[íi]a\.|Incapacidad\.|Hallazgos:|Complicaciones:|Lugar:|Fecha:|Hora:)/i, '<strong>$1</strong>')
+                        .replace(/\b(TRAER|NUEVOS)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-paragraph">${formattedPara}</div>`);
+                }
+            }
+
+            if (includeSign) {
+                htmlParts.push(`
+                    <div class="print-signature-block">
+                        <div class="print-signature-inner">
+                            <strong>Dr. José Luis Navia Ávila</strong><br>
+                            Médico Oftalmólogo
+                        </div>
+                    </div>
+                `);
+            }
+
+            return htmlParts.join('\n');
+        }
+
         function printDocument() {
             const text = elements.resultText.innerText;
-            if (!text) {
+            if (!text || !text.trim()) {
                 alert('No hay texto generado para imprimir.');
                 return;
             }
-            elements.printContent.textContent = text;
+            elements.printContent.innerHTML = formatTextForPrint(text);
             window.print();
         }
 
-        </script>
+        function saveTemplateAsFile() {
+            if (editingIndex !== null) {
+                resetVariableForm();
+            }
+            elements.variablesData.textContent = JSON.stringify(variables, null, 2);
+            elements.templateTextData.textContent = templateText;
+            if (elements.templateText) {
+                elements.templateText.textContent = templateText;
+            }
+            if (elements.templateTitle) {
+                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+            }
+
+            const docHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const blob = new Blob([docHtml], { type: 'text/html' });
+            
+            let filename = elements.templateTitle ? elements.templateTitle.value.trim() : '';
+            if (!filename) filename = 'Plantilla_AutoText';
+            filename = filename.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.html';
+
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+            showToast(`💾 Archivo "${filename}" descargado.`);
+        }
+    </script>
 </body>
 </html>

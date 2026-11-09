@@ -15,6 +15,7 @@
     --border: #e2e8f0;
     --badge-bg: #eef2ff;
     --badge-txt: #4338ca;
+    --kbd-bg: #f1f5f9;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -27,6 +28,7 @@
       --border: #334155;
       --badge-bg: rgba(99, 102, 241, 0.18);
       --badge-txt: #a5b4fc;
+      --kbd-bg: #334155;
     }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,10 +50,33 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.9rem;
   }
   .brand h1 { font-size: 1.35rem; font-weight: 800; }
   .brand p { font-size: 0.85rem; color: var(--muted); }
+  .shortcuts-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  kbd {
+    background: var(--kbd-bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.1rem 0.4rem;
+    font-family: monospace;
+    font-size: 0.76rem;
+    color: var(--text);
+    font-weight: 700;
+  }
   .toolbar {
     display: flex;
     gap: 0.75rem;
@@ -149,16 +174,25 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas</h1>
-      <p>100% Offline & GitHub Pages Ready · Actualizado: 2026-11-07</p>
+      <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas y Quirúrgicas</h1>
+      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: 2026-11-08</p>
     </div>
     <div style="display:flex; gap:0.6rem;">
       <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">➕ Crear Nueva Plantilla (Lienzo)</a>
     </div>
   </header>
 
+  <div class="shortcuts-bar">
+    <span>⚡ <strong>Atajos rápidos dentro de cada plantilla:</strong></span>
+    <span><kbd>Alt+C</kbd> Copiar texto plano HC</span>
+    <span><kbd>Alt+M</kbd> Copiar en MAYÚSCULAS</span>
+    <span><kbd>Alt+P</kbd> Imprimir con Marca de Agua Verum</span>
+    <span><kbd>Alt+R</kbd> Botón Restablecer</span>
+    <span><kbd>Ctrl+S</kbd> Guardar plantilla HTML</span>
+  </div>
+
   <div class="toolbar">
-    <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido..." oninput="render()">
+    <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido clínico..." oninput="render()">
     <button class="filter-btn active" onclick="setCat('ALL', this)">Todas (8)</button>
     <button class="filter-btn" onclick="setCat('Consulta General', this)">Consulta</button>
     <button class="filter-btn" onclick="setCat('Catarata / Faco', this)">Catarata</button>
@@ -169,7 +203,7 @@
   <div id="grid" class="grid"></div>
 
   <footer>
-    AutoText v12 · Motor HTML Autocontenido con Impresión Membretada · Sincronizado con NAS-760025 y GitHub Pages
+    AutoText v12 · 100% Offline & Autocontenido · Impresión Membretada Verum · Sincronizado con NAS-760025 y GitHub Pages
   </footer>
 </div>
 
@@ -179,17 +213,19 @@
     "filename": "ADULTO_PLANTILLA.html",
     "title": "Examen Clínico de Adulto",
     "category": "Consulta General",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
     "varCount": 47,
-    "preview": "Agudeza visual lejos Sin corrección Ojo derecho {{od_av_sc_lejos}} Ojo izquierdo {{oi_av_sc_lejos}} Con corrección Ojo derecho {{od_av_cc_lejos}} Ojo izquierdo ...",
+    "preview": "Agudeza visual lejos Sin corrección Ojo derecho {{od_av_sc_lejos}} Ojo izquierdo {{oi_av_sc_lejos}} Con corrección Ojo derecho {{od_av_cc_lejos}} Ojo izquierdo {{oi_...",
     "webUrl": "web/ADULTO_PLANTILLA.html",
     "editorUrl": "ADULTO_PLANTILLA.html"
   },
   {
     "filename": "CIRUGIA.html",
-    "title": "CIRUGIA",
+    "title": "Descripción Quirúrgica y Fórmula de Facoemulsificación",
     "category": "Quirúrgico",
+    "workflow": "📋 HC + 🖨️ Impresión Verum",
     "varCount": 4,
-    "preview": "Facoemulsificación de cristalino con implante de lente intraocular ojo {{ojo}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antisepsia tó...",
+    "preview": "Facoemulsificación de cristalino con implante de lente intraocular ojo {{ojo}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antisepsia tópicas...",
     "webUrl": "web/CIRUGIA.html",
     "editorUrl": "CIRUGIA.html"
   },
@@ -197,8 +233,9 @@
     "filename": "CONSULTA_CATARATA.html",
     "title": "Consulta de Catarata",
     "category": "Catarata / Faco",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
     "varCount": 8,
-    "preview": "Catarata y lente intraocular en el {{ojo_intervenir}} No veo bien Disminución progresiva de la visión por el {{ojo_intervenir}}. Agudeza visual lejos sin correc...",
+    "preview": "Catarata y lente intraocular en el {{ojo_intervenir}} No veo bien Disminución progresiva de la visión por el {{ojo_intervenir}}. Agudeza visual lejos sin corrección:...",
     "webUrl": "web/CONSULTA_CATARATA.html",
     "editorUrl": "CONSULTA_CATARATA.html"
   },
@@ -206,8 +243,9 @@
     "filename": "CONSULTA_CATARATA_INSUMOS.html",
     "title": "Consulta de Catarata con Insumos",
     "category": "Catarata / Faco",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
     "varCount": 10,
-    "preview": "Catarata, vitrectomía anterior y lente intraocular con insumos en el {{ojo_intervenir}} No veo bien Disminución progresiva de la visión por el {{ojo_intervenir}...",
+    "preview": "Catarata, vitrectomía anterior y lente intraocular con insumos en el {{ojo_intervenir}} No veo bien Disminución progresiva de la visión por el {{ojo_intervenir}}. {{...",
     "webUrl": "web/CONSULTA_CATARATA_INSUMOS.html",
     "editorUrl": "CONSULTA_CATARATA_INSUMOS.html"
   },
@@ -215,17 +253,19 @@
     "filename": "CONSULTA_CATARATA_PREMIUM.html",
     "title": "Consulta de Catarata Premium",
     "category": "Catarata / Faco",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
     "varCount": 14,
-    "preview": "1. Historia Clínica Motivo de consulta Tiene pendiente cirugía de catarata. Enfermedad actual Paciente interesado en más información acerca de lentes intraocula...",
+    "preview": "1. Historia Clínica Motivo de consulta Tiene pendiente cirugía de catarata. Enfermedad actual Paciente interesado en más información acerca de lentes intraoculares p...",
     "webUrl": "web/CONSULTA_CATARATA_PREMIUM.html",
     "editorUrl": "CONSULTA_CATARATA_PREMIUM.html"
   },
   {
     "filename": "Descripcion_Recomendaciones_Formula.html",
-    "title": "Descripción quirúrgica, recomendaciones y fórmula Facoemulsificación",
+    "title": "Descripción Quirúrgica, Recomendaciones y Fórmula Tórica",
     "category": "Fórmulas y Postoperatorio",
-    "varCount": 11,
-    "preview": "Facoemulsificación de cristalino con implante de lente intraocular {{ojo_intervenido}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antis...",
+    "workflow": "📋 HC + 🖨️ Impresión Verum",
+    "varCount": 14,
+    "preview": "Facoemulsificación de cristalino con implante de lente intraocular {{ojo_intervenido}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antisepsia...",
     "webUrl": "web/Descripcion_Recomendaciones_Formula.html",
     "editorUrl": "Descripcion_Recomendaciones_Formula.html"
   },
@@ -233,17 +273,19 @@
     "filename": "Prequirurgico.html",
     "title": "Consentimiento Prequirúrgico de Catarata",
     "category": "Quirúrgico",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
     "varCount": 14,
-    "preview": "## 1. Historia Clínica ### Motivo de consulta El/la paciente tiene pendiente una cirugía de catarata. ### Enfermedad actual Paciente interesado en más informaci...",
+    "preview": "1. Historia Clínica Motivo de consulta El/la paciente tiene pendiente una cirugía de catarata. Enfermedad actual Paciente interesado en más información acerca de len...",
     "webUrl": "web/Prequirurgico.html",
     "editorUrl": "Prequirurgico.html"
   },
   {
     "filename": "RECOMENDACIONES_CATARATA.html",
-    "title": "Nueva Plantilla",
-    "category": "Catarata / Faco",
+    "title": "Recomendaciones Postoperatorias de Catarata",
+    "category": "Fórmulas y Postoperatorio",
+    "workflow": "📋 HC + 🖨️ Impresión Verum",
     "varCount": 5,
-    "preview": "Estimado/a {{nombres_apellidos}}. Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular {{ojo_intervenido}} ...",
+    "preview": "Estimado/a {{nombres_apellidos}}. Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular {{ojo_intervenido}} 1. TR...",
     "webUrl": "web/RECOMENDACIONES_CATARATA.html",
     "editorUrl": "RECOMENDACIONES_CATARATA.html"
   }
@@ -275,16 +317,16 @@
       card.className = 'card';
       card.innerHTML = `
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem; flex-wrap:wrap;">
             <span class="badge">${it.category}</span>
-            <span style="font-size:0.75rem; color:var(--muted); font-weight:600;">⚙️ ${it.varCount} variables</span>
+            <span style="font-size:0.73rem; color:var(--muted); font-weight:600;">${it.workflow} · ⚙️ ${it.varCount} vars</span>
           </div>
           <h2>${it.title}</h2>
           <div style="font-size:0.74rem; color:var(--muted); margin-bottom:0.5rem;">📄 ${it.filename}</div>
           <div class="preview">${it.preview}</div>
         </div>
         <div class="actions">
-          <a class="btn btn-primary" href="${it.webUrl}">🌐 Modo Consulta (Limpio)</a>
+          <a class="btn btn-primary" href="${it.webUrl}">🌐 Modo Consulta / Imprimir</a>
           <a class="btn" href="${it.editorUrl}">✏️ Modo Editor</a>
         </div>
       `;

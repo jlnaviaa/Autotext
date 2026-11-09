@@ -4,11 +4,11 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 ---
 
 ## Estado Actual (snapshot)
-- **Fase**: activo
-- **Ultimo cambio**: 2026-11-07
-- **Proximo paso**: Configurar Push Mirror a GitHub Pages para publicar index.html y plantillas web/
+- **Fase**: produccion
+- **Ultimo cambio**: 2026-11-08
+- **Proximo paso**: Publicar en GitHub Pages (`git push github main`) o agregar nuevas plantillas `.txt`
 - **Bloqueadores**: ninguno
-- **Conversacion activa**: [2aefd4c7](conversation://2aefd4c7-e610-49bf-a31f-bf312b69d107)
+- **Conversacion activa**: [78558019](conversation://78558019-8235-4e95-be17-12f73ca6bc1d)
 
 ## Flujo de Trabajo
 1. Usuario aporta borrador en `.txt` o edita en `Autotext_Final.html`.

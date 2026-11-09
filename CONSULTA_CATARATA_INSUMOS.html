@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nueva Plantilla AutoText</title>
+    <title>Plantilla: Consulta de Catarata con Insumos</title>
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -525,15 +525,88 @@
             }
 
             #print-content {
-                font-family: inherit;
-                font-size: 11pt;
-                line-height: 1.6;
-                color: #000000;
-                padding-left: 1.5cm; /* Margen izquierdo clínico */
-                padding-right: 1.5cm; /* Margen derecho clínico */
-                white-space: pre-wrap; /* Respeta los saltos de línea clínicos */
+                font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+                font-size: 10.5pt;
+                line-height: 1.48;
+                color: #0f172a;
+                padding-left: 1.6cm; /* Margen izquierdo clínico */
+                padding-right: 1.6cm; /* Margen derecho clínico */
+                white-space: normal;
                 box-sizing: border-box;
                 overflow: visible;
+            }
+
+            .print-doc-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                border-bottom: 1.5px solid #334155;
+                padding-bottom: 4px;
+                margin-bottom: 10px;
+            }
+
+            .print-doc-title {
+                font-size: 11.5pt;
+                font-weight: 700;
+                color: #0f172a;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+            }
+
+            .print-doc-date {
+                font-size: 9pt;
+                color: #475569;
+                font-weight: 500;
+            }
+
+            .print-section-title {
+                font-size: 10pt;
+                font-weight: 700;
+                color: #0f172a;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                margin-top: 9px;
+                margin-bottom: 3px;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #cbd5e1;
+                page-break-after: avoid;
+            }
+
+            .print-paragraph {
+                margin-bottom: 4px;
+                text-align: justify;
+            }
+
+            .print-rx-item {
+                margin-bottom: 5px;
+                padding: 4px 8px;
+                border-left: 3px solid #334155;
+                page-break-inside: avoid;
+                text-align: justify;
+            }
+
+            .print-list-item {
+                margin-bottom: 3.5px;
+                padding-left: 4px;
+                page-break-inside: avoid;
+                text-align: justify;
+            }
+
+            .print-signature-block {
+                margin-top: 1.1cm;
+                page-break-inside: avoid;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .print-signature-inner {
+                width: 6.5cm;
+                text-align: center;
+                border-top: 1px solid #0f172a;
+                padding-top: 4px;
+                font-size: 9.5pt;
+                line-height: 1.35;
+                color: #0f172a;
             }
 
             /* Elemento de fondo para la marca de agua/membrete */
@@ -559,11 +632,12 @@
     <div class="container" id="main-container">
         <header id="app-header">
             <div class="header-title-group">
+                <a href="index.html" class="btn btn-sm" title="Volver al Portal de Plantillas" style="text-decoration: none;">🏠 Portal</a>
                 <span>📄</span>
                 <input type="text" id="template-title" class="template-title-input" value="Consulta de Catarata con Insumos" placeholder="Nombre de la Plantilla">
             </div>
             <div>
-                <button id="save-app-btn" class="btn btn-success" title="Guarda esta plantilla permanentemente en un nuevo archivo HTML">💾 Guardar Plantilla</button>
+                <button id="save-app-btn" class="btn btn-success" title="Guarda esta plantilla permanentemente en un nuevo archivo HTML (Ctrl+S)">💾 Guardar Plantilla</button>
             </div>
         </header>
 
@@ -582,7 +656,51 @@
                 <div id="editor-tab" class="tab-content-panel active">
                     <div class="form-group">
                         <label for="template-text">Texto Base de la Plantilla</label>
-                        <textarea id="template-text" class="form-control" placeholder="Escribe el texto de la plantilla. Usa {{variable}} para insertar campos dinámicos."></textarea>
+                        <textarea id="template-text" class="form-control" placeholder="Escribe el texto de la plantilla. Usa {{variable}} para insertar campos dinámicos.">Catarata, vitrectomía anterior y lente intraocular con insumos en el {{ojo_intervenir}}
+
+No veo bien
+Disminución progresiva de la visión por el {{ojo_intervenir}}.
+{{ecografia}}
+
+Agudeza visual lejos sin corrección: ojo derecho {{avl_sc_od}} / ojo izquierdo {{avl_sc_oi}}
+Movimientos extraoculares: Hirschberg centrado. Ducciones normales. Cover test negativo.
+Biomicroscopia ambos ojos: conjuntiva sana. Córnea transparente. Cámara anterior amplia. Iris normal.
+Ojo derecho. Cristalino: {{cristalino_od}}
+Ojo izquierdo. Cristalino: {{cristalino_oi}}
+Fondo de ojo ambos ojos: vítreo transparente. Retina adherida. Vasculatura de aspecto normal.
+Ojo derecho. Excavación: {{excavacion_od}}
+Ojo izquierdo. Excavación: {{excavacion_oi}}
+
+{{ecografia}}
+Ya tiene paraclínicos
+Se indica facoemulsificación de cristalino más vitrectomía anterior (con vitréofago) con implante de lente intraocular en el {{ojo_intervenir}}.
+Se debe contar con disponibilidad de: retractores de iris, anillo de tensión capsular, lente de cámara anterior, lente plegable hidrofílico.
+
+Paciente con catarata significativa que compromete la agudeza visual. Se indica procedimiento de extracción de cristalino asistida (por facoemulsificación) + vitrectomía anterior (por {{causa_vitrectomia}}) con implante de lente intraocular en el {{ojo_intervenir}}.
+
+Se explica que durante el procedimiento se puede implantar un lente ofrecido por la EPS (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos) el resto de estructuras del globo ocular después de la intervención.
+
+Después de haber interrogado al paciente sobre sus expectativas y ocupación, se recomienda el implante de un {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.
+
+Información complementaria para el procedimiento de cirugía de catarata
+Esta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.
+
+Información sobre la intervención
+La catarata es la opacificación del cristalino, el cual es el lente natural del ojo que permite enfocar las imágenes de manera adecuada en la retina (al interior del ojo). Cuando se opacifica este lente, provoca una disminución en la capacidad visual; las imágenes se tornan borrosas o la luz lo deslumbra.
+
+La cirugía consiste en retirar el cristalino opaco y reemplazarlo por un lente artificial. En general, este lente se coloca detrás de la pupila, en donde estaba localizado el cristalino; pero en ciertos casos no es posible y se requiere colocar otro tipo de lente diseñado para ubicarlo delante de la pupila. Este último puede requerir ser implantado en una segunda cirugía.
+
+Beneficios
+La cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.
+
+Riesgos
+No existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.
+
+Es importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión. Las complicaciones que se pueden presentar durante la cirugía pueden ser: ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular), luxación del cristalino al vítreo, descompensación corneal (pérdida de la transparencia de la córnea), sangrado y complicaciones vítreorretinales. Y en el postoperatorio puede aparecer: infecciones, inflamación, cierres defectuosos de las heridas, sangrado, hernia de iris, cambio en la pigmentación y la forma del iris, cambio en el tamaño de la pupila, desplazamiento del lente, astigmatismo u otro defecto refractivo, edema macular, aumento de la presión del ojo (glaucoma) y desprendimiento de retina (más frecuente en miopes). Dichas complicaciones pueden requerir para su solución de intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales. Es importante anotar que muchas de las complicaciones postquirúrgicas se deben al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de la degeneración macular relacionada con la edad, la retinopatía diabética, los agujeros maculares, los ojos ambliopes (ojo perezoso), hemorragias vítreas, patologías vasculares de la retina (hemorragia o infarto), enfermedades del nervio óptico y el glaucoma avanzado o terminal, entre otros.
+
+La anestesia tampoco está exenta de riesgos. Con la anestesia local, que es la que generalmente aplicamos, se reduce la posibilidad de una complicación, pero no evita una reacción alérgica que incluso pueda amenazar la vida.
+
+En ocasiones se requiere operar la catarata con anestesia general, este hecho le será informado en el momento de la consulta (generalmente en pacientes niños, enfermos mentales o pacientes con dificultad auditiva severa). Hay ocasiones en las que la inyección de la anestesia local produce un hematoma o no logra un nivel anestésico adecuado, lo que nos obliga a posponer la cirugía.</textarea>
                     </div>
                 </div>
 
@@ -635,6 +753,7 @@
         <div class="card" id="form-card">
             <div class="card-header">
                 <span class="card-title">Formulario (Datos del Paciente)</span>
+                <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
             </div>
             <div class="card-body">
                 <div class="dynamic-form-grid" id="dynamic-form">
@@ -647,14 +766,23 @@
         <div class="card" id="result-card">
             <div class="card-header">
                 <span class="card-title">Editor de Resultado</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar | Alt+M Mayúsculas | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
             </div>
             <div class="card-body">
                 <div class="result-container">
                     <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar."></div>
                     <div class="result-actions">
-                        <button id="copy-btn" class="btn btn-primary">📋 Copiar Texto</button>
-                        <button id="copy-upper-btn" class="btn">🔠 Copiar en MAYÚSCULAS</button>
-                        <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);">🖨️ Imprimir Documento</button>
+                        <button id="copy-btn" class="btn btn-primary" title="Copia texto 100% plano para pegar en Historia Clínica (Alt+C)">📋 Copiar Texto</button>
+                        <button id="copy-upper-btn" class="btn" title="Copia texto 100% plano en MAYÚSCULAS para Historia Clínica (Alt+M)">🔠 Copiar en MAYÚSCULAS</button>
+                        <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);" title="Imprime con marca de agua personal y formato clínico (Alt+P)">🖨️ Imprimir Documento</button>
+                        <div style="display: flex; gap: 12px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
+                            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="print-header-chk" checked> Encabezado y fecha
+                            </label>
+                            <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <input type="checkbox" id="print-sign-chk" checked> Firma médica al imprimir
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -769,7 +897,7 @@
     "defaultValue": "lente intraocular monofocal con filtros (visión lejana)"
   }
 ]
-</script>
+    </script>
 
     <!-- TEXTO INICIAL DE LA PLANTILLA INYECTADO -->
     <script id="template-text-data" type="text/plain">
@@ -795,9 +923,9 @@ Se debe contar con disponibilidad de: retractores de iris, anillo de tensión ca
 
 Paciente con catarata significativa que compromete la agudeza visual. Se indica procedimiento de extracción de cristalino asistida (por facoemulsificación) + vitrectomía anterior (por {{causa_vitrectomia}}) con implante de lente intraocular en el {{ojo_intervenir}}.
 
-Se explica que durante el procedimiento se puede implantar un lente ofrecido por la EPS (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos) el resto de estructuras del globo ocular después de la intervención. 
+Se explica que durante el procedimiento se puede implantar un lente ofrecido por la EPS (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos) el resto de estructuras del globo ocular después de la intervención.
 
-Después de haber interrogado al paciente sobre sus expectativas y ocupación, se recomienda el implante de un {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso. 
+Después de haber interrogado al paciente sobre sus expectativas y ocupación, se recomienda el implante de un {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.
 
 Información complementaria para el procedimiento de cirugía de catarata
 Esta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.
@@ -811,7 +939,7 @@ Beneficios
 La cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.
 
 Riesgos
-No existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurri en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.
+No existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.
 
 Es importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión. Las complicaciones que se pueden presentar durante la cirugía pueden ser: ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular), luxación del cristalino al vítreo, descompensación corneal (pérdida de la transparencia de la córnea), sangrado y complicaciones vítreorretinales. Y en el postoperatorio puede aparecer: infecciones, inflamación, cierres defectuosos de las heridas, sangrado, hernia de iris, cambio en la pigmentación y la forma del iris, cambio en el tamaño de la pupila, desplazamiento del lente, astigmatismo u otro defecto refractivo, edema macular, aumento de la presión del ojo (glaucoma) y desprendimiento de retina (más frecuente en miopes). Dichas complicaciones pueden requerir para su solución de intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales. Es importante anotar que muchas de las complicaciones postquirúrgicas se deben al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de la degeneración macular relacionada con la edad, la retinopatía diabética, los agujeros maculares, los ojos ambliopes (ojo perezoso), hemorragias vítreas, patologías vasculares de la retina (hemorragia o infarto), enfermedades del nervio óptico y el glaucoma avanzado o terminal, entre otros.
 
@@ -842,10 +970,13 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
             cancelEditBtn: document.getElementById('cancel-edit-btn'),
             formActionTitle: document.getElementById('form-action-title'),
             dynamicForm: document.getElementById('dynamic-form'),
+            resetFormBtn: document.getElementById('reset-form-btn'),
             resultText: document.getElementById('result-text'),
             copyBtn: document.getElementById('copy-btn'),
             copyUpperBtn: document.getElementById('copy-upper-btn'),
             printBtn: document.getElementById('print-btn'),
+            printHeaderChk: document.getElementById('print-header-chk'),
+            printSignChk: document.getElementById('print-sign-chk'),
             printContent: document.getElementById('print-content'),
             saveAppBtn: document.getElementById('save-app-btn'),
             toastMsg: document.getElementById('toast-msg'),
@@ -853,15 +984,56 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
             templateTextData: document.getElementById('template-text-data')
         };
 
+        function getTodayISO() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getInitialValueForVar(v) {
+            if (v.type === 'date') {
+                const def = (v.defaultValue || '').trim();
+                if (!def || /^(hoy|today)$/i.test(def) || !/^\d{4}-\d{2}-\d{2}$/.test(def)) {
+                    return getTodayISO();
+                }
+                return def;
+            }
+            if (v.type === 'select' && Array.isArray(v.options) && v.options.length > 0) {
+                if (v.defaultValue && v.options.includes(v.defaultValue)) {
+                    return v.defaultValue;
+                }
+                return v.options[0];
+            }
+            return v.defaultValue !== undefined ? v.defaultValue : '';
+        }
+
+        function initVariableValues() {
+            variableValues = {};
+            variables.forEach(v => {
+                variableValues[v.id] = getInitialValueForVar(v);
+            });
+        }
+
+        function resetFormValues() {
+            initVariableValues();
+            renderForm();
+            showToast('🔄 Valores restablecidos a valores normales.');
+        }
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Detección inteligente de Iframe (Google Sites)
+            // 1. Detección inteligente de Iframe (Google Sites) — Null-safe
             const isIframe = window.self !== window.top;
             if (isIframe) {
                 document.body.classList.add('in-iframe');
-                document.getElementById('config-card').style.display = 'none';
-                document.getElementById('app-header').style.display = 'none';
-                document.getElementById('main-container').style.gridTemplateColumns = '1.2fr 1fr';
+                const cfgCard = document.getElementById('config-card');
+                if (cfgCard) cfgCard.style.display = 'none';
+                const appHdr = document.getElementById('app-header');
+                if (appHdr) appHdr.style.display = 'none';
+                const mainCont = document.getElementById('main-container');
+                if (mainCont) mainCont.style.gridTemplateColumns = '1.2fr 1fr';
             }
 
             // Cargar datos inyectados
@@ -871,43 +1043,71 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
                 variables = [];
             }
             templateText = elements.templateTextData.textContent.trim();
-            elements.templateText.value = templateText;
+            if (elements.templateText) {
+                elements.templateText.value = templateText;
+            }
 
             // Inicializar variableValues con los valores preestablecidos
-            variables.forEach(v => {
-                if (v.defaultValue !== undefined && v.defaultValue !== '') {
-                    variableValues[v.id] = v.defaultValue;
+            initVariableValues();
+
+            // Vincular eventos
+            if (elements.templateTitle) {
+                elements.templateTitle.addEventListener('input', () => {
+                    elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+                    document.title = `Plantilla: ${elements.templateTitle.value}`;
+                });
+                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+                document.title = `Plantilla: ${elements.templateTitle.value}`;
+            }
+
+            if (elements.templateText) {
+                elements.templateText.addEventListener('input', () => {
+                    templateText = elements.templateText.value;
+                    elements.templateTextData.textContent = templateText;
+                    elements.templateText.textContent = templateText;
+                    renderForm();
+                });
+            }
+
+            if (elements.newVarType) {
+                elements.newVarType.addEventListener('change', () => {
+                    elements.optionsGroup.style.display = elements.newVarType.value === 'select' ? 'block' : 'none';
+                });
+            }
+
+            if (elements.addVarBtn) elements.addVarBtn.addEventListener('click', saveVariableAction);
+            if (elements.cancelEditBtn) elements.cancelEditBtn.addEventListener('click', resetVariableForm);
+            if (elements.resetFormBtn) elements.resetFormBtn.addEventListener('click', resetFormValues);
+            if (elements.copyBtn) elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, false));
+            if (elements.copyUpperBtn) elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, true));
+            if (elements.printBtn) elements.printBtn.addEventListener('click', printDocument);
+            if (elements.saveAppBtn) elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
+
+            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R y Ctrl+S)
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    if (elements.saveAppBtn) {
+                        e.preventDefault();
+                        saveTemplateAsFile();
+                    }
+                } else if (e.altKey && e.key.toLowerCase() === 'c') {
+                    e.preventDefault();
+                    copyToClipboard(elements.resultText.innerText, false);
+                } else if (e.altKey && e.key.toLowerCase() === 'm') {
+                    e.preventDefault();
+                    copyToClipboard(elements.resultText.innerText, true);
+                } else if (e.altKey && e.key.toLowerCase() === 'p') {
+                    e.preventDefault();
+                    printDocument();
+                } else if (e.altKey && e.key.toLowerCase() === 'r') {
+                    e.preventDefault();
+                    resetFormValues();
                 }
             });
 
-            // Vincular eventos
-            elements.templateTitle.addEventListener('input', () => {
-                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
-                document.title = `Plantilla: ${elements.templateTitle.value}`;
-            });
-
-            elements.templateText.addEventListener('input', () => {
-                templateText = elements.templateText.value;
-                elements.templateTextData.textContent = templateText;
-                elements.templateText.textContent = templateText;
-                renderForm();
-            });
-
-            elements.newVarType.addEventListener('change', () => {
-                elements.optionsGroup.style.display = elements.newVarType.value === 'select' ? 'block' : 'none';
-            });
-
-            elements.addVarBtn.addEventListener('click', saveVariableAction);
-            elements.cancelEditBtn.addEventListener('click', resetVariableForm);
-            elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText));
-            elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText.toUpperCase()));
-            elements.printBtn.addEventListener('click', printDocument);
-            elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
-
-            elements.templateTitle.setAttribute('value', elements.templateTitle.value);
-            document.title = `Plantilla: ${elements.templateTitle.value}`;
-
-            renderVariablesConfig();
+            if (elements.variablesConfigList) {
+                renderVariablesConfig();
+            }
             renderForm();
         });
 
@@ -929,6 +1129,7 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
         }
 
         function renderVariablesConfig() {
+            if (!elements.variablesConfigList) return;
             elements.variablesConfigList.innerHTML = '';
             if (variables.length === 0) {
                 elements.variablesConfigList.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">No hay variables.</div>';
@@ -969,15 +1170,13 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
                 return;
             }
 
+            const eyeTokenRegex = /(^|[\s_\-\(\/])(od|oi)($|[\s_\-\)\/\.,:])/i;
+
             variables.forEach(v => {
-                const idLower = v.id.toLowerCase();
-                const labelUpper = v.label.toUpperCase();
-                const isEyeVar = idLower.endsWith('_od') || 
-                                 idLower.endsWith('_oi') || 
-                                 idLower.endsWith('od') || 
-                                 idLower.endsWith('oi') || 
-                                 labelUpper.includes('OD') || 
-                                 labelUpper.includes('OI');
+                const isEyeVar = /_(od|oi)$/i.test(v.id) ||
+                                 /^(od|oi)_/i.test(v.id) ||
+                                 eyeTokenRegex.test(v.id) ||
+                                 eyeTokenRegex.test(v.label);
                 
                 const isFullWidth = !isEyeVar || v.type === 'textarea';
 
@@ -1008,8 +1207,8 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
                 field.className = 'form-control';
                 field.dataset.id = v.id;
                 
-                if (variableValues[v.id] === undefined) {
-                    variableValues[v.id] = v.defaultValue !== undefined ? v.defaultValue : '';
+                if (variableValues[v.id] === undefined || (v.type === 'select' && Array.isArray(v.options) && !v.options.includes(variableValues[v.id]))) {
+                    variableValues[v.id] = getInitialValueForVar(v);
                 }
                 field.value = variableValues[v.id];
 
@@ -1034,9 +1233,11 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
         function generateResult() {
             let result = templateText;
             variables.forEach(v => {
-                const val = variableValues[v.id] !== undefined && variableValues[v.id] !== '' 
-                    ? variableValues[v.id] 
-                    : (v.defaultValue !== undefined && v.defaultValue !== '' ? v.defaultValue : `[${v.label}]`);
+                const currentVal = variableValues[v.id];
+                const fallbackVal = getInitialValueForVar(v);
+                const val = (currentVal !== undefined && currentVal !== '')
+                    ? currentVal
+                    : (fallbackVal !== '' ? fallbackVal : `[${v.label}]`);
                 const regex = new RegExp(`\\{\\{${v.id}\\}\\}`, 'g');
                 result = result.replace(regex, val);
             });
@@ -1130,9 +1331,7 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
                 showToast(`Variable {{${id}}} actualizada.`);
             } else {
                 variables.push(varData);
-                if (defaultValue) {
-                    variableValues[id] = defaultValue;
-                }
+                variableValues[id] = getInitialValueForVar(varData);
                 showToast(`Variable {{${id}}} añadida.`);
             }
 
@@ -1164,22 +1363,113 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
             renderForm();
         };
 
-        function copyToClipboard(text) {
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('¡Texto copiado!');
+        // Garantiza texto 100% plano y limpio para el software de Historia Clínica (sin Markdown)
+        function toPlainClinicalText(raw) {
+            return (raw || '')
+                .replace(/^#{1,6}\s+/gm, '')
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/^\s*---\s*$/gm, '')
+                .replace(/^\s*\*\s+/gm, '- ')
+                .replace(/\n{3,}/g, '\n\n')
+                .trim();
+        }
+
+        function copyToClipboard(text, toUpper = false) {
+            const cleanText = toPlainClinicalText(text);
+            if (!cleanText) return;
+            const finalStr = toUpper ? cleanText.toUpperCase() : cleanText;
+            navigator.clipboard.writeText(finalStr).then(() => {
+                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULAS copiado para HC!' : '📋 ¡Texto plano copiado para HC!');
             }).catch(err => {
                 alert('Error al copiar: ' + err);
             });
         }
 
+        function escapeHtml(str) {
+            return (str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // Formateador editorial para Impresión con Marca Personal (Plantilla_Verum.svg)
+        function formatTextForPrint(rawText) {
+            const clean = toPlainClinicalText(rawText);
+            const lines = clean.split(/\r?\n/);
+            const htmlParts = [];
+
+            const includeHeader = !elements.printHeaderChk || elements.printHeaderChk.checked;
+            const includeSign = !elements.printSignChk || elements.printSignChk.checked;
+
+            if (includeHeader) {
+                const docTitle = elements.templateTitle ? elements.templateTitle.value.trim() : document.title.replace(/^Plantilla:\s*/i, '');
+                const dateFormatted = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+                htmlParts.push(`
+                    <div class="print-doc-header">
+                        <span class="print-doc-title">${escapeHtml(docTitle)}</span>
+                        <span class="print-doc-date">Fecha: ${escapeHtml(dateFormatted)}</span>
+                    </div>
+                `);
+            }
+
+            const sectionHeaderRegex = /^(?:\d+\.\s*)?(?:Historia Clínica|Motivo de consulta|Enfermedad actual|Antecedentes|Examen Oftalmológico|Agudeza visual(?:\s+lejos|\s+cerca)?|Autorrefracción|Queratometría|Refracción en uso|Movimientos extraoculares|Motilidad ocular|Examen externo|Polo anterior|Biomicroscop[íi]a(?:\s*\(Polo anterior\))?|Gonioscopia|Polo posterior(?:\s*\(Fondo de ojo\))?|Presi[óo]n intraocular(?:\s*\(PIO\))?|An[áa]lisis(?:\s+y\s+Plan\s+Terap[ée]utico)?|Descripci[óo]n quir[úu]rgica|Recomendaciones(?:\s+posteriores.*)?|Informaci[óo]n(?:\s+complementaria.*|\s+sobre\s+la\s+intervenci[óo]n)?|Beneficios|Riesgos(?:\s+de\s+la\s+intervenci[óo]n|\s+de\s+la\s+anestesia)?|Medicamentos|Pr[óo]ximo control.*)$/i;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // Ignorar número aislado como "1." si la siguiente línea tiene el contenido
+                if (/^\d+\.$/.test(line) && i + 1 < lines.length && lines[i + 1].trim()) {
+                    lines[i + 1] = `${line} ${lines[i + 1].trim()}`;
+                    continue;
+                }
+
+                const escaped = escapeHtml(line);
+
+                if (sectionHeaderRegex.test(line) && line.length <= 85) {
+                    htmlParts.push(`<div class="print-section-title">${escaped}</div>`);
+                } else if (/^(?:\d+\.\s*)?\(\s*[A-ZÁÉÍÓÚÑ\s]+\s*\)/.test(line)) {
+                    // Bloque de medicamento (ej. (OFTAMOX) Moxifloxacino...)
+                    const formattedRx = escaped
+                        .replace(/(\(\s*[A-ZÁÉÍÓÚÑ\s]+\s*\))/, '<strong>$1</strong>')
+                        .replace(/\b(NO|NUEVOS|TRAER)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-rx-item">${formattedRx}</div>`);
+                } else if (/^\d+\.\s+/.test(line) || /^-\s+/.test(line)) {
+                    const formattedItem = escaped
+                        .replace(/^(\d+\.|-)\s+/, '<strong>$1</strong> ')
+                        .replace(/^(<strong>\d+\.<\/strong>\s+)(Signos de alarma\.|Cita optometr[íi]a\.|Incapacidad\.)/i, '$1<strong>$2</strong>')
+                        .replace(/\b(TRAER|NUEVOS|NO)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-list-item">${formattedItem}</div>`);
+                } else {
+                    const formattedPara = escaped
+                        .replace(/^(Ojo derecho\.|Ojo izquierdo\.|Signos de alarma\.|Cita optometr[íi]a\.|Incapacidad\.|Hallazgos:|Complicaciones:|Lugar:|Fecha:|Hora:)/i, '<strong>$1</strong>')
+                        .replace(/\b(TRAER|NUEVOS)\b/g, '<strong>$1</strong>');
+                    htmlParts.push(`<div class="print-paragraph">${formattedPara}</div>`);
+                }
+            }
+
+            if (includeSign) {
+                htmlParts.push(`
+                    <div class="print-signature-block">
+                        <div class="print-signature-inner">
+                            <strong>Dr. José Luis Navia Ávila</strong><br>
+                            Médico Oftalmólogo
+                        </div>
+                    </div>
+                `);
+            }
+
+            return htmlParts.join('\n');
+        }
+
         function printDocument() {
             const text = elements.resultText.innerText;
-            if (!text) {
+            if (!text || !text.trim()) {
                 alert('No hay texto generado para imprimir.');
                 return;
             }
-            elements.printContent.textContent = text;
+            elements.printContent.innerHTML = formatTextForPrint(text);
             window.print();
         }
 
@@ -1189,13 +1479,17 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
             }
             elements.variablesData.textContent = JSON.stringify(variables, null, 2);
             elements.templateTextData.textContent = templateText;
-            elements.templateText.textContent = templateText;
-            elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+            if (elements.templateText) {
+                elements.templateText.textContent = templateText;
+            }
+            if (elements.templateTitle) {
+                elements.templateTitle.setAttribute('value', elements.templateTitle.value);
+            }
 
             const docHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
             const blob = new Blob([docHtml], { type: 'text/html' });
             
-            let filename = elements.templateTitle.value.trim();
+            let filename = elements.templateTitle ? elements.templateTitle.value.trim() : '';
             if (!filename) filename = 'Plantilla_AutoText';
             filename = filename.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.html';
 
@@ -1206,7 +1500,7 @@ En ocasiones se requiere operar la catarata con anestesia general, este hecho le
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(a.href);
-            showToast(`Archivo "${filename}" descargado.`);
+            showToast(`💾 Archivo "${filename}" descargado.`);
         }
     </script>
 </body>
