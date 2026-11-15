@@ -1,0 +1,31 @@
+{
+  "schema_version": "2.1.0",
+  "context_language": "en",
+  "project_name": "Autotext",
+  "phase": "production",
+  "updated_at": "2026-11-14",
+  "active_conversation_id": "904c5869-6f22-451c-80ee-463f57c6f441",
+  "global_context_ref": "\\\\NAS-760025\\Desarrollo\\context_global.json",
+  "purpose": "Self-contained HTML clinical template generator for ophthalmology (v12 engine) with automated CLI compiler (build_autotext.py) and index.html catalog for GitHub Pages. Supports translating English clinical guidelines into bilingual pairs (xxxx-en.md / xxxx-es.md) via local SLM before extracting {{od_...}}/{{oi_...}} variables.",
+  "key_files": {
+    "master_app": "Autotext_Final.html",
+    "builder_cli": "build_autotext.py",
+    "portal_index": "index.html",
+    "technical_context": "CONTEXT.md",
+    "validator_zero_token": "test-quality.ps1"
+  },
+  "canonical_commands": {
+    "build_portal": "python .\\build_autotext.py",
+    "import_draft_txt": "python .\\build_autotext.py --from-txt <draft.txt>",
+    "translate_english_guideline_bilingual": "slm-translate --file <guideline.md>",
+    "gauntlet_check": "pwsh -ExecutionPolicy Bypass -File .\\test-quality.ps1"
+  },
+  "active_strategies": [
+    "STRAT-03: Zero-Token Verification",
+    "STRAT-04: Local SLM Dual Translation (xxxx-en.md & xxxx-es.md)",
+    "STRAT-08: Offline Parity & GitHub Pages Dual Push"
+  ],
+  "next_steps": [
+    "Publish updates to GitHub Pages or compile new clinical templates from .txt drafts"
+  ]
+}
