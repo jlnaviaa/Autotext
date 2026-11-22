@@ -224,11 +224,12 @@
             font-family: inherit;
         }
 
-        /* Grid de dos columnas para el formulario dinámico */
+        /* Grid de dos columnas para el formulario dinámico (Izquierda: OD | Derecha: OI | Ambas: Full) */
         .dynamic-form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            align-items: start;
         }
 
         .form-group.full-width {
@@ -237,6 +238,64 @@
 
         .form-group.half-width {
             grid-column: span 1;
+        }
+
+        .form-group.od-col {
+            grid-column: 1 / 2;
+            border-left: 3px solid #4f46e5;
+            padding-left: 8px;
+        }
+
+        .form-group.oi-col {
+            grid-column: 2 / 3;
+            border-left: 3px solid #0d9488;
+            padding-left: 8px;
+        }
+
+        .form-section-separator {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 2px;
+            padding: 6px 10px;
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-section-separator:first-child {
+            margin-top: 0;
+        }
+
+        .form-section-separator .eye-legend {
+            display: inline-flex;
+            gap: 10px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .eye-badge-od {
+            color: #4f46e5;
+        }
+
+        .eye-badge-oi {
+            color: #0d9488;
+        }
+
+        .template-title-input[readonly] {
+            pointer-events: none;
+            border-color: transparent !important;
+            background: transparent !important;
         }
 
         .variables-config-list {
@@ -641,12 +700,18 @@
             </div>
         </header>
 
-        <!-- COLUMNA 1: CONFIGURACIÓN (Se oculta en Google Sites) -->
+        <!-- COLUMNA 1: CONFIGURACIÓN (Sólo disponible en Autotext_Final.html) -->
         <div class="card" id="config-card">
             <div class="card-header">
-                <span class="card-title">Configuración</span>
+                <span class="card-title">Edición de Plantilla (AutoText)</span>
             </div>
             <div class="card-body">
+                <div class="form-group" id="preset-loader-group" style="display: none; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                    <label for="preset-template-select">📂 Cargar Plantilla Existente para Editar</label>
+                    <select id="preset-template-select" class="form-control">
+                        <option value="">-- Nueva Plantilla en Blanco --</option>
+                    </select>
+                </div>
                 <div class="tab-buttons">
                     <button class="tab-btn active" onclick="switchTab('editor-tab')">Editar Texto</button>
                     <button class="tab-btn" onclick="switchTab('variables-tab')">Configurar Variables</button>
@@ -708,8 +773,11 @@
         <!-- COLUMNA 2: FORMULARIO DE Relleno -->
         <div class="card" id="form-card">
             <div class="card-header">
-                <span class="card-title">Formulario (Datos del Paciente)</span>
-                <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
+                <span class="card-title">Variables Clínicas</span>
+                <div style="display: flex; gap: 6px;">
+                    <button id="share-hybrid-btn" class="btn btn-sm" title="Copia la URL actual con las variables ya editadas para abrirla en otro dispositivo (Alt+L)">📲 Enlace Híbrido</button>
+                    <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="dynamic-form-grid" id="dynamic-form">
@@ -721,15 +789,15 @@
         <!-- COLUMNA 3: RESULTADO GENERADO -->
         <div class="card" id="result-card">
             <div class="card-header">
-                <span class="card-title">Editor de Resultado</span>
-                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar | Alt+M Mayúsculas | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
+                <span class="card-title">Texto Editado</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar minúscula | Alt+M Copiar MAYÚSCULA | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
             </div>
             <div class="card-body">
                 <div class="result-container">
                     <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar."></div>
                     <div class="result-actions">
-                        <button id="copy-btn" class="btn btn-primary" title="Copia texto 100% plano para pegar en Historia Clínica (Alt+C)">📋 Copiar Texto</button>
-                        <button id="copy-upper-btn" class="btn" title="Copia texto 100% plano en MAYÚSCULAS para Historia Clínica (Alt+M)">🔠 Copiar en MAYÚSCULAS</button>
+                        <button id="copy-btn" class="btn btn-primary" title="Copia el texto editado en formato normal / minúscula para Historia Clínica (Alt+C)">📋 Copiar minúscula</button>
+                        <button id="copy-upper-btn" class="btn" title="Copia el texto editado en MAYÚSCULA para Historia Clínica (Alt+M)">🔠 Copiar MAYÚSCULA</button>
                         <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);" title="Imprime con marca de agua personal y formato clínico (Alt+P)">🖨️ Imprimir Documento</button>
                         <div style="display: flex; gap: 12px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
                             <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
@@ -775,6 +843,861 @@
 
     <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
 
+    
+    <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->
+    
+    <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->
+    <script id="presets-catalog-data" type="application/json">
+[
+  {
+    "filename": "ADULTO_PLANTILLA.html",
+    "title": "Examen Clínico de Adulto",
+    "variables": [
+      {
+        "id": "od_av_sc_lejos",
+        "label": "AV lejos SC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "oi_av_sc_lejos",
+        "label": "AV lejos SC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "od_av_cc_lejos",
+        "label": "AV lejos CC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "oi_av_cc_lejos",
+        "label": "AV lejos CC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "od_av_sc_cerca",
+        "label": "AV cerca SC OD",
+        "type": "text",
+        "defaultValue": "J1"
+      },
+      {
+        "id": "oi_av_sc_cerca",
+        "label": "AV cerca SC OI",
+        "type": "text",
+        "defaultValue": "J1"
+      },
+      {
+        "id": "od_av_cc_cerca",
+        "label": "AV cerca CC OD",
+        "type": "text",
+        "defaultValue": "J1"
+      },
+      {
+        "id": "oi_av_cc_cerca",
+        "label": "AV cerca CC OI",
+        "type": "text",
+        "defaultValue": "J1"
+      },
+      {
+        "id": "od_autorrefraccion_esfera",
+        "label": "Autorref esfera OD",
+        "type": "text",
+        "defaultValue": "0.00"
+      },
+      {
+        "id": "oi_autorrefraccion_esfera",
+        "label": "Autorref esfera OI",
+        "type": "text",
+        "defaultValue": "0.00"
+      },
+      {
+        "id": "od_autorrefraccion_cilindro",
+        "label": "Autorref cilindro OD",
+        "type": "text",
+        "defaultValue": "0.00"
+      },
+      {
+        "id": "oi_autorrefraccion_cilindro",
+        "label": "Autorref cilindro OI",
+        "type": "text",
+        "defaultValue": "0.00"
+      },
+      {
+        "id": "od_autorrefraccion_eje",
+        "label": "Autorref eje OD",
+        "type": "text",
+        "defaultValue": "0"
+      },
+      {
+        "id": "oi_autorrefraccion_eje",
+        "label": "Autorref eje OI",
+        "type": "text",
+        "defaultValue": "0"
+      },
+      {
+        "id": "od_queratometria_plano",
+        "label": "K plano OD",
+        "type": "text",
+        "defaultValue": "43.00"
+      },
+      {
+        "id": "oi_queratometria_plano",
+        "label": "K plano OI",
+        "type": "text",
+        "defaultValue": "43.00"
+      },
+      {
+        "id": "od_queratometria_curvo",
+        "label": "K curvo OD",
+        "type": "text",
+        "defaultValue": "43.50"
+      },
+      {
+        "id": "oi_queratometria_curvo",
+        "label": "K curvo OI",
+        "type": "text",
+        "defaultValue": "43.50"
+      },
+      {
+        "id": "od_queratometria_eje",
+        "label": "K eje OD",
+        "type": "text",
+        "defaultValue": "0"
+      },
+      {
+        "id": "oi_queratometria_eje",
+        "label": "K eje OI",
+        "type": "text",
+        "defaultValue": "0"
+      },
+      {
+        "id": "mov_ext",
+        "label": "Movimientos extraoculares",
+        "type": "text",
+        "defaultValue": "Hirschberg centrado. Ducciones normales. Cover test negativo."
+      },
+      {
+        "id": "meibomio_od",
+        "label": "Meibomio OD",
+        "type": "text",
+        "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+      },
+      {
+        "id": "meibomio_oi",
+        "label": "Meibomio OI",
+        "type": "text",
+        "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+      },
+      {
+        "id": "parpado_od",
+        "label": "Párpado OD",
+        "type": "text",
+        "defaultValue": "Bordes libres normales. Pestañas bien. Puntos lagrimales normales."
+      },
+      {
+        "id": "parpado_oi",
+        "label": "Párpado OI",
+        "type": "text",
+        "defaultValue": "Bordes libres normales. Pestañas bien. Puntos lagrimales normales."
+      },
+      {
+        "id": "but_od",
+        "label": "BUT OD (seg)",
+        "type": "text",
+        "defaultValue": "10"
+      },
+      {
+        "id": "but_oi",
+        "label": "BUT OI (seg)",
+        "type": "text",
+        "defaultValue": "10"
+      },
+      {
+        "id": "conjuntiva_od",
+        "label": "Conjuntiva OD",
+        "type": "text",
+        "defaultValue": "Conjuntiva sana."
+      },
+      {
+        "id": "conjuntiva_oi",
+        "label": "Conjuntiva OI",
+        "type": "text",
+        "defaultValue": "Conjuntiva sana."
+      },
+      {
+        "id": "cornea_od",
+        "label": "Córnea OD",
+        "type": "text",
+        "defaultValue": "Córnea transparente."
+      },
+      {
+        "id": "cornea_oi",
+        "label": "Córnea OI",
+        "type": "text",
+        "defaultValue": "Córnea transparente."
+      },
+      {
+        "id": "camara_od",
+        "label": "Cámara anterior OD",
+        "type": "select",
+        "options": [
+          "IV",
+          "III",
+          "II",
+          "I"
+        ],
+        "defaultValue": "IV"
+      },
+      {
+        "id": "camara_oi",
+        "label": "Cámara anterior OI",
+        "type": "select",
+        "options": [
+          "IV",
+          "III",
+          "II",
+          "I"
+        ],
+        "defaultValue": "IV"
+      },
+      {
+        "id": "iris_od",
+        "label": "Iris OD",
+        "type": "text",
+        "defaultValue": "Iris normal."
+      },
+      {
+        "id": "iris_oi",
+        "label": "Iris OI",
+        "type": "text",
+        "defaultValue": "Iris normal."
+      },
+      {
+        "id": "cristalino_od",
+        "label": "Cristalino OD",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "cristalino_oi",
+        "label": "Cristalino OI",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "vitreo_od",
+        "label": "Vítreo OD",
+        "type": "text",
+        "defaultValue": "Vítreo transparente."
+      },
+      {
+        "id": "vitreo_oi",
+        "label": "Vítreo OI",
+        "type": "text",
+        "defaultValue": "Vítreo transparente."
+      },
+      {
+        "id": "retina_od",
+        "label": "Retina OD",
+        "type": "text",
+        "defaultValue": "Retina adherida."
+      },
+      {
+        "id": "retina_oi",
+        "label": "Retina OI",
+        "type": "text",
+        "defaultValue": "Retina adherida."
+      },
+      {
+        "id": "vasculatura_od",
+        "label": "Vasculatura OD",
+        "type": "text",
+        "defaultValue": "Vasculatura de aspecto normal."
+      },
+      {
+        "id": "vasculatura_oi",
+        "label": "Vasculatura OI",
+        "type": "text",
+        "defaultValue": "Vasculatura de aspecto normal."
+      },
+      {
+        "id": "excavacion_od",
+        "label": "Excavación OD",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "excavacion_oi",
+        "label": "Excavación OI",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "pio_od",
+        "label": "PIO OD (mmHg)",
+        "type": "text",
+        "defaultValue": "14"
+      },
+      {
+        "id": "pio_oi",
+        "label": "PIO OI (mmHg)",
+        "type": "text",
+        "defaultValue": "14"
+      }
+    ],
+    "template_text": "Agudeza visual lejos\nSin corrección   Ojo derecho {{od_av_sc_lejos}} Ojo izquierdo {{oi_av_sc_lejos}}\nCon corrección   Ojo derecho {{od_av_cc_lejos}} Ojo izquierdo {{oi_av_cc_lejos}}\n\nAgudeza visual cerca\nSin corrección   Ojo derecho {{od_av_sc_cerca}} Ojo izquierdo {{oi_av_sc_cerca}}\nCon corrección   Ojo derecho {{od_av_cc_cerca}} Ojo izquierdo {{oi_av_cc_cerca}}\n\nAutorrefracción  Ojo derecho {{od_autorrefraccion_esfera}} {{od_autorrefraccion_cilindro}} {{od_autorrefraccion_eje}}  Ojo izquierdo {{oi_autorrefraccion_esfera}} {{oi_autorrefraccion_cilindro}} {{oi_autorrefraccion_eje}}\n\nQueratometría  Ojo derecho {{od_queratometria_plano}}/{{od_queratometria_curvo}} @ {{od_queratometria_eje}}  Ojo izquierdo {{oi_queratometria_plano}}/{{oi_queratometria_curvo}} @ {{oi_queratometria_eje}}\n\nRefracción en uso  Ojo derecho  Ojo izquierdo\n\nMovimientos extraoculares\n{{mov_ext}}\n\nExamen externo\nOjo derecho. {{meibomio_od}}. {{parpado_od}}\nOjo izquierdo. {{meibomio_oi}}. {{parpado_oi}}\n\nPolo anterior\nOjo derecho. Tiempo de ruptura de la película lagrimal {{but_od}} segundos. {{conjuntiva_od}} {{cornea_od}} Cámara anterior grado {{camara_od}}. {{iris_od}} {{cristalino_od}}\nOjo izquierdo. Tiempo de ruptura de la película lagrimal {{but_oi}} segundos. {{conjuntiva_oi}} {{cornea_oi}} Cámara anterior grado {{camara_oi}}. {{iris_oi}} {{cristalino_oi}}\n\nGonioscopia\nOjo derecho. Sin hallazgos relevantes.\nOjo izquierdo. Sin hallazgos relevantes.\n\nPolo posterior\nOjo derecho. {{vitreo_od}} {{retina_od}} {{vasculatura_od}} Excavación {{excavacion_od}}\nOjo izquierdo. {{vitreo_oi}} {{retina_oi}} {{vasculatura_oi}} Excavación {{excavacion_oi}}\n\nPresión intraocular\nOjo derecho {{pio_od}} mmHg       Ojo izquierdo {{pio_oi}} mmHg"
+  },
+  {
+    "filename": "CIRUGIA.html",
+    "title": "Descripción Quirúrgica y Fórmula de Facoemulsificación",
+    "variables": [
+      {
+        "id": "ojo",
+        "label": "Ojo Operado",
+        "type": "select",
+        "options": [
+          "derecho",
+          "izquierdo"
+        ],
+        "defaultValue": "derecho"
+      },
+      {
+        "id": "incision",
+        "label": "Incisión (mm)",
+        "type": "text",
+        "defaultValue": "2.5"
+      },
+      {
+        "id": "tipo_lente",
+        "label": "Tipo de Lente",
+        "type": "text",
+        "defaultValue": "plegable"
+      },
+      {
+        "id": "complicaciones",
+        "label": "Complicaciones",
+        "type": "textarea",
+        "defaultValue": "Sin complicaciones"
+      }
+    ],
+    "template_text": "Facoemulsificación de cristalino con implante de lente intraocular ojo {{ojo}}\nDescripción quirúrgica\nLavado de manos\n Bloqueo anestésico\n Asepsia y antisepsia tópicas con yodopovidona 5%\n Aislamiento de pestañas\n Colocación de campos estériles\n Blefaróstato ojo {{ojo}}\n Incisión de paracentesis\n Aplicación de viscoelástico en cámara anterior\n Capsulorrexis circular continua con quistotomo\n Incisión principal con cuchillete {{incision}} mm\n Hidrodisección e hidrodelineación\n Emulsificación de cristalino con ultrasonido\n Extracción de epinúcleo\n Irrigación y aspiración con cánulas bimanuales\n Aplicación de viscoelástico en cámara anterior\n Implante de lente intraocular {{tipo_lente}}\n Lavado de viscoelástico con bimanuales\n Hidratación de incisiones\n Verificación de hermeticidad\n Antibiótico y corticoide tópicos\n Protección\n {{complicaciones}}\n Se entregan recomendaciones, signos de alarma, fórmula médica (corticoide y antibiótico tópicos).\n\nRecomendaciones posteriores a la cirugía de catarata\nTRAER los frascos de las gotas formuladas el día del control de cirugía.\nTodos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.\nAsistir con los documentos que se le entregaron el día del procedimiento.\nCuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.\nSi posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional.\nEn casos muy puntuales puede apreciar una burbuja de aire dentro del ojo que con el paso del tiempo desaparece sin dejar ningún tipo de alteración a su visión.\nNo deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.\nNo se frote los ojos.\nNo use parche ocular.\nUse gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere gafas oscuras para estar dentro de su casa, ni para leer, ni ver televisión.\nUtilice siempre pañuelos desechables secos, no pañuelos de tela ni paños húmedos para limpiar sus párpados.\nSuspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales.\nConducir bicicleta, moto o carro puede realizarlo veinte (20) días después de su cirugía.\nBañar en río, piscina o mar debe ser suspendido por noventa (90) días.\nSi usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.\nPuede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.\nDormir boca arriba o del lado contrario al ojo operado durante quince (15) días.\nLavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.\nDebe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.\nPuede consumir cualquier alimento, no existe restricción.\nCita optometría. Llamar o solicitar la consulta de control presencial en el primer piso de la institución (Unidad Quirúrgica Calida).\nIncapacidad. Aplica solo para cotizantes, no aplica para subsidiado ni beneficiarios.\nSignos de alarma.  Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana, miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados asista al servicio de urgencias de su eps para ser remitido a especialista de oftalmología.\n\nMedicamentos\nSi las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.\n No requiere levantarse en la noche para aplicar la medicación.\n(OFTAMOX) Moxifloxacino 0.5% solución oftálmica. Aplicar 1 gota cada 3 horas en el ojo operado en el siguiente horario 7:00 - 10:00 - 13:00 - 16:00 - 19:00 - 22:00 durante quince (15) días ó hasta terminar el frasco. NO es necesario repetir el frasco.\n(CORTIOFTAL) Prednisolona 1% suspensión oftálmica. Aplicar 1 gota cada 4 horas en el ojo operado en el siguiente horario 6:00 - 10:30- 14:00- 18:00 - 21:30 hasta terminar el frasco. NO es necesario repetir el frasco\n (NEPAOFTAL) Nepafenaco 0.1% suspensión oftálmica. Iniciar este medicamento después de terminar el frasco de CORTIOFTAL. Aplicar 1 gota en el ojo operado cada 12 horas en el siguiente horario  6:30- 18:30 hasta terminar el frasco. NO es necesario repetir el frasco."
+  },
+  {
+    "filename": "CONSULTA_CATARATA.html",
+    "title": "Consulta de Catarata",
+    "variables": [
+      {
+        "id": "ojo_intervenir",
+        "label": "Ojo a intervenir",
+        "type": "select",
+        "options": [
+          "ojo derecho",
+          "ojo izquierdo"
+        ],
+        "defaultValue": "ojo derecho"
+      },
+      {
+        "id": "avl_sc_od",
+        "label": "AV lejos SC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_sc_oi",
+        "label": "AV lejos SC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "cristalino_od",
+        "label": "Cristalino OD",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "cristalino_oi",
+        "label": "Cristalino OI",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "excavacion_od",
+        "label": "Excavación OD",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "excavacion_oi",
+        "label": "Excavación OI",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "tipo_lente",
+        "label": "Lente recomendado",
+        "type": "select",
+        "options": [
+          "lente intraocular monofocal con filtros (visión lejana)",
+          "lente monofocal de visión o rango extendido (visión lejana e intermedia)"
+        ],
+        "defaultValue": "lente intraocular monofocal con filtros (visión lejana)"
+      }
+    ],
+    "template_text": "Catarata y lente intraocular en el {{ojo_intervenir}}\n\nNo veo bien\nDisminución progresiva de la visión por el {{ojo_intervenir}}.\n\nAgudeza visual lejos sin corrección: ojo derecho {{avl_sc_od}} / ojo izquierdo {{avl_sc_oi}}\nMovimientos extraoculares: Hirschberg centrado. Ducciones normales. Cover test negativo.\nBiomicroscopia ambos ojos: conjuntiva sana. Córnea transparente. Cámara anterior amplia. Iris normal.\nOjo derecho. Cristalino: {{cristalino_od}}\nOjo izquierdo. Cristalino: {{cristalino_oi}}\nFondo de ojo ambos ojos: vítreo transparente. Retina adherida. Vasculatura de aspecto normal.\nOjo derecho. Excavación: {{excavacion_od}}\nOjo izquierdo. Excavación: {{excavacion_oi}}\n\nYa tiene paraclínicos\nSe indica facoemulsificación de cristalino con implante de lente intraocular en el {{ojo_intervenir}}.\n\nPaciente con catarata significativa que compromete la agudeza visual. Se indica procedimiento de extracción de cristalino asistida (por facoemulsificación) con implante de lente intraocular en el {{ojo_intervenir}}.\n\nSe explica que durante el procedimiento se puede implantar un lente ofrecido por la EPS (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos) el resto de estructuras del globo ocular después de la intervención.\n\nDespués de haber interrogado al paciente sobre sus expectativas y ocupación, se recomienda el implante de un {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.\n\nInformación complementaria para el procedimiento de cirugía de catarata\nEsta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.\n\nInformación sobre la intervención\nLa catarata es la opacificación del cristalino, el cual es el lente natural del ojo que permite enfocar las imágenes de manera adecuada en la retina (al interior del ojo). Cuando se opacifica este lente, provoca una disminución en la capacidad visual; las imágenes se tornan borrosas o la luz lo deslumbra.\n\nLa cirugía consiste en retirar el cristalino opaco y reemplazarlo por un lente artificial. En general, este lente se coloca detrás de la pupila, en donde estaba localizado el cristalino; pero en ciertos casos no es posible y se requiere colocar otro tipo de lente diseñado para ubicarlo delante de la pupila. Este último puede requerir ser implantado en una segunda cirugía.\n\nBeneficios\nLa cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.\n\nRiesgos\nNo existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.\n\nEs importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión. Las complicaciones que se pueden presentar durante la cirugía pueden ser: ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular), luxación del cristalino al vítreo, descompensación corneal (pérdida de la transparencia de la córnea), sangrado y complicaciones vítreorretinales. Y en el postoperatorio puede aparecer: infecciones, inflamación, cierres defectuosos de las heridas, sangrado, hernia de iris, cambio en la pigmentación y la forma del iris, cambio en el tamaño de la pupila, desplazamiento del lente, astigmatismo u otro defecto refractivo, edema macular, aumento de la presión del ojo (glaucoma) y desprendimiento de retina (más frecuente en miopes). Dichas complicaciones pueden requerir para su solución de intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales. Es importante anotar que muchas de las complicaciones postquirúrgicas se deben al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de la degeneración macular relacionada con la edad, la retinopatía diabética, los agujeros maculares, los ojos ambliopes (ojo perezoso), hemorragias vítreas, patologías vasculares de la retina (hemorragia o infarto), enfermedades del nervio óptico y el glaucoma avanzado o terminal, entre otros.\n\nLa anestesia tampoco está exenta de riesgos. Con la anestesia local, que es la que generalmente aplicamos, se reduce la posibilidad de una complicación, pero no evita una reacción alérgica que incluso pueda amenazar la vida.\n\nEn ocasiones se requiere operar la catarata con anestesia general, este hecho le será informado en el momento de la consulta (generalmente en pacientes niños, enfermos mentales o pacientes con dificultad auditiva severa). Hay ocasiones en las que la inyección de la anestesia local produce un hematoma o no logra un nivel anestésico adecuado, lo que nos obliga a posponer la cirugía."
+  },
+  {
+    "filename": "CONSULTA_CATARATA_INSUMOS.html",
+    "title": "Consulta de Catarata con Insumos",
+    "variables": [
+      {
+        "id": "ojo_intervenir",
+        "label": "Ojo a intervenir",
+        "type": "select",
+        "options": [
+          "ojo derecho",
+          "ojo izquierdo"
+        ],
+        "defaultValue": "ojo derecho"
+      },
+      {
+        "id": "ecografia",
+        "label": "Resultado ecografía",
+        "type": "text",
+        "defaultValue": "Ecografía de ojo muestra polo posterior dentro de límites normales."
+      },
+      {
+        "id": "avl_sc_od",
+        "label": "AV lejos SC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_sc_oi",
+        "label": "AV lejos SC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "cristalino_od",
+        "label": "Cristalino OD",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "cristalino_oi",
+        "label": "Cristalino OI",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica."
+      },
+      {
+        "id": "excavacion_od",
+        "label": "Excavación OD",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "excavacion_oi",
+        "label": "Excavación OI",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "causa_vitrectomia",
+        "label": "Causa vitrectomía anterior",
+        "type": "select",
+        "options": [
+          "pobre midriasis",
+          "catarata madura",
+          "catarata hipermadura",
+          "catarata complicada"
+        ],
+        "defaultValue": "pobre midriasis"
+      },
+      {
+        "id": "tipo_lente",
+        "label": "Lente recomendado",
+        "type": "select",
+        "options": [
+          "lente intraocular monofocal con filtros (visión lejana)",
+          "lente monofocal de visión o rango extendido (visión lejana e intermedia)"
+        ],
+        "defaultValue": "lente intraocular monofocal con filtros (visión lejana)"
+      }
+    ],
+    "template_text": "Catarata, vitrectomía anterior y lente intraocular con insumos en el {{ojo_intervenir}}\n\nNo veo bien\nDisminución progresiva de la visión por el {{ojo_intervenir}}.\n{{ecografia}}\n\nAgudeza visual lejos sin corrección: ojo derecho {{avl_sc_od}} / ojo izquierdo {{avl_sc_oi}}\nMovimientos extraoculares: Hirschberg centrado. Ducciones normales. Cover test negativo.\nBiomicroscopia ambos ojos: conjuntiva sana. Córnea transparente. Cámara anterior amplia. Iris normal.\nOjo derecho. Cristalino: {{cristalino_od}}\nOjo izquierdo. Cristalino: {{cristalino_oi}}\nFondo de ojo ambos ojos: vítreo transparente. Retina adherida. Vasculatura de aspecto normal.\nOjo derecho. Excavación: {{excavacion_od}}\nOjo izquierdo. Excavación: {{excavacion_oi}}\n\n{{ecografia}}\nYa tiene paraclínicos\nSe indica facoemulsificación de cristalino más vitrectomía anterior (con vitréofago) con implante de lente intraocular en el {{ojo_intervenir}}.\nSe debe contar con disponibilidad de: retractores de iris, anillo de tensión capsular, lente de cámara anterior, lente plegable hidrofílico.\n\nPaciente con catarata significativa que compromete la agudeza visual. Se indica procedimiento de extracción de cristalino asistida (por facoemulsificación) + vitrectomía anterior (por {{causa_vitrectomia}}) con implante de lente intraocular en el {{ojo_intervenir}}.\n\nSe explica que durante el procedimiento se puede implantar un lente ofrecido por la EPS (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos) el resto de estructuras del globo ocular después de la intervención.\n\nDespués de haber interrogado al paciente sobre sus expectativas y ocupación, se recomienda el implante de un {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.\n\nInformación complementaria para el procedimiento de cirugía de catarata\nEsta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.\n\nInformación sobre la intervención\nLa catarata es la opacificación del cristalino, el cual es el lente natural del ojo que permite enfocar las imágenes de manera adecuada en la retina (al interior del ojo). Cuando se opacifica este lente, provoca una disminución en la capacidad visual; las imágenes se tornan borrosas o la luz lo deslumbra.\n\nLa cirugía consiste en retirar el cristalino opaco y reemplazarlo por un lente artificial. En general, este lente se coloca detrás de la pupila, en donde estaba localizado el cristalino; pero en ciertos casos no es posible y se requiere colocar otro tipo de lente diseñado para ubicarlo delante de la pupila. Este último puede requerir ser implantado en una segunda cirugía.\n\nBeneficios\nLa cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.\n\nRiesgos\nNo existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.\n\nEs importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión. Las complicaciones que se pueden presentar durante la cirugía pueden ser: ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular), luxación del cristalino al vítreo, descompensación corneal (pérdida de la transparencia de la córnea), sangrado y complicaciones vítreorretinales. Y en el postoperatorio puede aparecer: infecciones, inflamación, cierres defectuosos de las heridas, sangrado, hernia de iris, cambio en la pigmentación y la forma del iris, cambio en el tamaño de la pupila, desplazamiento del lente, astigmatismo u otro defecto refractivo, edema macular, aumento de la presión del ojo (glaucoma) y desprendimiento de retina (más frecuente en miopes). Dichas complicaciones pueden requerir para su solución de intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales. Es importante anotar que muchas de las complicaciones postquirúrgicas se deben al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de la degeneración macular relacionada con la edad, la retinopatía diabética, los agujeros maculares, los ojos ambliopes (ojo perezoso), hemorragias vítreas, patologías vasculares de la retina (hemorragia o infarto), enfermedades del nervio óptico y el glaucoma avanzado o terminal, entre otros.\n\nLa anestesia tampoco está exenta de riesgos. Con la anestesia local, que es la que generalmente aplicamos, se reduce la posibilidad de una complicación, pero no evita una reacción alérgica que incluso pueda amenazar la vida.\n\nEn ocasiones se requiere operar la catarata con anestesia general, este hecho le será informado en el momento de la consulta (generalmente en pacientes niños, enfermos mentales o pacientes con dificultad auditiva severa). Hay ocasiones en las que la inyección de la anestesia local produce un hematoma o no logra un nivel anestésico adecuado, lo que nos obliga a posponer la cirugía."
+  },
+  {
+    "filename": "CONSULTA_CATARATA_PREMIUM.html",
+    "title": "Consulta de Catarata Premium",
+    "variables": [
+      {
+        "id": "ojo_intervenir",
+        "label": "Ojo a intervenir",
+        "type": "select",
+        "options": [
+          "ojo derecho",
+          "ojo izquierdo"
+        ],
+        "defaultValue": "ojo derecho"
+      },
+      {
+        "id": "antecedentes",
+        "label": "Antecedentes",
+        "type": "textarea",
+        "defaultValue": "Niega antecedentes de importancia."
+      },
+      {
+        "id": "avl_sc_od",
+        "label": "AV lejos SC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_sc_oi",
+        "label": "AV lejos SC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_cc_od",
+        "label": "AV lejos CC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_cc_oi",
+        "label": "AV lejos CC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "camara_anterior",
+        "label": "Cámara anterior",
+        "type": "select",
+        "options": [
+          "IV",
+          "III",
+          "II",
+          "I"
+        ],
+        "defaultValue": "IV"
+      },
+      {
+        "id": "cristalino_od",
+        "label": "Cristalino OD",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+      },
+      {
+        "id": "cristalino_oi",
+        "label": "Cristalino OI",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+      },
+      {
+        "id": "pio_od",
+        "label": "PIO OD",
+        "type": "text",
+        "defaultValue": "14 mmHg"
+      },
+      {
+        "id": "pio_oi",
+        "label": "PIO OI",
+        "type": "text",
+        "defaultValue": "14 mmHg"
+      },
+      {
+        "id": "excavacion_od",
+        "label": "Excavación OD",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "excavacion_oi",
+        "label": "Excavación OI",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "tipo_lente",
+        "label": "Tipo de lente",
+        "type": "select",
+        "options": [
+          "intraocular con filtros (visión lejana)",
+          "de visión o rango extendido (visión lejana e intermedia)",
+          "multifocal (visión lejos y cerca)",
+          "trifocal (visión lejos, intermedia y cerca)"
+        ],
+        "defaultValue": "intraocular con filtros (visión lejana)"
+      }
+    ],
+    "template_text": "1. Historia Clínica\n\nMotivo de consulta\nTiene pendiente cirugía de catarata.\n\nEnfermedad actual\nPaciente interesado en más información acerca de lentes intraoculares premium. Tiene pendiente cirugía de catarata con implante de lente intraocular en el {{ojo_intervenir}}.\n\nAntecedentes\n{{antecedentes}}\n\n2. Examen Oftalmológico\n\nAgudeza visual\nAgudeza visual de lejos sin corrección:\n  OD: {{avl_sc_od}}\n  OI: {{avl_sc_oi}}\nAgudeza visual de lejos con corrección:\n  OD: {{avl_cc_od}}\n  OI: {{avl_cc_oi}}\n\nExamen externo\nEn ambos ojos se observan bordes palpebrales normales, puntos lagrimales en buen estado y pestañas normales.\n\nMotilidad ocular\nMovimientos extraoculares con Hirschberg centrado. Ducciones normales. Cover test negativo.\n\nBiomicroscopía (Polo anterior)\nEn ambos ojos se observa conjuntiva sana, córnea transparente, cámara anterior grado {{camara_anterior}} e iris normal.\nCristalino OD: {{cristalino_od}}\nCristalino OI: {{cristalino_oi}}\n\nPresión intraocular (PIO)\nOD: {{pio_od}}\nOI: {{pio_oi}}\n\nPolo posterior (Fondo de ojo)\nEn ambos ojos se observa vítreo transparente, retina adherida y vasculatura de aspecto normal.\nExcavación OD: {{excavacion_od}}\nExcavación OI: {{excavacion_oi}}\n\n3. Análisis y Plan Terapéutico\n\nPaciente con catarata significativa que compromete la agudeza visual. Se indica el procedimiento de extracción de cristalino asistida (por facoemulsificación) con implante de lente intraocular en el {{ojo_intervenir}}.\n\nSe explica que durante el procedimiento se puede implantar un lente básico (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos adicionales) el resto de las estructuras del globo ocular después de la intervención.\n\nDespués de haber interrogado al/a la paciente sobre sus expectativas y ocupación, se recomienda el implante de un lente {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.\n\n4. Información Complementaria para la Cirugía de Catarata\n\nEsta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.\n\nInformación sobre la intervención\nLa catarata es la opacificación del cristalino, el cual es el lente natural del ojo que permite enfocar las imágenes de manera adecuada en la retina (al interior del ojo). Cuando se opacifica este lente, provoca una disminución en la capacidad visual; las imágenes se tornan borrosas o la luz lo deslumbra.\n\nLa cirugía consiste en retirar el cristalino opaco y reemplazarlo por un lente artificial. En general, este lente se coloca detrás de la pupila, en donde estaba localizado el cristalino; pero en ciertos casos no es posible y se requiere colocar otro tipo de lente diseñado para ubicarse delante de la pupila. Este último puede requerir ser implantado en una segunda cirugía.\n\nBeneficios\nLa cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.\n\nRiesgos de la intervención\nNo existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.\n\nEs importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión.\n\nLas complicaciones que se pueden presentar durante la cirugía pueden ser:\n- Ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular).\n- Luxación del cristalino al vítreo.\n- Descompensación corneal (pérdida de la transparencia de la córnea).\n- Sangrado.\n- Complicaciones vítreorretinales.\n\nEn el postoperatorio puede aparecer:\n- Infecciones o inflamación.\n- Cierres defectuosos de las heridas o sangrado.\n- Hernia de iris.\n- Cambios en la pigmentación y en la forma del iris.\n- Cambio en el tamaño de la pupila.\n- Desplazamiento del lente.\n- Astigmatismo u otro defecto refractivo.\n- Edema macular.\n- Aumento de la presión del ojo (glaucoma).\n- Desprendimiento de retina (más frecuente en miopes).\n\nDichas complicaciones pueden requerir para su solución de intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales.\n\nEs importante anotar que muchas de las complicaciones postquirúrgicas son debidas al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de:\n- Degeneración macular relacionada con la edad.\n- Retinopatía diabética o agujeros maculares.\n- Ojos ambliopes (ojo perezoso).\n- Hemorragias vítreas.\n- Patologías vasculares de la retina (hemorragia o infarto).\n- Enfermedades del nervio óptico.\n- Glaucoma avanzado o terminal, entre otros.\n\nRiesgos de la anestesia\nLa anestesia tampoco está exenta de riesgos. Con la anestesia local, que es la que generalmente aplicamos, se reduce la posibilidad de una complicación, pero no evita una reacción alérgica que incluso pueda amenazar la vida.\n\nEn ocasiones se requiere operar la catarata con anestesia general, hecho que le será informado durante la consulta (generalmente en pacientes niños, enfermos mentales o pacientes con dificultad auditiva severa). Hay ocasiones en las que la inyección de la anestesia local produce un hematoma o no logra un nivel anestésico adecuado, lo que nos obliga a posponer la cirugía."
+  },
+  {
+    "filename": "Descripcion_Recomendaciones_Formula.html",
+    "title": "Descripción Quirúrgica, Recomendaciones y Fórmula Tórica",
+    "variables": [
+      {
+        "id": "ojo_intervenido",
+        "label": "Ojo intervenido",
+        "type": "select",
+        "options": [
+          "ojo derecho",
+          "ojo izquierdo",
+          "ambos ojos"
+        ],
+        "defaultValue": "ojo derecho"
+      },
+      {
+        "id": "lente",
+        "label": "Lente",
+        "type": "select",
+        "options": [
+          "plegable una sola pieza",
+          "plegable tres piezas"
+        ],
+        "defaultValue": "plegable una sola pieza"
+      },
+      {
+        "id": "principal",
+        "label": "Incisión principal (mm)",
+        "type": "text",
+        "defaultValue": "2.5"
+      },
+      {
+        "id": "principal_eje",
+        "label": "Eje incisión principal",
+        "type": "text",
+        "defaultValue": "100"
+      },
+      {
+        "id": "relajante",
+        "label": "Incisión relajante (mm)",
+        "type": "text",
+        "defaultValue": "1.0"
+      },
+      {
+        "id": "relajante_eje",
+        "label": "Eje incisión relajante",
+        "type": "text",
+        "defaultValue": "10"
+      },
+      {
+        "id": "poder_lente",
+        "label": "Poder lente (D)",
+        "type": "text",
+        "defaultValue": "21.0"
+      },
+      {
+        "id": "poder_cilindro",
+        "label": "Poder cilindro (D)",
+        "type": "text",
+        "defaultValue": "0.0"
+      },
+      {
+        "id": "eje_lente",
+        "label": "Eje lente tórico",
+        "type": "text",
+        "defaultValue": "0"
+      },
+      {
+        "id": "Hallazgos",
+        "label": "Hallazgos",
+        "type": "textarea",
+        "defaultValue": "Sin hallazgos relevantes"
+      },
+      {
+        "id": "Complicaciones",
+        "label": "Complicaciones",
+        "type": "textarea",
+        "defaultValue": "Sin complicaciones"
+      },
+      {
+        "id": "ubicacion_control",
+        "label": "Lugar del control",
+        "type": "select",
+        "options": [
+          "Edificio de Colores consultorio 1122 en Cali",
+          "Clínica Nuestra Señora del Palmar consultorio 104 en Palmira"
+        ],
+        "defaultValue": "Edificio de Colores consultorio 1122 en Cali"
+      },
+      {
+        "id": "fecha_control",
+        "label": "Fecha del control",
+        "type": "text",
+        "options": [],
+        "defaultValue": "en 24 a 48 horas"
+      },
+      {
+        "id": "hora_control",
+        "label": "Hora del control",
+        "type": "text",
+        "options": [],
+        "defaultValue": "por confirmar"
+      }
+    ],
+    "template_text": "Facoemulsificación de cristalino con implante de lente intraocular {{ojo_intervenido}}\n\nDescripción quirúrgica\nLavado de manos\nBloqueo anestésico\nAsepsia y antisepsia tópicas con yodopovidona 5%\nAislamiento de pestañas\nColocación de campos estériles\nBlefaróstato {{ojo_intervenido}}\nIncisión de paracentesis\nAplicación de viscoelástico en cámara anterior\nCapsulorrexis circular continua con quistotomo\nIncisión principal de {{principal}} mm en eje de {{principal_eje}}°\nIncisión relajante de {{relajante}} mm en eje de {{relajante_eje}}°\nHidrodisección e hidrodelineación\nEmulsificación de cristalino con ultrasonido\nExtracción de epinúcleo\nIrrigación y aspiración con cánulas bimanuales\nAplicación de viscoelástico en cámara anterior\nImplante de lente intraocular {{lente}}. Poder: {{poder_lente}} D. Cilindro: {{poder_cilindro}} D. Eje: {{eje_lente}}°\nLavado de viscoelástico con bimanuales\nHidratación de incisiones\nVerificación de hermeticidad\nAntibiótico y corticoide tópicos\nProtección\nHallazgos: {{Hallazgos}}\nComplicaciones: {{Complicaciones}}\nSe entregan recomendaciones, signos de alarma, fórmula médica (corticoide y antibiótico tópicos).\n\nRecomendaciones posteriores a la cirugía de catarata\n\n1. TRAER los frascos de las gotas formuladas el día del control de cirugía.\n\n2. Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.\n\n3. Asistir con los documentos que se le entregaron el día del procedimiento.\n\n4. Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.\n\n5. Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional.\n\n6. En casos muy puntuales puede apreciar una burbuja de aire dentro del ojo que con el paso del tiempo desaparece sin dejar ningún tipo de alteración a su visión.\n\n7. No deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.\n\n8. No se frote los ojos.\n\n9. No use parche ocular.\n\n10. Use gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere gafas oscuras para estar dentro de su casa, ni para leer, ni ver televisión.\n\n11. Utilice siempre pañuelos desechables secos, no pañuelos de tela ni paños húmedos para limpiar sus párpados.\n\n12. Suspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales.\n\n13. Conducir bicicleta, moto o carro puede realizarlo veinte (20) días después de su cirugía.\n\n14. Bañar en río, piscina o mar debe ser suspendido por noventa (90) días.\n\n15. Si usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.\n\n16. Puede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.\n\n17. Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días.\n\n18. Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.\n\n19. Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.\n\n20. Puede consumir cualquier alimento, no existe restricción.\n\n21. Cita optometría. Llamar o solicitar la consulta de control presencial en el primer piso de la institución (Unidad Quirúrgica Calida).\n\n22. Incapacidad. Aplica solo para cotizantes, no aplica para subsidiado ni beneficiarios.\n\n23. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana, miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados asista al servicio de urgencias de su eps para ser remitido a especialista de oftalmología.\n\nMedicamentos\nSi las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.\nNo requiere levantarse en la noche para aplicar la medicación.\n\n1. (OFTAMOX) Moxifloxacino 0.5% solución oftálmica. Aplicar 1 gota cada 3 horas en el ojo operado en el siguiente horario 7:00 - 10:00 - 13:00 - 16:00 - 19:00 - 22:00 durante quince (15) días ó hasta terminar el frasco. NO es necesario repetir el frasco.\n\n2. (CORTIOFTAL) Prednisolona 1% suspensión oftálmica. Aplicar 1 gota cada 4 horas en el ojo operado en el siguiente horario 6:00 - 10:30- 14:00- 18:00 - 21:30 hasta terminar el frasco. NO es necesario repetir el frasco\n\n3. (NEPAOFTAL) Nepafenaco 0.1% suspensión oftálmica. Iniciar este medicamento después de terminar el frasco de CORTIOFTAL. Aplicar 1 gota en el ojo operado cada 12 horas en el siguiente horario  6:30- 18:30 hasta terminar el frasco. NO es necesario repetir el frasco.\n\nPróximo control postoperatorio con el Doctor JOSE LUIS NAVIA AVILA\nLugar: {{ubicacion_control}}\nFecha: {{fecha_control}}\nHora: {{hora_control}}\nRecuerde que es un control postoperatorio y el horario es flexible. Debe presentar los documentos entregados el día de la cirugía y traer los frascos de la medicación formulada."
+  },
+  {
+    "filename": "Prequirurgico.html",
+    "title": "Consentimiento Prequirúrgico de Catarata",
+    "variables": [
+      {
+        "id": "ojo_intervenir",
+        "label": "Ojo a intervenir",
+        "type": "select",
+        "options": [
+          "Ojo Derecho",
+          "Ojo Izquierdo",
+          "Ambos Ojos"
+        ],
+        "defaultValue": "Ojo Derecho"
+      },
+      {
+        "id": "antecedentes",
+        "label": "Antecedentes",
+        "type": "textarea",
+        "defaultValue": "Niega antecedentes de importancia."
+      },
+      {
+        "id": "avl_sc_od",
+        "label": "AV Lejos SC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_sc_oi",
+        "label": "AV Lejos SC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_cc_od",
+        "label": "AV Lejos CC OD",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "avl_cc_oi",
+        "label": "AV Lejos CC OI",
+        "type": "text",
+        "defaultValue": "20/20"
+      },
+      {
+        "id": "camara_anterior",
+        "label": "Cámara anterior",
+        "type": "select",
+        "options": [
+          "IV",
+          "III",
+          "II",
+          "I"
+        ],
+        "defaultValue": "IV"
+      },
+      {
+        "id": "cristalino_od",
+        "label": "Cristalino OD",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+      },
+      {
+        "id": "cristalino_oi",
+        "label": "Cristalino OI",
+        "type": "text",
+        "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+      },
+      {
+        "id": "pio_od",
+        "label": "PIO OD",
+        "type": "text",
+        "defaultValue": "14 mmHg"
+      },
+      {
+        "id": "pio_oi",
+        "label": "PIO OI",
+        "type": "text",
+        "defaultValue": "14 mmHg"
+      },
+      {
+        "id": "excavacion_od",
+        "label": "Excavación OD",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "excavacion_oi",
+        "label": "Excavación OI",
+        "type": "text",
+        "defaultValue": "0.3"
+      },
+      {
+        "id": "tipo_lente",
+        "label": "Tipo de lente intraocular",
+        "type": "select",
+        "options": [
+          "intraocular con filtros (visión lejana)",
+          "de visión o rango extendido (visión lejana e intermedia)",
+          "multifocal (visión lejos y cerca)",
+          "trifocal (visión lejos, intermedia y cerca)"
+        ],
+        "defaultValue": "intraocular con filtros (visión lejana)"
+      }
+    ],
+    "template_text": "1. Historia Clínica\n\nMotivo de consulta\nEl/la paciente tiene pendiente una cirugía de catarata.\n\nEnfermedad actual\nPaciente interesado en más información acerca de lentes intraoculares premium. Tiene pendiente una cirugía de catarata con implante de lente intraocular en el {{ojo_intervenir}}.\n\nAntecedentes\n{{antecedentes}}\n\n2. Examen Oftalmológico\n\nAgudeza visual\nAgudeza visual de lejos sin corrección:\n  OD: {{avl_sc_od}}\n  OI: {{avl_sc_oi}}\nAgudeza visual de lejos con corrección:\n  OD: {{avl_cc_od}}\n  OI: {{avl_cc_oi}}\n\nExamen externo\nEn ambos ojos se observan bordes palpebrales normales, puntos lagrimales en buen estado y pestañas normales.\n\nMotilidad ocular\nMovimientos extraoculares con Hirschberg centrado. Ducciones normales. Cover test negativo.\n\nBiomicroscopía (Polo anterior)\nEn ambos ojos se observa conjuntiva sana, córnea transparente, cámara anterior grado {{camara_anterior}} e iris normal.\nCristalino OD: {{cristalino_od}}\nCristalino OI: {{cristalino_oi}}\n\nPresión intraocular (PIO)\nOD: {{pio_od}}\nOI: {{pio_oi}}\n\nPolo posterior (Fondo de ojo)\nEn ambos ojos se observa vítreo transparente, retina adherida y vasculatura de aspecto normal.\nExcavación OD: {{excavacion_od}}\nExcavación OI: {{excavacion_oi}}\n\n3. Análisis y Plan Terapéutico\n\nPaciente con catarata significativa que compromete la agudeza visual. Se indica el procedimiento de extracción de cristalino asistida (por facoemulsificación) con implante de lente intraocular en el {{ojo_intervenir}}.\n\nSe explica que durante el procedimiento se puede implantar un lente básico (convencional) o un lente que posee mejores características, diseño y materiales. El uso de estos lentes intraoculares no excluye la posibilidad de requerir el uso de gafas (corrección óptica) después del procedimiento quirúrgico, teniendo en cuenta que el resultado visual final no solo depende del desarrollo de la cirugía, sino que es indispensable evaluar y examinar (incluso con exámenes paraclínicos adicionales) el resto de las estructuras del globo ocular después de la intervención.\n\nDespués de haber interrogado al/a la paciente sobre sus expectativas y ocupación, se recomienda el implante de un lente {{tipo_lente}} durante el procedimiento quirúrgico. También se le informa que el recambio del lente intraocular es una opción; sin embargo, dicho procedimiento solo se realiza bajo condiciones excepcionales y de común acuerdo con el equipo médico a cargo de su caso.\n\n4. Información Complementaria para la Cirugía de Catarata\n\nEsta información sobre la intervención le ayudará a entender mejor las explicaciones dadas en la consulta. Léala atentamente. Si desea más información o que le sea aclarado algún punto, no dude en solicitarlo a nuestro equipo médico, el cual estará dispuesto a satisfacer sus inquietudes. De existir alguna duda, no deje de consultarnos antes de autorizar la realización de la cirugía.\n\nInformación sobre la intervención\nLa catarata es la opacificación del cristalino, el cual es el lente natural del ojo que permite enfocar las imágenes de manera adecuada en la retina (al interior del ojo). Cuando se opacifica este lente, provoca una disminución en la capacidad visual; las imágenes se tornan borrosas o la luz lo deslumbra.\n\nLa cirugía consiste en retirar el cristalino opaco y reemplazarlo por un lente artificial. En general, este lente se coloca detrás de la pupila, en donde estaba localizado el cristalino; pero en ciertos casos no es posible y se requiere colocar otro tipo de lente diseñado para ubicarse delante de la pupila. Este último puede requerir ser implantado en una segunda cirugía.\n\nBeneficios\nLa cirugía de catarata busca una mejoría en la función visual en los aspectos de cantidad y calidad.\n\nRiesgos de la intervención\nNo existe ninguna cirugía sin riesgos. Debido al avance de la técnica, la cirugía de catarata se desarrolla en la mayoría de los casos sin complicaciones. Sin embargo, en algunos casos pueden presentarse complicaciones que pueden ser leves, moderadas o graves. Pueden ocurrir en cirugías perfectamente realizadas por los cirujanos más expertos. La consecuencia más grave es la pérdida definitiva de la visión (pérdida funcional) del ojo operado, con o sin pérdida de este (pérdida anatómica); esto último es sumamente infrecuente, pero no es imposible.\n\nEs importante recalcar que en cirugía no se puede garantizar un éxito absoluto. Pueden presentarse complicaciones durante o después de la misma; algunos de los pacientes presentan dificultades que llegan a limitar la visión.\n\nLas complicaciones que se pueden presentar durante la cirugía pueden ser:\n- Ruptura de la cápsula del cristalino (que en ocasiones lleva a la imposibilidad de colocación del lente intraocular).\n- Luxación del cristalino al vítreo.\n- Descompensación corneal (pérdida de la transparencia de la córnea).\n- Sangrado.\n- Complicaciones vítreorretinales.\n\nEn el postoperatorio puede aparecer:\n- Infecciones o inflamación.\n- Cierres defectuosos de las heridas o sangrado.\n- Hernia de iris.\n- Cambios en la pigmentación y en la forma del iris.\n- Cambio en el tamaño de la pupila.\n- Desplazamiento del lente.\n- Astigmatismo u otro defecto refractivo.\n- Edema macular.\n- Aumento de la presión del ojo (glaucoma).\n- Desprendimiento de retina (más frecuente en miopes).\n\nDichas complicaciones pueden requerir para su solución intervenciones quirúrgicas adicionales. Además, puede suceder que la visión disminuya a los 2 o 3 meses, generalmente por opacificación de la cápsula del cristalino, hecho que conlleva la necesidad de que se le efectúe un procedimiento denominado capsulotomía posterior asistida con YAG láser. Vale la pena resaltar que, luego de la cirugía, puede requerir el uso de corrección óptica con lentes para optimizar los resultados visuales.\n\nEs importante anotar que muchas de las complicaciones postquirúrgicas son debidas al no seguimiento de las recomendaciones postoperatorias que le son dadas. Vale la pena mencionar que, aparte de la catarata, usted puede tener otras patologías oculares que limiten su recuperación visual y que, por la catarata misma, son imposibles de identificar antes de la extracción del cristalino, como puede ser el caso de:\n- Degeneración macular relacionada con la edad.\n- Retinopatía diabética o agujeros maculares.\n- Ojos ambliopes (ojo perezoso).\n- Hemorragias vítreas.\n- Patologías vasculares de la retina (hemorragia o infarto).\n- Enfermedades del nervio óptico.\n- Glaucoma avanzado o terminal, entre otros.\n\nRiesgos de la anestesia\nLa anestesia tampoco está exenta de riesgos. Con la anestesia local, que es la que generalmente aplicamos, se reduce la posibilidad de una complicación, pero no evita una reacción alérgica que incluso pueda amenazar la vida.\n\nEn ocasiones se requiere operar la catarata con anestesia general, hecho que le será informado durante la consulta (generalmente en pacientes niños, enfermos mentales o pacientes con dificultad auditiva severa). Hay ocasiones en las que la inyección de la anestesia local produce un hematoma o no logra un nivel anestésico adecuado, lo que nos obliga a posponer la cirugía."
+  },
+  {
+    "filename": "RECOMENDACIONES_CATARATA.html",
+    "title": "Recomendaciones Postoperatorias de Catarata",
+    "variables": [
+      {
+        "id": "nombres_apellidos",
+        "label": "Nombres y Apellidos",
+        "type": "text",
+        "defaultValue": "nombre del paciente"
+      },
+      {
+        "id": "ojo_intervenido",
+        "label": "Ojo intervenido",
+        "type": "select",
+        "defaultValue": "ojo derecho",
+        "options": [
+          "ojo derecho",
+          "ojo izquierdo",
+          "ambos ojos"
+        ]
+      },
+      {
+        "id": "fecha_control",
+        "label": "Fecha",
+        "type": "text",
+        "defaultValue": "en 24 a 48 horas"
+      },
+      {
+        "id": "hora_control",
+        "label": "Hora",
+        "type": "text",
+        "defaultValue": "por confirmar"
+      },
+      {
+        "id": "ubicacion_control",
+        "label": "Consultorio",
+        "type": "select",
+        "defaultValue": "Edificio de Colores consultorio 1122 en Cali",
+        "options": [
+          "Edificio de Colores consultorio 1122 en Cali",
+          "Clínica Nuestra Señora del Palmar consultorio 104 en Palmira"
+        ]
+      }
+    ],
+    "template_text": "Estimado/a {{nombres_apellidos}}.\n\nEstas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular {{ojo_intervenido}}\n\n1.  TRAER los frascos de las gotas formuladas el día del control de cirugía.\n2.  Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.\n3.  Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.\n4.  Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional.\n5.  NO deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.\n6.  NO se frote los ojos.\n7.  NO use parche ocular.\n8.  Use gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere usar gafas oscuras para estar dentro de su casa ni para leer, ni ver televisión.\n9.  Utilice siempre pañuelos desechables secos, NO pañuelos de tela ni paños húmedos para limpiar sus párpados.\n10. Suspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales.\n11. Conducir bicicleta, moto o carro puede realizarlo quince (15) días después de su cirugía.\n12. Bañar en río, piscina o mar debe ser suspendido por noventa (90) días.\n13. Si usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.\n14. Puede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.\n15. Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días.\n16. Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.\n17. Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.\n18. Puede consumir cualquier alimento, no existe restricción.\n19. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana,  miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados comuníquese al Whatsapp 316-4499355.\n\nTu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_control}} en la ubicación {{ubicacion_control}}."
+  }
+]
+    </script>
     <!-- DATOS DE LAS VARIABLES INYECTADOS -->
     <script id="variables-data" type="application/json">
 []
@@ -807,6 +1730,7 @@
             formActionTitle: document.getElementById('form-action-title'),
             dynamicForm: document.getElementById('dynamic-form'),
             resetFormBtn: document.getElementById('reset-form-btn'),
+            shareHybridBtn: document.getElementById('share-hybrid-btn'),
             resultText: document.getElementById('result-text'),
             copyBtn: document.getElementById('copy-btn'),
             copyUpperBtn: document.getElementById('copy-upper-btn'),
@@ -852,8 +1776,73 @@
             });
         }
 
+        function encodeStateToHash() {
+            const delta = {};
+            let hasChanges = false;
+            variables.forEach(v => {
+                const defVal = getInitialValueForVar(v);
+                const curVal = variableValues[v.id];
+                if (curVal !== undefined && curVal !== defVal) {
+                    delta[v.id] = curVal;
+                    hasChanges = true;
+                }
+            });
+            try {
+                if (!hasChanges) {
+                    if (window.location.hash && window.location.hash.includes('s=')) {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }
+                    return;
+                }
+                const jsonStr = JSON.stringify({ v: delta });
+                const b64 = btoa(unescape(encodeURIComponent(jsonStr)))
+                    .replace(/\+/g, '-')
+                    .replace(/\//g, '_')
+                    .replace(/=+$/, '');
+                history.replaceState(null, '', '#s=' + b64);
+            } catch (e) {
+                // Ignorar en contextos file:// restringidos si falla replaceState
+            }
+        }
+
+        function loadStateFromHash() {
+            const hash = window.location.hash || '';
+            const m = hash.match(/[#&]s=([A-Za-z0-9\-_]+)/);
+            if (!m) return false;
+            try {
+                let b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+                while (b64.length % 4) b64 += '=';
+                const jsonStr = decodeURIComponent(escape(atob(b64)));
+                const parsed = JSON.parse(jsonStr);
+                if (parsed && parsed.v && typeof parsed.v === 'object') {
+                    Object.keys(parsed.v).forEach(k => {
+                        variableValues[k] = parsed.v[k];
+                    });
+                    return true;
+                }
+            } catch (e) {
+                console.warn('No se pudo decodificar el estado híbrido de la URL:', e);
+            }
+            return false;
+        }
+
+        function shareHybridLink() {
+            encodeStateToHash();
+            const hybridUrl = window.location.href;
+            navigator.clipboard.writeText(hybridUrl).then(() => {
+                showToast('📲 ¡URL híbrida con variables editadas copiada! Ábrela en tu portátil o PC.');
+            }).catch(() => {
+                prompt('Copia esta URL con las variables ya editadas para abrirla en otro dispositivo:', hybridUrl);
+            });
+        }
+
         function resetFormValues() {
             initVariableValues();
+            try {
+                if (window.location.hash) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+            } catch (e) {}
             renderForm();
             showToast('🔄 Valores restablecidos a valores normales.');
         }
@@ -883,8 +1872,15 @@
                 elements.templateText.value = templateText;
             }
 
-            // Inicializar variableValues con los valores preestablecidos
+            // Inicializar variableValues con los valores preestablecidos y restaurar estado híbrido si viene en la URL (#s=...)
             initVariableValues();
+            const restoredFromUrl = loadStateFromHash();
+            window.addEventListener('hashchange', () => {
+                if (loadStateFromHash()) {
+                    renderForm();
+                    showToast('📲 Variables actualizadas desde enlace híbrido.');
+                }
+            });
 
             // Vincular eventos
             if (elements.templateTitle) {
@@ -914,12 +1910,13 @@
             if (elements.addVarBtn) elements.addVarBtn.addEventListener('click', saveVariableAction);
             if (elements.cancelEditBtn) elements.cancelEditBtn.addEventListener('click', resetVariableForm);
             if (elements.resetFormBtn) elements.resetFormBtn.addEventListener('click', resetFormValues);
+            if (elements.shareHybridBtn) elements.shareHybridBtn.addEventListener('click', shareHybridLink);
             if (elements.copyBtn) elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, false));
             if (elements.copyUpperBtn) elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, true));
             if (elements.printBtn) elements.printBtn.addEventListener('click', printDocument);
             if (elements.saveAppBtn) elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
 
-            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R y Ctrl+S)
+            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R, Alt+L y Ctrl+S)
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                     if (elements.saveAppBtn) {
@@ -938,11 +1935,64 @@
                 } else if (e.altKey && e.key.toLowerCase() === 'r') {
                     e.preventDefault();
                     resetFormValues();
+                } else if (e.altKey && e.key.toLowerCase() === 'l') {
+                    e.preventDefault();
+                    shareHybridLink();
                 }
             });
 
             if (elements.variablesConfigList) {
                 renderVariablesConfig();
+            }
+            const presetCatalogEl = document.getElementById('presets-catalog-data');
+            const presetSelectEl = document.getElementById('preset-template-select');
+            const presetGroupEl = document.getElementById('preset-loader-group');
+            if (presetCatalogEl && presetSelectEl && presetGroupEl) {
+                try {
+                    const presets = JSON.parse(presetCatalogEl.textContent.trim() || '[]');
+                    if (Array.isArray(presets) && presets.length > 0) {
+                        presetGroupEl.style.display = 'block';
+                        presets.forEach((p, idx) => {
+                            const opt = document.createElement('option');
+                            opt.value = String(idx);
+                            opt.textContent = `${p.title} (${p.filename})`;
+                            presetSelectEl.appendChild(opt);
+                        });
+                        presetSelectEl.addEventListener('change', () => {
+                            const val = presetSelectEl.value;
+                            if (val === '') {
+                                variables = [];
+                                templateText = '';
+                                if (elements.templateTitle) {
+                                    elements.templateTitle.value = 'Nueva Plantilla';
+                                    elements.templateTitle.setAttribute('value', 'Nueva Plantilla');
+                                }
+                            } else {
+                                const chosen = presets[Number(val)];
+                                if (chosen) {
+                                    variables = JSON.parse(JSON.stringify(chosen.variables || []));
+                                    templateText = chosen.template_text || '';
+                                    if (elements.templateTitle) {
+                                        elements.templateTitle.value = chosen.title;
+                                        elements.templateTitle.setAttribute('value', chosen.title);
+                                        document.title = `Plantilla: ${chosen.title}`;
+                                    }
+                                    showToast(`📂 Plantilla "${chosen.title}" cargada para edición.`);
+                                }
+                            }
+                            if (elements.templateText) {
+                                elements.templateText.value = templateText;
+                                elements.templateText.textContent = templateText;
+                            }
+                            elements.templateTextData.textContent = templateText;
+                            initVariableValues();
+                            renderVariablesConfig();
+                            renderForm();
+                        });
+                    }
+                } catch (err) {
+                    // Sin catálogo preinyectado
+                }
             }
             renderForm();
         });
@@ -998,6 +2048,126 @@
             elements.variablesData.textContent = JSON.stringify(variables, null, 2);
         }
 
+        function getVariableEyeSide(v) {
+            if (!v || v.type === 'textarea') return 'both';
+            const id = String(v.id || '');
+            const label = String(v.label || '');
+            const odRegex = /(^|[\s_\-\(\/])(od|ojo\s+derecho)($|[\s_\-\)\/\.,:])/i;
+            const oiRegex = /(^|[\s_\-\(\/])(oi|ojo\s+izquierdo)($|[\s_\-\)\/\.,:])/i;
+
+            const isOd = /^od_|_od$/i.test(id) || odRegex.test(id) || odRegex.test(label);
+            const isOi = /^oi_|_oi$/i.test(id) || oiRegex.test(id) || oiRegex.test(label);
+
+            if (isOd && !isOi) return 'od';
+            if (isOi && !isOd) return 'oi';
+            return 'both';
+        }
+
+        function getEyeBaseKey(v) {
+            return String(v.id || '')
+                .toLowerCase()
+                .replace(/^od_|^oi_|_od$|_oi$/g, '')
+                .replace(/(^|_)(od|oi)(_|$)/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function hasContralateralEyePair(v, varsList) {
+            const side = getVariableEyeSide(v);
+            if (side !== 'od' && side !== 'oi') return false;
+            const targetSide = side === 'od' ? 'oi' : 'od';
+            const baseKey = getEyeBaseKey(v);
+            return varsList.some(other => other.id !== v.id && getVariableEyeSide(other) === targetSide && (getEyeBaseKey(other) === baseKey || baseKey.length > 0));
+        }
+
+        function extractVariableSectionsMap(rawTemplateText, varsList) {
+            const sectionMap = {};
+            const lines = String(rawTemplateText || '').split(/\r?\n/);
+            let currentSection = 'Datos Clínicos Generales';
+
+            const knownHeaderPrefix = /^(Agudeza visual(?:\s+lejos|\s+cerca)?|Autorrefracci[óo]n|Queratometr[íi]a|Refracci[óo]n en uso|Movimientos extraoculares|Motilidad ocular|Examen externo|Polo anterior|Biomicroscop[íi]a|Gonioscopia|Polo posterior|Fondo de ojo|Presi[óo]n intraocular|Antecedentes|Examen Oftalmol[óo]gico|An[áa]lisis(?:\s+y\s+Plan\s+Terap[ée]utico)?|Descripci[óo]n quir[úu]rgica|Recomendaciones(?:\s+posteriores.*)?|Pr[óo]ximo control|Medicamentos)/i;
+
+            lines.forEach(rawLine => {
+                const line = rawLine.trim();
+                if (!line) return;
+
+                const headerMatch = line.match(knownHeaderPrefix);
+                if (headerMatch) {
+                    currentSection = headerMatch[1].trim();
+                } else if (!line.includes('{{') && line.length <= 55 && !line.endsWith('.')) {
+                    currentSection = line.replace(/:$/, '').trim();
+                }
+
+                const varMatches = line.matchAll(/\{\{([a-zA-Z0-9_]+)\}\}/g);
+                for (const m of varMatches) {
+                    const vid = m[1];
+                    if (!sectionMap[vid]) {
+                        if (/^(ubicacion_control|fecha_control|hora_control)$/i.test(vid)) {
+                            sectionMap[vid] = 'Próximo Control';
+                        } else {
+                            sectionMap[vid] = currentSection;
+                        }
+                    }
+                }
+            });
+
+            varsList.forEach(v => {
+                if (!sectionMap[v.id]) {
+                    if (/^(ubicacion_control|fecha_control|hora_control)$/i.test(v.id)) {
+                        sectionMap[v.id] = 'Próximo Control';
+                    } else {
+                        sectionMap[v.id] = currentSection;
+                    }
+                }
+            });
+
+            return sectionMap;
+        }
+
+        function orderVariablesForTwoColumnGrid(varsList) {
+            const result = [];
+            let odBucket = [];
+            let oiBucket = [];
+
+            function flushEyeBuckets() {
+                if (odBucket.length === 0 && oiBucket.length === 0) return;
+                const usedOi = new Set();
+                odBucket.forEach((odVar, idx) => {
+                    result.push(odVar);
+                    const baseKey = getEyeBaseKey(odVar);
+                    let matchIdx = oiBucket.findIndex((oiVar, j) => !usedOi.has(j) && getEyeBaseKey(oiVar) === baseKey);
+                    if (matchIdx === -1 && idx < oiBucket.length && !usedOi.has(idx)) {
+                        matchIdx = idx;
+                    }
+                    if (matchIdx !== -1) {
+                        usedOi.add(matchIdx);
+                        result.push(oiBucket[matchIdx]);
+                    }
+                });
+                oiBucket.forEach((oiVar, j) => {
+                    if (!usedOi.has(j)) {
+                        result.push(oiVar);
+                    }
+                });
+                odBucket = [];
+                oiBucket = [];
+            }
+
+            varsList.forEach(v => {
+                const side = getVariableEyeSide(v);
+                const isDifferentiatedPair = (side === 'od' || side === 'oi') && hasContralateralEyePair(v, varsList);
+                if (isDifferentiatedPair && side === 'od') {
+                    odBucket.push(v);
+                } else if (isDifferentiatedPair && side === 'oi') {
+                    oiBucket.push(v);
+                } else {
+                    flushEyeBuckets();
+                    result.push(v);
+                }
+            });
+            flushEyeBuckets();
+            return result;
+        }
+
         function renderForm() {
             elements.dynamicForm.innerHTML = '';
             if (variables.length === 0) {
@@ -1006,18 +2176,40 @@
                 return;
             }
 
-            const eyeTokenRegex = /(^|[\s_\-\(\/])(od|oi)($|[\s_\-\)\/\.,:])/i;
+            const orderedVars = orderVariablesForTwoColumnGrid(variables);
+            const sectionMap = extractVariableSectionsMap(templateText, orderedVars);
+            let lastRenderedSection = null;
 
-            variables.forEach(v => {
-                const isEyeVar = /_(od|oi)$/i.test(v.id) ||
-                                 /^(od|oi)_/i.test(v.id) ||
-                                 eyeTokenRegex.test(v.id) ||
-                                 eyeTokenRegex.test(v.label);
-                
-                const isFullWidth = !isEyeVar || v.type === 'textarea';
+            orderedVars.forEach(v => {
+                const side = getVariableEyeSide(v);
+                const isDifferentiatedPair = (side === 'od' || side === 'oi') && hasContralateralEyePair(v, orderedVars);
+                const varSection = sectionMap[v.id] || 'Datos Clínicos';
+
+                if (varSection !== lastRenderedSection) {
+                    lastRenderedSection = varSection;
+                    const sectionHasEyePairs = orderedVars.some(item =>
+                        (sectionMap[item.id] || 'Datos Clínicos') === varSection &&
+                        (getVariableEyeSide(item) === 'od' || getVariableEyeSide(item) === 'oi') &&
+                        hasContralateralEyePair(item, orderedVars)
+                    );
+                    const sep = document.createElement('div');
+                    sep.className = 'form-section-separator';
+                    sep.innerHTML = `
+                        <span>📌 ${escapeHtml(varSection)}</span>
+                        ${sectionHasEyePairs ? '<span class="eye-legend"><span class="eye-badge-od">◀ Ojo Derecho (OD)</span><span>|</span><span class="eye-badge-oi">Ojo Izquierdo (OI) ▶</span></span>' : ''}
+                    `;
+                    elements.dynamicForm.appendChild(sep);
+                }
+
+                let colClass = 'full-width';
+                if (isDifferentiatedPair && side === 'od') {
+                    colClass = 'half-width od-col';
+                } else if (isDifferentiatedPair && side === 'oi') {
+                    colClass = 'half-width oi-col';
+                }
 
                 const group = document.createElement('div');
-                group.className = `form-group ${isFullWidth ? 'full-width' : 'half-width'}`;
+                group.className = `form-group ${colClass}`;
                 
                 const label = document.createElement('label');
                 label.textContent = v.label;
@@ -1051,11 +2243,13 @@
                 field.addEventListener('input', (e) => {
                     variableValues[v.id] = e.target.value;
                     generateResult();
+                    encodeStateToHash();
                 });
                 if (v.type === 'select') {
                     field.addEventListener('change', (e) => {
                         variableValues[v.id] = e.target.value;
                         generateResult();
+                        encodeStateToHash();
                     });
                 }
 
@@ -1215,7 +2409,7 @@
             if (!cleanText) return;
             const finalStr = toUpper ? cleanText.toUpperCase() : cleanText;
             navigator.clipboard.writeText(finalStr).then(() => {
-                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULAS copiado para HC!' : '📋 ¡Texto plano copiado para HC!');
+                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULA copiado para HC!' : '📋 ¡Texto en minúscula copiado para HC!');
             }).catch(err => {
                 alert('Error al copiar: ' + err);
             });

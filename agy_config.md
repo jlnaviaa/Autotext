@@ -5,10 +5,10 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 
 ## Estado Actual (snapshot)
 - **Fase**: produccion
-- **Ultimo cambio**: 2026-11-08
-- **Proximo paso**: Publicar en GitHub Pages (`git push github main`) o agregar nuevas plantillas `.txt`
+- **Ultimo cambio**: 2026-11-21
+- **Proximo paso**: Compilar nuevas plantillas clinicas desde borradores `.txt` o usar flujo hibrido (`#s=...`) en consulta
 - **Bloqueadores**: ninguno
-- **Conversacion activa**: [78558019](conversation://78558019-8235-4e95-be17-12f73ca6bc1d)
+- **Conversacion activa**: [42609aa9](conversation://42609aa9-6e21-4c95-bc82-00b507701799)
 
 ## Flujo de Trabajo
 1. Usuario aporta borrador en `.txt` o edita en `Autotext_Final.html`.

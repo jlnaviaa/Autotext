@@ -175,20 +175,21 @@
   <header>
     <div class="brand">
       <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas y Quirúrgicas</h1>
-      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: 2026-11-08</p>
+      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: 2026-11-21</p>
     </div>
     <div style="display:flex; gap:0.6rem;">
-      <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">➕ Crear Nueva Plantilla (Lienzo)</a>
+      <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">✏️ Editor de Plantillas (AutoText)</a>
     </div>
   </header>
 
   <div class="shortcuts-bar">
     <span>⚡ <strong>Atajos rápidos dentro de cada plantilla:</strong></span>
-    <span><kbd>Alt+C</kbd> Copiar texto plano HC</span>
-    <span><kbd>Alt+M</kbd> Copiar en MAYÚSCULAS</span>
-    <span><kbd>Alt+P</kbd> Imprimir con Marca de Agua Verum</span>
+    <span><kbd>Alt+C</kbd> Copiar minúscula</span>
+    <span><kbd>Alt+M</kbd> Copiar MAYÚSCULA</span>
+    <span><kbd>Alt+P</kbd> Imprimir Documento</span>
     <span><kbd>Alt+R</kbd> Botón Restablecer</span>
-    <span><kbd>Ctrl+S</kbd> Guardar plantilla HTML</span>
+    <span><kbd>Alt+L</kbd> 📲 Enlace Híbrido (Móvil → Portátil/PC)</span>
+    <span><kbd>Ctrl+S</kbd> Guardar (sólo en Editor AutoText)</span>
   </div>
 
   <div class="toolbar">
@@ -326,8 +327,7 @@
           <div class="preview">${it.preview}</div>
         </div>
         <div class="actions">
-          <a class="btn btn-primary" href="${it.webUrl}">🌐 Modo Consulta / Imprimir</a>
-          <a class="btn" href="${it.editorUrl}">✏️ Modo Editor</a>
+          <a class="btn btn-primary" href="${it.webUrl}">🌐 Abrir Plantilla (2 Columnas)</a>
         </div>
       `;
       grid.appendChild(card);

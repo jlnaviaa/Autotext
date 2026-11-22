@@ -39,7 +39,7 @@
             max-width: 100%;
             height: calc(100vh - 90px); /* Deja espacio para el header */
             display: grid;
-            grid-template-columns: 350px 1.2fr 1fr;
+            grid-template-columns: 1.2fr 1fr;
             gap: 20px;
             transition: all 0.3s;
         }
@@ -224,11 +224,12 @@
             font-family: inherit;
         }
 
-        /* Grid de dos columnas para el formulario dinámico */
+        /* Grid de dos columnas para el formulario dinámico (Izquierda: OD | Derecha: OI | Ambas: Full) */
         .dynamic-form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            align-items: start;
         }
 
         .form-group.full-width {
@@ -237,6 +238,64 @@
 
         .form-group.half-width {
             grid-column: span 1;
+        }
+
+        .form-group.od-col {
+            grid-column: 1 / 2;
+            border-left: 3px solid #4f46e5;
+            padding-left: 8px;
+        }
+
+        .form-group.oi-col {
+            grid-column: 2 / 3;
+            border-left: 3px solid #0d9488;
+            padding-left: 8px;
+        }
+
+        .form-section-separator {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 2px;
+            padding: 6px 10px;
+            background: #f1f5f9;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-section-separator:first-child {
+            margin-top: 0;
+        }
+
+        .form-section-separator .eye-legend {
+            display: inline-flex;
+            gap: 10px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .eye-badge-od {
+            color: #4f46e5;
+        }
+
+        .eye-badge-oi {
+            color: #0d9488;
+        }
+
+        .template-title-input[readonly] {
+            pointer-events: none;
+            border-color: transparent !important;
+            background: transparent !important;
         }
 
         .variables-config-list {
@@ -634,106 +693,20 @@
             <div class="header-title-group">
                 <a href="index.html" class="btn btn-sm" title="Volver al Portal de Plantillas" style="text-decoration: none;">🏠 Portal</a>
                 <span>📄</span>
-                <input type="text" id="template-title" class="template-title-input" value="Recomendaciones Postoperatorias de Catarata" placeholder="Nombre de la Plantilla">
+                <input type="text" id="template-title" class="template-title-input" readonly value="Recomendaciones Postoperatorias de Catarata" placeholder="Nombre de la Plantilla">
             </div>
             <div>
-                <button id="save-app-btn" class="btn btn-success" title="Guarda esta plantilla permanentemente en un nuevo archivo HTML (Ctrl+S)">💾 Guardar Plantilla</button>
             </div>
         </header>
-
-        <!-- COLUMNA 1: CONFIGURACIÓN (Se oculta en Google Sites) -->
-        <div class="card" id="config-card">
-            <div class="card-header">
-                <span class="card-title">Configuración</span>
-            </div>
-            <div class="card-body">
-                <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchTab('editor-tab')">Editar Texto</button>
-                    <button class="tab-btn" onclick="switchTab('variables-tab')">Configurar Variables</button>
-                </div>
-
-                <!-- Panel 1: Editor de Texto -->
-                <div id="editor-tab" class="tab-content-panel active">
-                    <div class="form-group">
-                        <label for="template-text">Texto Base de la Plantilla</label>
-                        <textarea id="template-text" class="form-control" placeholder="Escribe el texto de la plantilla. Usa {{variable}} para insertar campos dinámicos.">Estimado/a {{nombres_apellidos}}.
-
-Estas son las recomendaciones posteriores a la extracción de cristalino con implante de lente intraocular {{ojo_intervenido}}
-
-1.  TRAER los frascos de las gotas formuladas el día del control de cirugía.
-2.  Todos los medicamentos en gotas que utilice deben ser NUEVOS, es decir, no pueden estar abiertos previamente.
-3.  Cuatro (4) horas después de su cirugía retire la concha dura y/o apósito que se encuentra sobre el ojo. No bote la concha. Hierva agua, déjela enfriar, humedezca una gasa estéril con ella y limpie los residuos que se encuentran alrededor de su ojo. Si presenta secreción, moco o restantes de coágulos sobre los párpados, humedezca otra gasa y déjela sobre el ojo cerrado por 5 minutos, luego limpie con otra gasa e inicie el tratamiento con las gotas.
-4.  Si posterior a la cirugía presenta párpado caído, visión borrosa y/o visión doble, estos síntomas ocurren por el efecto de la anestesia local y, por tanto, son síntomas transitorios que no requieren manejo adicional.
-5.  NO deseche la concha dura (protector ocular) ya que debe ser utilizada por quince (15) noches.
-6.  NO se frote los ojos.
-7.  NO use parche ocular.
-8.  Use gafas oscuras cuando se encuentre en el exterior hasta completar noventa (90) días. No requiere usar gafas oscuras para estar dentro de su casa ni para leer, ni ver televisión.
-9.  Utilice siempre pañuelos desechables secos, NO pañuelos de tela ni paños húmedos para limpiar sus párpados.
-10. Suspender por quince (15) días actividades físicas como agacharse, amarrarse los zapatos, barrer, bailar, brincar, cocinar, trotar, hacer ejercicio, cargar objetos pesados o deportes de contacto, al igual que las actividades sexuales.
-11. Conducir bicicleta, moto o carro puede realizarlo quince (15) días después de su cirugía.
-12. Bañar en río, piscina o mar debe ser suspendido por noventa (90) días.
-13. Si usted es fumador activo, usuario de sustancias recreativas o bebedor frecuente de sustancias alcohólicas debe suspender estas actividades.
-14. Puede usar dispositivos electrónicos con pantallas realizando pausas de cinco (5) a quince (15) minutos aproximadamente cada hora.
-15. Dormir boca arriba o del lado contrario al ojo operado durante quince (15) días.
-16. Lavar el cabello como en el salón de belleza, haciendo que el agua corra hacia atrás durante los cinco (5) primeros días.
-17. Debe suspender el maquillaje y tinturas en el cabello durante treinta (30) días.
-18. Puede consumir cualquier alimento, no existe restricción.
-19. Signos de alarma. Sí durante los siguientes quince (15) días presenta dolor que disminuye con la no medicación, secreción de color verdosa (legañas), disminución de la agudeza visual lejana,  miodesopsias (moscas flotantes), fotopsias (luces o destellos) y/o inflamación en párpados comuníquese al Whatsapp 316-4499355.
-
-Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_control}} en la ubicación {{ubicacion_control}}.</textarea>
-                    </div>
-                </div>
-
-                <!-- Panel 2: Variables -->
-                <div id="variables-tab" class="tab-content-panel">
-                    <div class="variables-config-list" id="variables-config-list">
-                        <!-- Generado dinámicamente -->
-                    </div>
-
-                    <div class="add-var-box">
-                        <h4 id="form-action-title" style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">Añadir Variable</h4>
-                        <div class="add-var-grid">
-                            <div class="form-group">
-                                <label for="new-var-id">ID Variable</label>
-                                <input type="text" id="new-var-id" class="form-control" placeholder="ej: nombre">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-var-label">Etiqueta</label>
-                                <input type="text" id="new-var-label" class="form-control" placeholder="ej: Nombre">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-var-type">Tipo</label>
-                                <select id="new-var-type" class="form-control">
-                                    <option value="text">Texto corto</option>
-                                    <option value="textarea">Texto largo</option>
-                                    <option value="number">Número</option>
-                                    <option value="date">Fecha</option>
-                                    <option value="select">Lista</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="options-group" style="display: none;">
-                                <label for="new-var-options">Opciones (,)</label>
-                                <input type="text" id="new-var-options" class="form-control" placeholder="Opción 1, Opción 2">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="new-var-default">Texto Preestablecido (Opcional)</label>
-                                <input type="text" id="new-var-default" class="form-control" placeholder="ej: Valor por defecto">
-                            </div>
-                        </div>
-                        <div class="button-group-row">
-                            <button id="add-var-btn" class="btn btn-primary btn-sm" style="flex: 2;">➕ Guardar</button>
-                            <button id="cancel-edit-btn" class="btn btn-danger btn-sm" style="flex: 1; display: none;">Cancelar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- COLUMNA 2: FORMULARIO DE Relleno -->
         <div class="card" id="form-card">
             <div class="card-header">
-                <span class="card-title">Formulario (Datos del Paciente)</span>
-                <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
+                <span class="card-title">Variables Clínicas</span>
+                <div style="display: flex; gap: 6px;">
+                    <button id="share-hybrid-btn" class="btn btn-sm" title="Copia la URL actual con las variables ya editadas para abrirla en otro dispositivo (Alt+L)">📲 Enlace Híbrido</button>
+                    <button id="reset-form-btn" class="btn btn-sm" title="Restablecer todos los campos a sus valores preestablecidos (Alt+R)">🔄 Restablecer</button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="dynamic-form-grid" id="dynamic-form">
@@ -745,15 +718,15 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
         <!-- COLUMNA 3: RESULTADO GENERADO -->
         <div class="card" id="result-card">
             <div class="card-header">
-                <span class="card-title">Editor de Resultado</span>
-                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar | Alt+M Mayúsculas | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
+                <span class="card-title">Texto Editado</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);" title="Atajos: Alt+C Copiar minúscula | Alt+M Copiar MAYÚSCULA | Alt+P Imprimir | Alt+R Restablecer">⌨️ Alt+C / M / P / R</span>
             </div>
             <div class="card-body">
                 <div class="result-container">
                     <div id="result-text" class="result-editor" contenteditable="true" placeholder="El texto clínico generado aparecerá aquí. Haz clic para editar."></div>
                     <div class="result-actions">
-                        <button id="copy-btn" class="btn btn-primary" title="Copia texto 100% plano para pegar en Historia Clínica (Alt+C)">📋 Copiar Texto</button>
-                        <button id="copy-upper-btn" class="btn" title="Copia texto 100% plano en MAYÚSCULAS para Historia Clínica (Alt+M)">🔠 Copiar en MAYÚSCULAS</button>
+                        <button id="copy-btn" class="btn btn-primary" title="Copia el texto editado en formato normal / minúscula para Historia Clínica (Alt+C)">📋 Copiar minúscula</button>
+                        <button id="copy-upper-btn" class="btn" title="Copia el texto editado en MAYÚSCULA para Historia Clínica (Alt+M)">🔠 Copiar MAYÚSCULA</button>
                         <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);" title="Imprime con marca de agua personal y formato clínico (Alt+P)">🖨️ Imprimir Documento</button>
                         <div style="display: flex; gap: 12px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
                             <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
@@ -799,6 +772,8 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
 
     <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
 
+    
+    <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->
     <!-- DATOS DE LAS VARIABLES INYECTADOS -->
     <script id="variables-data" type="application/json">
 [
@@ -896,6 +871,7 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
             formActionTitle: document.getElementById('form-action-title'),
             dynamicForm: document.getElementById('dynamic-form'),
             resetFormBtn: document.getElementById('reset-form-btn'),
+            shareHybridBtn: document.getElementById('share-hybrid-btn'),
             resultText: document.getElementById('result-text'),
             copyBtn: document.getElementById('copy-btn'),
             copyUpperBtn: document.getElementById('copy-upper-btn'),
@@ -941,8 +917,73 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
             });
         }
 
+        function encodeStateToHash() {
+            const delta = {};
+            let hasChanges = false;
+            variables.forEach(v => {
+                const defVal = getInitialValueForVar(v);
+                const curVal = variableValues[v.id];
+                if (curVal !== undefined && curVal !== defVal) {
+                    delta[v.id] = curVal;
+                    hasChanges = true;
+                }
+            });
+            try {
+                if (!hasChanges) {
+                    if (window.location.hash && window.location.hash.includes('s=')) {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }
+                    return;
+                }
+                const jsonStr = JSON.stringify({ v: delta });
+                const b64 = btoa(unescape(encodeURIComponent(jsonStr)))
+                    .replace(/\+/g, '-')
+                    .replace(/\//g, '_')
+                    .replace(/=+$/, '');
+                history.replaceState(null, '', '#s=' + b64);
+            } catch (e) {
+                // Ignorar en contextos file:// restringidos si falla replaceState
+            }
+        }
+
+        function loadStateFromHash() {
+            const hash = window.location.hash || '';
+            const m = hash.match(/[#&]s=([A-Za-z0-9\-_]+)/);
+            if (!m) return false;
+            try {
+                let b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+                while (b64.length % 4) b64 += '=';
+                const jsonStr = decodeURIComponent(escape(atob(b64)));
+                const parsed = JSON.parse(jsonStr);
+                if (parsed && parsed.v && typeof parsed.v === 'object') {
+                    Object.keys(parsed.v).forEach(k => {
+                        variableValues[k] = parsed.v[k];
+                    });
+                    return true;
+                }
+            } catch (e) {
+                console.warn('No se pudo decodificar el estado híbrido de la URL:', e);
+            }
+            return false;
+        }
+
+        function shareHybridLink() {
+            encodeStateToHash();
+            const hybridUrl = window.location.href;
+            navigator.clipboard.writeText(hybridUrl).then(() => {
+                showToast('📲 ¡URL híbrida con variables editadas copiada! Ábrela en tu portátil o PC.');
+            }).catch(() => {
+                prompt('Copia esta URL con las variables ya editadas para abrirla en otro dispositivo:', hybridUrl);
+            });
+        }
+
         function resetFormValues() {
             initVariableValues();
+            try {
+                if (window.location.hash) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+            } catch (e) {}
             renderForm();
             showToast('🔄 Valores restablecidos a valores normales.');
         }
@@ -972,8 +1013,15 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
                 elements.templateText.value = templateText;
             }
 
-            // Inicializar variableValues con los valores preestablecidos
+            // Inicializar variableValues con los valores preestablecidos y restaurar estado híbrido si viene en la URL (#s=...)
             initVariableValues();
+            const restoredFromUrl = loadStateFromHash();
+            window.addEventListener('hashchange', () => {
+                if (loadStateFromHash()) {
+                    renderForm();
+                    showToast('📲 Variables actualizadas desde enlace híbrido.');
+                }
+            });
 
             // Vincular eventos
             if (elements.templateTitle) {
@@ -1003,12 +1051,13 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
             if (elements.addVarBtn) elements.addVarBtn.addEventListener('click', saveVariableAction);
             if (elements.cancelEditBtn) elements.cancelEditBtn.addEventListener('click', resetVariableForm);
             if (elements.resetFormBtn) elements.resetFormBtn.addEventListener('click', resetFormValues);
+            if (elements.shareHybridBtn) elements.shareHybridBtn.addEventListener('click', shareHybridLink);
             if (elements.copyBtn) elements.copyBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, false));
             if (elements.copyUpperBtn) elements.copyUpperBtn.addEventListener('click', () => copyToClipboard(elements.resultText.innerText, true));
             if (elements.printBtn) elements.printBtn.addEventListener('click', printDocument);
             if (elements.saveAppBtn) elements.saveAppBtn.addEventListener('click', saveTemplateAsFile);
 
-            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R y Ctrl+S)
+            // Atajos de teclado clínicos (Alt+C, Alt+M, Alt+P, Alt+R, Alt+L y Ctrl+S)
             document.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                     if (elements.saveAppBtn) {
@@ -1027,11 +1076,64 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
                 } else if (e.altKey && e.key.toLowerCase() === 'r') {
                     e.preventDefault();
                     resetFormValues();
+                } else if (e.altKey && e.key.toLowerCase() === 'l') {
+                    e.preventDefault();
+                    shareHybridLink();
                 }
             });
 
             if (elements.variablesConfigList) {
                 renderVariablesConfig();
+            }
+            const presetCatalogEl = document.getElementById('presets-catalog-data');
+            const presetSelectEl = document.getElementById('preset-template-select');
+            const presetGroupEl = document.getElementById('preset-loader-group');
+            if (presetCatalogEl && presetSelectEl && presetGroupEl) {
+                try {
+                    const presets = JSON.parse(presetCatalogEl.textContent.trim() || '[]');
+                    if (Array.isArray(presets) && presets.length > 0) {
+                        presetGroupEl.style.display = 'block';
+                        presets.forEach((p, idx) => {
+                            const opt = document.createElement('option');
+                            opt.value = String(idx);
+                            opt.textContent = `${p.title} (${p.filename})`;
+                            presetSelectEl.appendChild(opt);
+                        });
+                        presetSelectEl.addEventListener('change', () => {
+                            const val = presetSelectEl.value;
+                            if (val === '') {
+                                variables = [];
+                                templateText = '';
+                                if (elements.templateTitle) {
+                                    elements.templateTitle.value = 'Nueva Plantilla';
+                                    elements.templateTitle.setAttribute('value', 'Nueva Plantilla');
+                                }
+                            } else {
+                                const chosen = presets[Number(val)];
+                                if (chosen) {
+                                    variables = JSON.parse(JSON.stringify(chosen.variables || []));
+                                    templateText = chosen.template_text || '';
+                                    if (elements.templateTitle) {
+                                        elements.templateTitle.value = chosen.title;
+                                        elements.templateTitle.setAttribute('value', chosen.title);
+                                        document.title = `Plantilla: ${chosen.title}`;
+                                    }
+                                    showToast(`📂 Plantilla "${chosen.title}" cargada para edición.`);
+                                }
+                            }
+                            if (elements.templateText) {
+                                elements.templateText.value = templateText;
+                                elements.templateText.textContent = templateText;
+                            }
+                            elements.templateTextData.textContent = templateText;
+                            initVariableValues();
+                            renderVariablesConfig();
+                            renderForm();
+                        });
+                    }
+                } catch (err) {
+                    // Sin catálogo preinyectado
+                }
             }
             renderForm();
         });
@@ -1087,6 +1189,126 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
             elements.variablesData.textContent = JSON.stringify(variables, null, 2);
         }
 
+        function getVariableEyeSide(v) {
+            if (!v || v.type === 'textarea') return 'both';
+            const id = String(v.id || '');
+            const label = String(v.label || '');
+            const odRegex = /(^|[\s_\-\(\/])(od|ojo\s+derecho)($|[\s_\-\)\/\.,:])/i;
+            const oiRegex = /(^|[\s_\-\(\/])(oi|ojo\s+izquierdo)($|[\s_\-\)\/\.,:])/i;
+
+            const isOd = /^od_|_od$/i.test(id) || odRegex.test(id) || odRegex.test(label);
+            const isOi = /^oi_|_oi$/i.test(id) || oiRegex.test(id) || oiRegex.test(label);
+
+            if (isOd && !isOi) return 'od';
+            if (isOi && !isOd) return 'oi';
+            return 'both';
+        }
+
+        function getEyeBaseKey(v) {
+            return String(v.id || '')
+                .toLowerCase()
+                .replace(/^od_|^oi_|_od$|_oi$/g, '')
+                .replace(/(^|_)(od|oi)(_|$)/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function hasContralateralEyePair(v, varsList) {
+            const side = getVariableEyeSide(v);
+            if (side !== 'od' && side !== 'oi') return false;
+            const targetSide = side === 'od' ? 'oi' : 'od';
+            const baseKey = getEyeBaseKey(v);
+            return varsList.some(other => other.id !== v.id && getVariableEyeSide(other) === targetSide && (getEyeBaseKey(other) === baseKey || baseKey.length > 0));
+        }
+
+        function extractVariableSectionsMap(rawTemplateText, varsList) {
+            const sectionMap = {};
+            const lines = String(rawTemplateText || '').split(/\r?\n/);
+            let currentSection = 'Datos Clínicos Generales';
+
+            const knownHeaderPrefix = /^(Agudeza visual(?:\s+lejos|\s+cerca)?|Autorrefracci[óo]n|Queratometr[íi]a|Refracci[óo]n en uso|Movimientos extraoculares|Motilidad ocular|Examen externo|Polo anterior|Biomicroscop[íi]a|Gonioscopia|Polo posterior|Fondo de ojo|Presi[óo]n intraocular|Antecedentes|Examen Oftalmol[óo]gico|An[áa]lisis(?:\s+y\s+Plan\s+Terap[ée]utico)?|Descripci[óo]n quir[úu]rgica|Recomendaciones(?:\s+posteriores.*)?|Pr[óo]ximo control|Medicamentos)/i;
+
+            lines.forEach(rawLine => {
+                const line = rawLine.trim();
+                if (!line) return;
+
+                const headerMatch = line.match(knownHeaderPrefix);
+                if (headerMatch) {
+                    currentSection = headerMatch[1].trim();
+                } else if (!line.includes('{{') && line.length <= 55 && !line.endsWith('.')) {
+                    currentSection = line.replace(/:$/, '').trim();
+                }
+
+                const varMatches = line.matchAll(/\{\{([a-zA-Z0-9_]+)\}\}/g);
+                for (const m of varMatches) {
+                    const vid = m[1];
+                    if (!sectionMap[vid]) {
+                        if (/^(ubicacion_control|fecha_control|hora_control)$/i.test(vid)) {
+                            sectionMap[vid] = 'Próximo Control';
+                        } else {
+                            sectionMap[vid] = currentSection;
+                        }
+                    }
+                }
+            });
+
+            varsList.forEach(v => {
+                if (!sectionMap[v.id]) {
+                    if (/^(ubicacion_control|fecha_control|hora_control)$/i.test(v.id)) {
+                        sectionMap[v.id] = 'Próximo Control';
+                    } else {
+                        sectionMap[v.id] = currentSection;
+                    }
+                }
+            });
+
+            return sectionMap;
+        }
+
+        function orderVariablesForTwoColumnGrid(varsList) {
+            const result = [];
+            let odBucket = [];
+            let oiBucket = [];
+
+            function flushEyeBuckets() {
+                if (odBucket.length === 0 && oiBucket.length === 0) return;
+                const usedOi = new Set();
+                odBucket.forEach((odVar, idx) => {
+                    result.push(odVar);
+                    const baseKey = getEyeBaseKey(odVar);
+                    let matchIdx = oiBucket.findIndex((oiVar, j) => !usedOi.has(j) && getEyeBaseKey(oiVar) === baseKey);
+                    if (matchIdx === -1 && idx < oiBucket.length && !usedOi.has(idx)) {
+                        matchIdx = idx;
+                    }
+                    if (matchIdx !== -1) {
+                        usedOi.add(matchIdx);
+                        result.push(oiBucket[matchIdx]);
+                    }
+                });
+                oiBucket.forEach((oiVar, j) => {
+                    if (!usedOi.has(j)) {
+                        result.push(oiVar);
+                    }
+                });
+                odBucket = [];
+                oiBucket = [];
+            }
+
+            varsList.forEach(v => {
+                const side = getVariableEyeSide(v);
+                const isDifferentiatedPair = (side === 'od' || side === 'oi') && hasContralateralEyePair(v, varsList);
+                if (isDifferentiatedPair && side === 'od') {
+                    odBucket.push(v);
+                } else if (isDifferentiatedPair && side === 'oi') {
+                    oiBucket.push(v);
+                } else {
+                    flushEyeBuckets();
+                    result.push(v);
+                }
+            });
+            flushEyeBuckets();
+            return result;
+        }
+
         function renderForm() {
             elements.dynamicForm.innerHTML = '';
             if (variables.length === 0) {
@@ -1095,18 +1317,40 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
                 return;
             }
 
-            const eyeTokenRegex = /(^|[\s_\-\(\/])(od|oi)($|[\s_\-\)\/\.,:])/i;
+            const orderedVars = orderVariablesForTwoColumnGrid(variables);
+            const sectionMap = extractVariableSectionsMap(templateText, orderedVars);
+            let lastRenderedSection = null;
 
-            variables.forEach(v => {
-                const isEyeVar = /_(od|oi)$/i.test(v.id) ||
-                                 /^(od|oi)_/i.test(v.id) ||
-                                 eyeTokenRegex.test(v.id) ||
-                                 eyeTokenRegex.test(v.label);
-                
-                const isFullWidth = !isEyeVar || v.type === 'textarea';
+            orderedVars.forEach(v => {
+                const side = getVariableEyeSide(v);
+                const isDifferentiatedPair = (side === 'od' || side === 'oi') && hasContralateralEyePair(v, orderedVars);
+                const varSection = sectionMap[v.id] || 'Datos Clínicos';
+
+                if (varSection !== lastRenderedSection) {
+                    lastRenderedSection = varSection;
+                    const sectionHasEyePairs = orderedVars.some(item =>
+                        (sectionMap[item.id] || 'Datos Clínicos') === varSection &&
+                        (getVariableEyeSide(item) === 'od' || getVariableEyeSide(item) === 'oi') &&
+                        hasContralateralEyePair(item, orderedVars)
+                    );
+                    const sep = document.createElement('div');
+                    sep.className = 'form-section-separator';
+                    sep.innerHTML = `
+                        <span>📌 ${escapeHtml(varSection)}</span>
+                        ${sectionHasEyePairs ? '<span class="eye-legend"><span class="eye-badge-od">◀ Ojo Derecho (OD)</span><span>|</span><span class="eye-badge-oi">Ojo Izquierdo (OI) ▶</span></span>' : ''}
+                    `;
+                    elements.dynamicForm.appendChild(sep);
+                }
+
+                let colClass = 'full-width';
+                if (isDifferentiatedPair && side === 'od') {
+                    colClass = 'half-width od-col';
+                } else if (isDifferentiatedPair && side === 'oi') {
+                    colClass = 'half-width oi-col';
+                }
 
                 const group = document.createElement('div');
-                group.className = `form-group ${isFullWidth ? 'full-width' : 'half-width'}`;
+                group.className = `form-group ${colClass}`;
                 
                 const label = document.createElement('label');
                 label.textContent = v.label;
@@ -1140,11 +1384,13 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
                 field.addEventListener('input', (e) => {
                     variableValues[v.id] = e.target.value;
                     generateResult();
+                    encodeStateToHash();
                 });
                 if (v.type === 'select') {
                     field.addEventListener('change', (e) => {
                         variableValues[v.id] = e.target.value;
                         generateResult();
+                        encodeStateToHash();
                     });
                 }
 
@@ -1304,7 +1550,7 @@ Tu próximo control es el día {{fecha_control}} en el siguiente horario {{hora_
             if (!cleanText) return;
             const finalStr = toUpper ? cleanText.toUpperCase() : cleanText;
             navigator.clipboard.writeText(finalStr).then(() => {
-                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULAS copiado para HC!' : '📋 ¡Texto plano copiado para HC!');
+                showToast(toUpper ? '🔠 ¡Texto en MAYÚSCULA copiado para HC!' : '📋 ¡Texto en minúscula copiado para HC!');
             }).catch(err => {
                 alert('Error al copiar: ' + err);
             });

@@ -59,16 +59,29 @@ STANDARD_OPHTHALMO_VARS = {
 }
 
 
-def derive_web_base_from_editor() -> str:
-    """Deriva web/Autotext_Final.html (Modo Consulta 2 columnas) desde Autotext_Final.html."""
+def derive_web_base_from_editor(relative_portal: str = "../index.html") -> str:
+    """Deriva la vista clínica de 2 columnas (Variables Izquierda | Texto Editado Derecha) sin edición de plantilla."""
     WEB_DIR.mkdir(exist_ok=True)
     editor_html = BASE_EDITOR.read_text(encoding="utf-8")
+    # Limpiar posible bloque previo de presets-catalog-data
+    editor_html = re.sub(
+        r'\s*<script id="presets-catalog-data" type="application/json">.*?</script>',
+        "",
+        editor_html,
+        flags=re.DOTALL,
+    )
 
     web_html = editor_html.replace(
         "grid-template-columns: 350px 1.2fr 1fr;",
         "grid-template-columns: 1.2fr 1fr;",
     )
-    web_html = web_html.replace('href="index.html"', 'href="../index.html"')
+    web_html = web_html.replace('href="index.html"', f'href="{relative_portal}"')
+    web_html = re.sub(
+        r'(<input\s+type="text"\s+id="template-title"\s+class="template-title-input")(?![^>]*readonly)',
+        r'\1 readonly',
+        web_html,
+        count=1,
+    )
     web_html = re.sub(
         r'\s*<button id="save-app-btn"[^>]*>.*?</button>',
         "",
@@ -76,14 +89,88 @@ def derive_web_base_from_editor() -> str:
         flags=re.DOTALL,
     )
     web_html = re.sub(
-        r'<!-- COLUMNA 1: CONFIGURACIÓN -->.*?<!-- COLUMNA 2: FORMULARIO -->',
-        "<!-- COLUMNA 2: FORMULARIO -->",
+        r'<!-- COLUMNA 1: CONFIGURACIÓN.*?<!-- COLUMNA 2: FORMULARIO',
+        "<!-- COLUMNA 2: FORMULARIO",
         web_html,
         flags=re.DOTALL,
     )
-    BASE_WEB.write_text(web_html, encoding="utf-8")
-    print("[BASE] web/Autotext_Final.html actualizado desde el motor maestro v12.")
+    if relative_portal == "../index.html":
+        BASE_WEB.write_text(web_html, encoding="utf-8")
+        print("[BASE] web/Autotext_Final.html actualizado (2 columnas sin edición de plantilla).")
     return web_html
+
+
+def get_variable_eye_side(v: dict) -> str:
+    """Clasifica una variable en 'od' (mitad izquierda), 'oi' (mitad derecha) o 'both' (ancho completo)."""
+    if not v or v.get("type") == "textarea":
+        return "both"
+    vid = str(v.get("id", ""))
+    label = str(v.get("label", ""))
+    od_re = re.compile(r"(^|[\s_\-\(\/])(od|ojo\s+derecho)($|[\s_\-\)\/\.,:])", re.IGNORECASE)
+    oi_re = re.compile(r"(^|[\s_\-\(\/])(oi|ojo\s+izquierdo)($|[\s_\-\)\/\.,:])", re.IGNORECASE)
+
+    is_od = bool(re.search(r"(^od_|_od$)", vid, re.IGNORECASE) or od_re.search(vid) or od_re.search(label))
+    is_oi = bool(re.search(r"(^oi_|_oi$)", vid, re.IGNORECASE) or oi_re.search(vid) or oi_re.search(label))
+
+    if is_od and not is_oi:
+        return "od"
+    if is_oi and not is_od:
+        return "oi"
+    return "both"
+
+
+def get_eye_base_key(v: dict) -> str:
+    vid = str(v.get("id", "")).lower()
+    vid = re.sub(r"(^od_|^oi_|_od$|_oi$)", "", vid)
+    vid = re.sub(r"(^|_)(od|oi)(_|$)", "_", vid)
+    return vid.strip("_")
+
+
+def pair_and_interleave_od_oi_variables(variables: list) -> list:
+    """
+    Intercala pares [OD, OI] dentro de cada bloque consecutivo de variables de ojo
+    para que Ojo Derecho ocupe siempre la mitad izquierda y Ojo Izquierdo la mitad derecha
+    en la misma fila, manteniendo las variables de ambos ojos ('both') a ancho completo.
+    """
+    result = []
+    od_bucket = []
+    oi_bucket = []
+
+    def flush_buckets():
+        nonlocal od_bucket, oi_bucket
+        if not od_bucket and not oi_bucket:
+            return
+        used_oi = set()
+        for idx, od_var in enumerate(od_bucket):
+            result.append(od_var)
+            base_key = get_eye_base_key(od_var)
+            match_idx = -1
+            for j, oi_var in enumerate(oi_bucket):
+                if j not in used_oi and get_eye_base_key(oi_var) == base_key:
+                    match_idx = j
+                    break
+            if match_idx == -1 and idx < len(oi_bucket) and idx not in used_oi:
+                match_idx = idx
+            if match_idx != -1:
+                used_oi.add(match_idx)
+                result.append(oi_bucket[match_idx])
+        for j, oi_var in enumerate(oi_bucket):
+            if j not in used_oi:
+                result.append(oi_var)
+        od_bucket = []
+        oi_bucket = []
+
+    for v in variables:
+        side = get_variable_eye_side(v)
+        if side == "od":
+            od_bucket.append(v)
+        elif side == "oi":
+            oi_bucket.append(v)
+        else:
+            flush_buckets()
+            result.append(v)
+    flush_buckets()
+    return result
 
 
 def normalize_template_data(stem: str, title: str, variables: list, template_text: str) -> tuple[str, list, str]:
@@ -231,6 +318,10 @@ def normalize_template_data(stem: str, title: str, variables: list, template_tex
             if ev["id"] not in existing_ids:
                 variables.append(ev)
 
+    # 7. Emparejar e intercalar bloques OD (mitad izquierda) y OI (mitad derecha),
+    # manteniendo variables de ambos ojos (ej. mov_ext) a ancho completo.
+    variables = pair_and_interleave_od_oi_variables(variables)
+
     return title, variables, template_text
 
 
@@ -309,9 +400,10 @@ def inject_into_html(base_html: str, title: str, variables: list, template_text:
 
 
 def sync_all_templates() -> list:
-    base_editor_html = BASE_EDITOR.read_text(encoding="utf-8")
-    base_web_html = derive_web_base_from_editor()
+    base_web_html = derive_web_base_from_editor(relative_portal="../index.html")
+    base_root_2col_html = derive_web_base_from_editor(relative_portal="index.html")
     templates_info = []
+    presets_for_editor = []
 
     for html_file in sorted(ROOT.glob("*.html")):
         if html_file.name.lower() == "index.html":
@@ -322,17 +414,24 @@ def sync_all_templates() -> list:
         if html_file.name == "Autotext_Final.html":
             continue
 
-        # Actualizar plantilla en raíz con el motor v12 unificado y marca de agua incrustada
-        rendered_editor = inject_into_html(
-            base_editor_html,
+        presets_for_editor.append({
+            "filename": meta["filename"],
+            "title": meta["title"],
+            "variables": meta["variables"],
+            "template_text": meta["template_text"],
+        })
+
+        # Actualizar plantilla en raíz a 2 columnas (la edición de plantilla es sólo en Autotext_Final.html)
+        rendered_root = inject_into_html(
+            base_root_2col_html,
             meta["title"],
             meta["variables"],
             meta["template_text"],
-            is_editor=True,
+            is_editor=False,
         )
-        html_file.write_text(rendered_editor, encoding="utf-8")
+        html_file.write_text(rendered_root, encoding="utf-8")
 
-        # Actualizar plantilla en web/ (Modo Consulta limpio)
+        # Actualizar plantilla en web/ (2 columnas: Variables Izquierda | Texto Editado Derecha)
         web_target = WEB_DIR / html_file.name
         rendered_web = inject_into_html(
             base_web_html,
@@ -342,7 +441,25 @@ def sync_all_templates() -> list:
             is_editor=False,
         )
         web_target.write_text(rendered_web, encoding="utf-8")
-        print(f"[SYNC] {html_file.name} + web/{html_file.name} sincronizados ({len(meta['variables'])} variables)")
+        print(f"[SYNC] {html_file.name} + web/{html_file.name} sincronizados a 2 columnas ({len(meta['variables'])} variables)")
+
+    # Inyectar el catálogo de plantillas dentro de Autotext_Final.html (único editor de plantillas)
+    editor_raw = BASE_EDITOR.read_text(encoding="utf-8")
+    editor_raw = re.sub(
+        r'\s*<script id="presets-catalog-data" type="application/json">.*?</script>',
+        "",
+        editor_raw,
+        flags=re.DOTALL,
+    )
+    presets_json = json.dumps(presets_for_editor, ensure_ascii=False, indent=2)
+    preset_script_tag = f'\n    <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->\n    <script id="presets-catalog-data" type="application/json">\n{presets_json}\n    </script>\n'
+    editor_raw = editor_raw.replace(
+        "<!-- DATOS DE LAS VARIABLES INYECTADOS -->",
+        f"{preset_script_tag}    <!-- DATOS DE LAS VARIABLES INYECTADOS -->",
+        1,
+    )
+    BASE_EDITOR.write_text(editor_raw, encoding="utf-8")
+    print(f"[EDITOR] Autotext_Final.html actualizado con selector de edición para {len(presets_for_editor)} plantillas.")
 
     return templates_info
 
@@ -567,17 +684,18 @@ def generate_portal_index(templates_info: list) -> Path:
       <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: {today}</p>
     </div>
     <div style="display:flex; gap:0.6rem;">
-      <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">➕ Crear Nueva Plantilla (Lienzo)</a>
+      <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">✏️ Editor de Plantillas (AutoText)</a>
     </div>
   </header>
 
   <div class="shortcuts-bar">
     <span>⚡ <strong>Atajos rápidos dentro de cada plantilla:</strong></span>
-    <span><kbd>Alt+C</kbd> Copiar texto plano HC</span>
-    <span><kbd>Alt+M</kbd> Copiar en MAYÚSCULAS</span>
-    <span><kbd>Alt+P</kbd> Imprimir con Marca de Agua Verum</span>
+    <span><kbd>Alt+C</kbd> Copiar minúscula</span>
+    <span><kbd>Alt+M</kbd> Copiar MAYÚSCULA</span>
+    <span><kbd>Alt+P</kbd> Imprimir Documento</span>
     <span><kbd>Alt+R</kbd> Botón Restablecer</span>
-    <span><kbd>Ctrl+S</kbd> Guardar plantilla HTML</span>
+    <span><kbd>Alt+L</kbd> 📲 Enlace Híbrido (Móvil → Portátil/PC)</span>
+    <span><kbd>Ctrl+S</kbd> Guardar (sólo en Editor AutoText)</span>
   </div>
 
   <div class="toolbar">
@@ -634,8 +752,7 @@ def generate_portal_index(templates_info: list) -> Path:
           <div class="preview">${{it.preview}}</div>
         </div>
         <div class="actions">
-          <a class="btn btn-primary" href="${{it.webUrl}}">🌐 Modo Consulta / Imprimir</a>
-          <a class="btn" href="${{it.editorUrl}}">✏️ Modo Editor</a>
+          <a class="btn btn-primary" href="${{it.webUrl}}">🌐 Abrir Plantilla (2 Columnas)</a>
         </div>
       `;
       grid.appendChild(card);
@@ -690,16 +807,17 @@ def build_from_txt(txt_path: Path, output_name: str = "") -> None:
     editor_out = ROOT / f"{stem}.html"
     web_out = WEB_DIR / f"{stem}.html"
 
-    derive_web_base_from_editor()
+    base_web_html = derive_web_base_from_editor(relative_portal="../index.html")
+    base_root_2col_html = derive_web_base_from_editor(relative_portal="index.html")
     editor_html = inject_into_html(
-        BASE_EDITOR.read_text(encoding="utf-8"),
+        base_root_2col_html,
         title,
         variables,
         raw_text,
-        is_editor=True,
+        is_editor=False,
     )
     web_html = inject_into_html(
-        BASE_WEB.read_text(encoding="utf-8"),
+        base_web_html,
         title,
         variables,
         raw_text,
