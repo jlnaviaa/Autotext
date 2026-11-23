@@ -1,0 +1,27 @@
+Descripción quirúrgica
+Resección de pterigión con injerto de conjuntiva {{ojo_intervenido}}
+Lavado de manos
+Colocación de campos estériles
+Blefaróstato {{ojo_intervenido}}
+Infiltración de anestesia local
+Resección de cabeza y cuerpo de pterigión {{localizacion_pterigion}}
+Resección de Tenon redundante
+Queratectomía superficial con bisturí
+Diseño y toma de injerto conjuntival superior
+Sutura de injerto a lecho receptor con {{sutura_injerto}}
+Sutura de lecho donante con {{sutura_injerto}}
+Antibiótico y corticoide tópicos
+Oclusión
+Complicaciones: {{complicaciones}}
+Se entregan recomendaciones, signos de alarma y fórmula médica (corticoide, antibiótico y lubricante tópicos).
+
+Medicamentos
+Si las gotas coinciden en horario aplicarlas con 10 minutos de diferencia.
+No requiere levantarse en la noche para aplicar la medicación.
+1. (TOBRAOFTAL - D) Tobramicina 0.3% + Dexametasona 0.1% solución oftálmica. Aplicar 1 gota en el {{ojo_intervenido}} en el siguiente horario: 7:00 - 10:00 - 13:00 - 16:00 - 19:00 - 22:00 durante quince (15) días.
+2. (CARMELUB) Carboximetilcelulosa 0.5% solución oftálmica. Aplicar 1 gota en el {{ojo_intervenido}} en el siguiente horario: 7:30 - 11:30 - 15:30 - 19:30 durante 3 meses.
+
+Próximo control
+Lugar: {{ubicacion_control}}
+Fecha: {{fecha_control}}
+Hora: {{hora_control}}

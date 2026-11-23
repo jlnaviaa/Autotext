@@ -1,0 +1,14 @@
+Motivo de consulta
+Postoperatorio resección de pterigión con injerto de conjuntiva {{ojo_intervenido}}
+
+Enfermedad actual
+{{evolucion_subjetiva}}
+
+Examen Oftalmológico
+Ojo examinado: {{ojo_intervenido}}
+Biomicroscopía. {{biomicroscopia_postop}}
+Fondo de ojo. {{fondo_ojo_postop}}
+
+Análisis
+Paciente en postoperatorio de cirugía de resección de pterigión con injerto de conjuntiva {{ojo_intervenido}} con evolución satisfactoria. Debe continuar tratamiento iniciado después de la cirugía. Ya tiene recomendaciones.
+Plan: {{conducta_suturas}}

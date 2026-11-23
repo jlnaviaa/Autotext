@@ -175,7 +175,7 @@
   <header>
     <div class="brand">
       <h1>🩺 AutoText v12 — Portal de Plantillas Clínicas y Quirúrgicas</h1>
-      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: 2026-11-21</p>
+      <p>Dr. José Luis Navia Ávila · Texto Plano para Historia Clínica + Impresión con Marca de Agua Verum · Actualizado: 2026-11-22</p>
     </div>
     <div style="display:flex; gap:0.6rem;">
       <a class="btn btn-primary" href="Autotext_Final.html" style="flex:initial; padding:0.6rem 1.1rem;">✏️ Editor de Plantillas (AutoText)</a>
@@ -194,10 +194,12 @@
 
   <div class="toolbar">
     <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido clínico..." oninput="render()">
-    <button class="filter-btn active" onclick="setCat('ALL', this)">Todas (8)</button>
+    <button class="filter-btn active" onclick="setCat('ALL', this)">Todas (17)</button>
     <button class="filter-btn" onclick="setCat('Consulta General', this)">Consulta</button>
+    <button class="filter-btn" onclick="setCat('Pediátrico / Neonato', this)">👶 Pediátrico / Neonato</button>
     <button class="filter-btn" onclick="setCat('Catarata / Faco', this)">Catarata</button>
     <button class="filter-btn" onclick="setCat('Quirúrgico', this)">Quirúrgico</button>
+    <button class="filter-btn" onclick="setCat('Consentimientos', this)">✍️ Consentimientos</button>
     <button class="filter-btn" onclick="setCat('Fórmulas y Postoperatorio', this)">Fórmulas / Postop</button>
   </div>
 
@@ -229,6 +231,46 @@
     "preview": "Facoemulsificación de cristalino con implante de lente intraocular ojo {{ojo}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antisepsia tópicas...",
     "webUrl": "web/CIRUGIA.html",
     "editorUrl": "CIRUGIA.html"
+  },
+  {
+    "filename": "CIRUGIA_PTERIGION.html",
+    "title": "Descripción Quirúrgica y Fórmula de Pterigión con Autoinjerto",
+    "category": "Quirúrgico",
+    "workflow": "📋 HC + 🖨️ Impresión Verum",
+    "varCount": 7,
+    "preview": "Descripción quirúrgica Resección de pterigión con injerto de conjuntiva {{ojo_intervenido}} Lavado de manos Colocación de campos estériles Blefaróstato {{ojo_interve...",
+    "webUrl": "web/CIRUGIA_PTERIGION.html",
+    "editorUrl": "CIRUGIA_PTERIGION.html"
+  },
+  {
+    "filename": "CONSENTIMIENTO_CATARATA.html",
+    "title": "Consentimiento Informado Cirugía de Catarata",
+    "category": "Consentimientos",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 5,
+    "preview": "Información sobre la intervención Yo, {{nombre_paciente}}, identificado(a) con documento {{documento_paciente}}, he acudido a consulta de oftalmología con el Doctor ...",
+    "webUrl": "web/CONSENTIMIENTO_CATARATA.html",
+    "editorUrl": "CONSENTIMIENTO_CATARATA.html"
+  },
+  {
+    "filename": "CONSENTIMIENTO_CHALAZION.html",
+    "title": "Consentimiento Informado Drenaje y Resección de Chalazión",
+    "category": "Consentimientos",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 4,
+    "preview": "Información sobre la intervención Yo, {{nombre_paciente}}, identificado(a) con documento {{documento_paciente}}, paciente con cuadro de chalazión persistente en {{oj...",
+    "webUrl": "web/CONSENTIMIENTO_CHALAZION.html",
+    "editorUrl": "CONSENTIMIENTO_CHALAZION.html"
+  },
+  {
+    "filename": "CONSENTIMIENTO_PTERIGION.html",
+    "title": "Consentimiento Informado Cirugía de Pterigión con Autoinjerto",
+    "category": "Consentimientos",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 5,
+    "preview": "Información sobre la intervención Yo, {{nombre_paciente}}, identificado(a) con documento {{documento_paciente}}, he acudido a consulta de oftalmología con el Doctor ...",
+    "webUrl": "web/CONSENTIMIENTO_PTERIGION.html",
+    "editorUrl": "CONSENTIMIENTO_PTERIGION.html"
   },
   {
     "filename": "CONSULTA_CATARATA.html",
@@ -269,6 +311,56 @@
     "preview": "Facoemulsificación de cristalino con implante de lente intraocular {{ojo_intervenido}} Descripción quirúrgica Lavado de manos Bloqueo anestésico Asepsia y antisepsia...",
     "webUrl": "web/Descripcion_Recomendaciones_Formula.html",
     "editorUrl": "Descripcion_Recomendaciones_Formula.html"
+  },
+  {
+    "filename": "EXAMEN_LACTANTE.html",
+    "title": "Examen Oftalmológico de Lactante",
+    "category": "Pediátrico / Neonato",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 12,
+    "preview": "Antecedentes {{antecedentes_lactante}} Examen Oftalmológico Agudeza visual lejos Sin corrección ambos ojos: {{agudeza_visual_ao}} Examen externo Ojo derecho. {{parpa...",
+    "webUrl": "web/EXAMEN_LACTANTE.html",
+    "editorUrl": "EXAMEN_LACTANTE.html"
+  },
+  {
+    "filename": "EXAMEN_NEONATO.html",
+    "title": "Examen Oftalmológico de Neonato",
+    "category": "Pediátrico / Neonato",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 12,
+    "preview": "Antecedentes {{antecedentes_neonato}} Examen Oftalmológico Agudeza visual Ambos ojos: {{agudeza_visual_ao}} Examen externo Ojo derecho. {{parpado_od}} Ojo izquierdo....",
+    "webUrl": "web/EXAMEN_NEONATO.html",
+    "editorUrl": "EXAMEN_NEONATO.html"
+  },
+  {
+    "filename": "EXAMEN_PEDIATRICO_NINO.html",
+    "title": "Examen Oftalmológico Pediátrico (Niño)",
+    "category": "Pediátrico / Neonato",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 17,
+    "preview": "Antecedentes {{antecedentes_nino}} Examen Oftalmológico Agudeza visual lejos Sin corrección Ojo derecho {{od_av_sc_lejos}} Ojo izquierdo {{oi_av_sc_lejos}} Con corre...",
+    "webUrl": "web/EXAMEN_PEDIATRICO_NINO.html",
+    "editorUrl": "EXAMEN_PEDIATRICO_NINO.html"
+  },
+  {
+    "filename": "POSTOPERATORIO_CATARATA.html",
+    "title": "Control Postoperatorio de Cirugía de Catarata",
+    "category": "Fórmulas y Postoperatorio",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 7,
+    "preview": "Motivo de consulta Postoperatorio cirugía de catarata con implante de lente intraocular {{ojo_intervenido}} Enfermedad actual {{evolucion_subjetiva}} Examen Oftalmol...",
+    "webUrl": "web/POSTOPERATORIO_CATARATA.html",
+    "editorUrl": "POSTOPERATORIO_CATARATA.html"
+  },
+  {
+    "filename": "POSTOPERATORIO_PTERIGION.html",
+    "title": "Control Postoperatorio de Resección de Pterigión",
+    "category": "Fórmulas y Postoperatorio",
+    "workflow": "📋 Historia Clínica + 🖨️ Verum",
+    "varCount": 5,
+    "preview": "Motivo de consulta Postoperatorio resección de pterigión con injerto de conjuntiva {{ojo_intervenido}} Enfermedad actual {{evolucion_subjetiva}} Examen Oftalmológico...",
+    "webUrl": "web/POSTOPERATORIO_PTERIGION.html",
+    "editorUrl": "POSTOPERATORIO_PTERIGION.html"
   },
   {
     "filename": "Prequirurgico.html",

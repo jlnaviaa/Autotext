@@ -1,0 +1,12 @@
+Información sobre la intervención
+Yo, {{nombre_paciente}}, identificado(a) con documento {{documento_paciente}}, he acudido a consulta de oftalmología con el Doctor JOSÉ LUIS NAVIA ÁVILA, habiendo sido atendido y examinado con diagnóstico de pterigión en {{ojo_intervenido}}.
+El pterigión es un crecimiento fibrovascular benigno de la conjuntiva que invade la córnea, asociado principalmente a la exposición solar (radiación ultravioleta), viento y sequedad ocular. La cirugía consiste en la resección de la cabeza y cuerpo del pterigión, queratectomía superficial y la colocación de un autoinjerto conjuntival tomado del mismo ojo mediante {{fijacion_injerto}} para reducir el riesgo de reproducción.
+
+Beneficios
+Eliminar la lesión fibrovascular que invade la superficie corneal, mejorar la sintomatología inflamatoria irritativa (ojo rojo, sensación de cuerpo extraño) y prevenir la progresión hacia el eje visual.
+
+Riesgos
+No existe ninguna cirugía sin riesgos. Entre las complicaciones que pueden presentarse durante o después de la cirugía de pterigión se encuentran: recidiva o reproducción del pterigión (que puede requerir nueva intervención o medicamentos coadyuvantes), infección ocular, hemorragia subconjuntival, dehiscencia o desplazamiento del injerto, granuloma piógeno, adelgazamiento corneal o escleral (dellen), cicatriz corneal residual (leucoma), astigmatismo residual con necesidad de gafas, diplopía por restricción muscular y riesgos inherentes a la anestesia local. El no seguimiento de las recomendaciones postoperatorias (como protección solar estricta, lubricación y no frotarse el ojo) aumenta significativamente el riesgo de reproducción o desprendimiento del injerto.
+
+Análisis
+{{calidad_declarante}}, CERTIFICO Y DECLARO que he leído y comprendido la información relacionada con la resección de pterigión más autoinjerto conjuntival en {{ojo_intervenido}}, se han aclarado mis dudas a cabalidad y doy mi CONSENTIMIENTO para que se me realice el procedimiento por parte del Doctor JOSÉ LUIS NAVIA ÁVILA.

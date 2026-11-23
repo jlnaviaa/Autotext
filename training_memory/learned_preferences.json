@@ -1,0 +1,578 @@
+{
+  "schema_version": "1.0.0",
+  "agent_name": "template-assistant",
+  "updated_at": "2026-11-22 22:17:39",
+  "total_templates_tracked": 17,
+  "total_user_improvements_learned": 0,
+  "learned_variable_defaults": {
+    "od_av_sc_lejos": {
+      "label": "AV Lejos SC OD",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "oi_av_sc_lejos": {
+      "label": "AV Lejos SC OI",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "od_av_cc_lejos": {
+      "label": "AV Lejos CC OD",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "oi_av_cc_lejos": {
+      "label": "AV Lejos CC OI",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "od_av_sc_cerca": {
+      "label": "AV cerca SC OD",
+      "type": "text",
+      "defaultValue": "J1"
+    },
+    "oi_av_sc_cerca": {
+      "label": "AV cerca SC OI",
+      "type": "text",
+      "defaultValue": "J1"
+    },
+    "od_av_cc_cerca": {
+      "label": "AV cerca CC OD",
+      "type": "text",
+      "defaultValue": "J1"
+    },
+    "oi_av_cc_cerca": {
+      "label": "AV cerca CC OI",
+      "type": "text",
+      "defaultValue": "J1"
+    },
+    "od_autorrefraccion_esfera": {
+      "label": "Autorref esfera OD",
+      "type": "text",
+      "defaultValue": "0.00"
+    },
+    "oi_autorrefraccion_esfera": {
+      "label": "Autorref esfera OI",
+      "type": "text",
+      "defaultValue": "0.00"
+    },
+    "od_autorrefraccion_cilindro": {
+      "label": "Autorref cilindro OD",
+      "type": "text",
+      "defaultValue": "0.00"
+    },
+    "oi_autorrefraccion_cilindro": {
+      "label": "Autorref cilindro OI",
+      "type": "text",
+      "defaultValue": "0.00"
+    },
+    "od_autorrefraccion_eje": {
+      "label": "Autorref eje OD",
+      "type": "text",
+      "defaultValue": "0"
+    },
+    "oi_autorrefraccion_eje": {
+      "label": "Autorref eje OI",
+      "type": "text",
+      "defaultValue": "0"
+    },
+    "od_queratometria_plano": {
+      "label": "K plano OD",
+      "type": "text",
+      "defaultValue": "43.00"
+    },
+    "oi_queratometria_plano": {
+      "label": "K plano OI",
+      "type": "text",
+      "defaultValue": "43.00"
+    },
+    "od_queratometria_curvo": {
+      "label": "K curvo OD",
+      "type": "text",
+      "defaultValue": "43.50"
+    },
+    "oi_queratometria_curvo": {
+      "label": "K curvo OI",
+      "type": "text",
+      "defaultValue": "43.50"
+    },
+    "od_queratometria_eje": {
+      "label": "K eje OD",
+      "type": "text",
+      "defaultValue": "0"
+    },
+    "oi_queratometria_eje": {
+      "label": "K eje OI",
+      "type": "text",
+      "defaultValue": "0"
+    },
+    "mov_ext": {
+      "label": "Movimientos Extraoculares",
+      "type": "text",
+      "defaultValue": "Hirschberg centrado. Ducciones normales. Cover test negativo."
+    },
+    "meibomio_od": {
+      "label": "Meibomio OD",
+      "type": "text",
+      "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+    },
+    "meibomio_oi": {
+      "label": "Meibomio OI",
+      "type": "text",
+      "defaultValue": "Secreción y posición normal de las glándulas de Meibomio."
+    },
+    "parpado_od": {
+      "label": "Examen Externo OD",
+      "type": "text",
+      "defaultValue": "Bordes palpebrales normales. Puntos lagrimales bien. Pestañas normal."
+    },
+    "parpado_oi": {
+      "label": "Examen Externo OI",
+      "type": "text",
+      "defaultValue": "Bordes palpebrales normales. Puntos lagrimales bien. Pestañas normal."
+    },
+    "but_od": {
+      "label": "BUT OD (seg)",
+      "type": "text",
+      "defaultValue": "10"
+    },
+    "but_oi": {
+      "label": "BUT OI (seg)",
+      "type": "text",
+      "defaultValue": "10"
+    },
+    "conjuntiva_od": {
+      "label": "Conjuntiva OD",
+      "type": "text",
+      "defaultValue": "Conjuntiva sana."
+    },
+    "conjuntiva_oi": {
+      "label": "Conjuntiva OI",
+      "type": "text",
+      "defaultValue": "Conjuntiva sana."
+    },
+    "cornea_od": {
+      "label": "Córnea OD",
+      "type": "text",
+      "defaultValue": "Córnea transparente."
+    },
+    "cornea_oi": {
+      "label": "Córnea OI",
+      "type": "text",
+      "defaultValue": "Córnea transparente."
+    },
+    "camara_od": {
+      "label": "Cámara anterior OD",
+      "type": "select",
+      "defaultValue": "IV"
+    },
+    "camara_oi": {
+      "label": "Cámara anterior OI",
+      "type": "select",
+      "defaultValue": "IV"
+    },
+    "iris_od": {
+      "label": "Iris OD",
+      "type": "text",
+      "defaultValue": "Iris normal."
+    },
+    "iris_oi": {
+      "label": "Iris OI",
+      "type": "text",
+      "defaultValue": "Iris normal."
+    },
+    "cristalino_od": {
+      "label": "Cristalino OD",
+      "type": "text",
+      "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+    },
+    "cristalino_oi": {
+      "label": "Cristalino OI",
+      "type": "text",
+      "defaultValue": "Cristalino N0C0P0 en posición anatómica"
+    },
+    "vitreo_od": {
+      "label": "Vítreo OD",
+      "type": "text",
+      "defaultValue": "Vítreo transparente."
+    },
+    "vitreo_oi": {
+      "label": "Vítreo OI",
+      "type": "text",
+      "defaultValue": "Vítreo transparente."
+    },
+    "retina_od": {
+      "label": "Retina OD",
+      "type": "text",
+      "defaultValue": "Retina adherida."
+    },
+    "retina_oi": {
+      "label": "Retina OI",
+      "type": "text",
+      "defaultValue": "Retina adherida."
+    },
+    "vasculatura_od": {
+      "label": "Vasculatura OD",
+      "type": "text",
+      "defaultValue": "Vasculatura de aspecto normal."
+    },
+    "vasculatura_oi": {
+      "label": "Vasculatura OI",
+      "type": "text",
+      "defaultValue": "Vasculatura de aspecto normal."
+    },
+    "excavacion_od": {
+      "label": "Excavación OD",
+      "type": "text",
+      "defaultValue": "0.3"
+    },
+    "excavacion_oi": {
+      "label": "Excavación OI",
+      "type": "text",
+      "defaultValue": "0.3"
+    },
+    "pio_od": {
+      "label": "PIO OD",
+      "type": "text",
+      "defaultValue": "14 mmHg"
+    },
+    "pio_oi": {
+      "label": "PIO OI",
+      "type": "text",
+      "defaultValue": "14 mmHg"
+    },
+    "ojo": {
+      "label": "Ojo Operado",
+      "type": "select",
+      "defaultValue": "derecho"
+    },
+    "incision": {
+      "label": "Incisión (mm)",
+      "type": "text",
+      "defaultValue": "2.5"
+    },
+    "tipo_lente": {
+      "label": "Tipo de lente intraocular",
+      "type": "select",
+      "defaultValue": "intraocular con filtros (visión lejana)"
+    },
+    "complicaciones": {
+      "label": "Complicaciones",
+      "type": "textarea",
+      "defaultValue": "Sin complicaciones"
+    },
+    "ojo_intervenido": {
+      "label": "Ojo intervenido",
+      "type": "select",
+      "defaultValue": "ojo derecho"
+    },
+    "localizacion_pterigion": {
+      "label": "Localización del Pterigión",
+      "type": "select",
+      "defaultValue": "nasal"
+    },
+    "sutura_injerto": {
+      "label": "Fijación del Injerto",
+      "type": "select",
+      "defaultValue": "Nylon 10-0 puntos separados"
+    },
+    "ubicacion_control": {
+      "label": "Consultorio",
+      "type": "select",
+      "defaultValue": "Edificio de Colores consultorio 1122 en Cali"
+    },
+    "fecha_control": {
+      "label": "Fecha",
+      "type": "text",
+      "defaultValue": "en 24 a 48 horas"
+    },
+    "hora_control": {
+      "label": "Hora",
+      "type": "text",
+      "defaultValue": "por confirmar"
+    },
+    "nombre_paciente": {
+      "label": "Nombre del Paciente",
+      "type": "text",
+      "defaultValue": "Paciente"
+    },
+    "tipo_lente_consentimiento": {
+      "label": "Tipo de Lente Intraocular",
+      "type": "select",
+      "defaultValue": "plegable monofocal"
+    },
+    "calidad_declarante": {
+      "label": "Calidad del Declarante",
+      "type": "select",
+      "defaultValue": "Por mí mismo"
+    },
+    "fijacion_injerto": {
+      "label": "Técnica de Fijación del Injerto",
+      "type": "select",
+      "defaultValue": "sutura con Nylon 10-0 puntos separados"
+    },
+    "ojo_intervenir": {
+      "label": "Ojo a intervenir",
+      "type": "select",
+      "defaultValue": "Ojo Derecho"
+    },
+    "avl_sc_od": {
+      "label": "AV Lejos SC OD",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "avl_sc_oi": {
+      "label": "AV Lejos SC OI",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "ecografia": {
+      "label": "Resultado ecografía",
+      "type": "text",
+      "defaultValue": "Ecografía de ojo muestra polo posterior dentro de límites normales."
+    },
+    "causa_vitrectomia": {
+      "label": "Causa vitrectomía anterior",
+      "type": "select",
+      "defaultValue": "pobre midriasis"
+    },
+    "antecedentes": {
+      "label": "Antecedentes",
+      "type": "textarea",
+      "defaultValue": "Niega antecedentes de importancia."
+    },
+    "avl_cc_od": {
+      "label": "AV Lejos CC OD",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "avl_cc_oi": {
+      "label": "AV Lejos CC OI",
+      "type": "text",
+      "defaultValue": "20/20"
+    },
+    "camara_anterior": {
+      "label": "Cámara anterior",
+      "type": "select",
+      "defaultValue": "IV"
+    },
+    "lente": {
+      "label": "Lente",
+      "type": "select",
+      "defaultValue": "plegable una sola pieza"
+    },
+    "principal": {
+      "label": "Incisión principal (mm)",
+      "type": "text",
+      "defaultValue": "2.5"
+    },
+    "principal_eje": {
+      "label": "Eje incisión principal",
+      "type": "text",
+      "defaultValue": "100"
+    },
+    "relajante": {
+      "label": "Incisión relajante (mm)",
+      "type": "text",
+      "defaultValue": "1.0"
+    },
+    "relajante_eje": {
+      "label": "Eje incisión relajante",
+      "type": "text",
+      "defaultValue": "10"
+    },
+    "poder_lente": {
+      "label": "Poder lente (D)",
+      "type": "text",
+      "defaultValue": "21.0"
+    },
+    "poder_cilindro": {
+      "label": "Poder cilindro (D)",
+      "type": "text",
+      "defaultValue": "0.0"
+    },
+    "eje_lente": {
+      "label": "Eje lente tórico",
+      "type": "text",
+      "defaultValue": "0"
+    },
+    "hallazgos": {
+      "label": "Hallazgos",
+      "type": "textarea",
+      "defaultValue": "Sin hallazgos relevantes"
+    },
+    "antecedentes_lactante": {
+      "label": "Antecedentes Generales y Oculares",
+      "type": "textarea",
+      "defaultValue": "Niega antecedentes patológicos, quirúrgicos u oculares de importancia."
+    },
+    "agudeza_visual_ao": {
+      "label": "Agudeza Visual (Ambos Ojos)",
+      "type": "text",
+      "defaultValue": "Pupilas reactivas"
+    },
+    "biomicroscopia_ao": {
+      "label": "Biomicroscopía (Ambos Ojos)",
+      "type": "text",
+      "defaultValue": "Conjuntiva sana. Córnea transparente. Cámara anterior formada, amplia. Iris normal."
+    },
+    "fondo_ojo_ao": {
+      "label": "Fondo de Ojo (Ambos Ojos)",
+      "type": "text",
+      "defaultValue": "Vítreo transparente. Retina adherida. Disco de aspecto normal. Vasculatura sana."
+    },
+    "pio_conducta": {
+      "label": "Presión Intraocular",
+      "type": "text",
+      "defaultValue": "Digital normal bilateral / No se toma por edad del paciente."
+    },
+    "antecedentes_neonato": {
+      "label": "Antecedentes Perinatales y Oculares",
+      "type": "textarea",
+      "defaultValue": "Niega antecedentes perinatales u oculares patológicos."
+    },
+    "antecedentes_nino": {
+      "label": "Antecedentes (Patológicos, Oculares, Familiares)",
+      "type": "textarea",
+      "defaultValue": "Niega antecedentes patológicos, quirúrgicos, oculares o alérgicos."
+    },
+    "refraccion_uso_od": {
+      "label": "Refracción en Uso OD",
+      "type": "text",
+      "defaultValue": "No usa"
+    },
+    "refraccion_uso_oi": {
+      "label": "Refracción en Uso OI",
+      "type": "text",
+      "defaultValue": "No usa"
+    },
+    "evolucion_subjetiva": {
+      "label": "Subjetivo / Síntomas",
+      "type": "text",
+      "defaultValue": "Manifiesta que no ha presentado dolor. Se aplica las gotas que le formularon."
+    },
+    "av_postop": {
+      "label": "Agudeza Visual Ojo Operado",
+      "type": "text",
+      "defaultValue": "20/25"
+    },
+    "biomicroscopia_postop": {
+      "label": "Biomicroscopía Ojo Operado",
+      "type": "text",
+      "defaultValue": "Conjuntiva tranquila. Injerto adherido. Lecho donante normal. Córnea transparente. Cámara anterior amplia. Iris normal."
+    },
+    "fondo_ojo_postop": {
+      "label": "Fondo de Ojo",
+      "type": "text",
+      "defaultValue": "Retina adherida. No otros detalles por miosis."
+    },
+    "pio_postop": {
+      "label": "Presión Intraocular",
+      "type": "text",
+      "defaultValue": "No se toma presión intraocular por postoperatorio mediato."
+    },
+    "plan_control": {
+      "label": "Plan y Próxima Valoración",
+      "type": "text",
+      "defaultValue": "Valoración por optometría en 3 meses."
+    },
+    "conducta_suturas": {
+      "label": "Conducta / Retiro de Suturas",
+      "type": "select",
+      "defaultValue": "Se retiran suturas sin complicaciones. Valoración por oftalmología en 2 meses."
+    },
+    "nombres_apellidos": {
+      "label": "Nombres y Apellidos",
+      "type": "text",
+      "defaultValue": "nombre del paciente"
+    }
+  },
+  "learned_select_options": {
+    "camara_od": [
+      "IV",
+      "III",
+      "II",
+      "I"
+    ],
+    "camara_oi": [
+      "IV",
+      "III",
+      "II",
+      "I"
+    ],
+    "ojo": [
+      "derecho",
+      "izquierdo"
+    ],
+    "ojo_intervenido": [
+      "ojo derecho",
+      "ojo izquierdo",
+      "ambos ojos"
+    ],
+    "localizacion_pterigion": [
+      "nasal",
+      "temporal",
+      "bipolar (nasal y temporal)"
+    ],
+    "sutura_injerto": [
+      "Nylon 10-0 puntos separados",
+      "Adhesivo tisular de fibrina"
+    ],
+    "ubicacion_control": [
+      "Edificio de Colores consultorio 1122 en Cali",
+      "Clínica Nuestra Señora del Palmar consultorio 104 en Palmira"
+    ],
+    "tipo_lente_consentimiento": [
+      "plegable monofocal",
+      "plegable con filtros (visión lejana)",
+      "de rango extendido (EDOF)",
+      "multifocal / trifocal",
+      "tórico"
+    ],
+    "calidad_declarante": [
+      "Por mí mismo",
+      "En representación del paciente"
+    ],
+    "fijacion_injerto": [
+      "sutura con Nylon 10-0 puntos separados",
+      "adhesivo tisular biológico (pegamento de fibrina)"
+    ],
+    "ojo_intervenir": [
+      "Ojo Derecho",
+      "Ojo Izquierdo",
+      "Ambos Ojos"
+    ],
+    "tipo_lente": [
+      "intraocular con filtros (visión lejana)",
+      "de visión o rango extendido (visión lejana e intermedia)",
+      "multifocal (visión lejos y cerca)",
+      "trifocal (visión lejos, intermedia y cerca)"
+    ],
+    "causa_vitrectomia": [
+      "pobre midriasis",
+      "catarata madura",
+      "catarata hipermadura",
+      "catarata complicada"
+    ],
+    "camara_anterior": [
+      "IV",
+      "III",
+      "II",
+      "I"
+    ],
+    "lente": [
+      "plegable una sola pieza",
+      "plegable tres piezas"
+    ],
+    "conducta_suturas": [
+      "Continúa manejo tópico actual. Control para retiro de suturas.",
+      "Se retiran suturas sin complicaciones. Valoración por oftalmología en 2 meses."
+    ]
+  },
+  "learned_style_rules": [
+    "Texto 100% plano sin sintaxis Markdown (##, **, ---) para pegado directo en Historia Clínica.",
+    "Variables OD (mitad izquierda) con sufijo/prefijo _od y variables OI (mitad derecha) con _oi.",
+    "Variables que incluyen ambos ojos o generales sin _od/_oi ocupan el 100% del ancho de la columna izquierda.",
+    "Toda variable lleva defaultValue con su hallazgo fisiológico normal."
+  ],
+  "recent_improvements": []
+}

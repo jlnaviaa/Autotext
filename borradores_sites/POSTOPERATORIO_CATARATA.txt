@@ -1,0 +1,17 @@
+Motivo de consulta
+Postoperatorio cirugía de catarata con implante de lente intraocular {{ojo_intervenido}}
+
+Enfermedad actual
+{{evolucion_subjetiva}}
+
+Examen Oftalmológico
+Ojo examinado: {{ojo_intervenido}}
+Agudeza visual: {{av_postop}}
+Biomicroscopía. {{biomicroscopia_postop}}
+Fondo de ojo. {{fondo_ojo_postop}}
+Presión intraocular. {{pio_postop}}
+
+Análisis
+Paciente en postoperatorio inmediato de cirugía de catarata e implante de lente intraocular {{ojo_intervenido}} con evolución satisfactoria. Debe continuar tratamiento iniciado después de la cirugía. Ya tiene recomendaciones.
+Signos de alarma. Disminución de la visión, aparición de legañas, dolor y ojo rojo que aumenten con el paso del tiempo.
+Plan: {{plan_control}}

@@ -466,11 +466,15 @@ def sync_all_templates() -> list:
 
 def classify_template(stem: str) -> str:
     s = stem.upper()
+    if "CONSENTIMIENTO" in s:
+        return "Consentimientos"
+    if "NEONATO" in s or "LACTANTE" in s or "PEDIATRICO" in s or "NINO" in s:
+        return "Pediátrico / Neonato"
     if "CIRUGIA" in s or "PREQUIRURGICO" in s:
         return "Quirúrgico"
-    if "CATARATA" in s and "RECOMENDACIONES" not in s:
+    if "CATARATA" in s and "RECOMENDACIONES" not in s and "POSTOPERATORIO" not in s:
         return "Catarata / Faco"
-    if "FORMULA" in s or "RECOMENDACIONES" in s:
+    if "FORMULA" in s or "RECOMENDACIONES" in s or "POSTOPERATORIO" in s:
         return "Fórmulas y Postoperatorio"
     if "AUTOTEXT_FINAL" in s:
         return "Lienzo Base"
@@ -702,8 +706,10 @@ def generate_portal_index(templates_info: list) -> Path:
     <input type="text" id="q" class="search-input" placeholder="🔍 Buscar plantilla por nombre, categoría o contenido clínico..." oninput="render()">
     <button class="filter-btn active" onclick="setCat('ALL', this)">Todas ({len(cards_data)})</button>
     <button class="filter-btn" onclick="setCat('Consulta General', this)">Consulta</button>
+    <button class="filter-btn" onclick="setCat('Pediátrico / Neonato', this)">👶 Pediátrico / Neonato</button>
     <button class="filter-btn" onclick="setCat('Catarata / Faco', this)">Catarata</button>
     <button class="filter-btn" onclick="setCat('Quirúrgico', this)">Quirúrgico</button>
+    <button class="filter-btn" onclick="setCat('Consentimientos', this)">✍️ Consentimientos</button>
     <button class="filter-btn" onclick="setCat('Fórmulas y Postoperatorio', this)">Fórmulas / Postop</button>
   </div>
 

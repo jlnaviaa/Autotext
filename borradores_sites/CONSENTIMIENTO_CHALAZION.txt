@@ -1,0 +1,13 @@
+Información sobre la intervención
+Yo, {{nombre_paciente}}, identificado(a) con documento {{documento_paciente}}, paciente con cuadro de chalazión persistente en {{ojo_intervenido}}. Se indica realización de drenaje y curetaje / resección de chalazión bajo anestesia local.
+Se explica que la cirugía consiste en incidir y resecar la lesión inflamatoria lipogranulomatosa de la glándula de Meibomio en el párpado afectado.
+
+Beneficios
+Drenar el contenido inflamatorio encapsulado y resecar la cápsula del chalazión que no resolvió con manejo médico conservador.
+
+Riesgos
+Los riesgos relacionados con este procedimiento consisten en infección palpebral, hematoma o hemorragia local, cicatriz palpebral, asimetría del borde libre o pérdida focal de pestañas, y reaparición (recidiva) de la masa o aparición de nuevos chalaziones en glándulas vecinas.
+En los casos en que la lesión reaparezca de forma recurrente en el mismo sitio, es indispensable realizar un estudio histopatológico (biopsia) de la lesión para descartar una lesión tumoral de glándulas sebáceas.
+
+Análisis
+{{calidad_declarante}}, CERTIFICO Y DECLARO que he comprendido la información explicada sobre el drenaje y resección de chalazión en {{ojo_intervenido}}, se han resuelto mis inquietudes y doy mi CONSENTIMIENTO para que se practique el procedimiento por parte del Doctor JOSÉ LUIS NAVIA ÁVILA.

@@ -1,0 +1,30 @@
+Antecedentes
+{{antecedentes_nino}}
+
+Examen Oftalmológico
+Agudeza visual lejos
+Sin corrección   Ojo derecho {{od_av_sc_lejos}}   Ojo izquierdo {{oi_av_sc_lejos}}
+Con corrección   Ojo derecho {{od_av_cc_lejos}}   Ojo izquierdo {{oi_av_cc_lejos}}
+
+Refracción en uso
+Ojo derecho {{refraccion_uso_od}}   Ojo izquierdo {{refraccion_uso_oi}}
+
+Examen externo
+Ojo derecho. {{parpado_od}}
+Ojo izquierdo. {{parpado_oi}}
+
+Movimientos extraoculares
+{{mov_ext}}
+
+Biomicroscopía
+Ambos ojos. {{biomicroscopia_ao}}
+Ojo derecho. {{cristalino_od}}
+Ojo izquierdo. {{cristalino_oi}}
+
+Polo posterior
+Ambos ojos. {{fondo_ojo_ao}}
+Ojo derecho. Excavación {{excavacion_od}}
+Ojo izquierdo. Excavación {{excavacion_oi}}
+
+Presión intraocular
+{{pio_conducta}}
