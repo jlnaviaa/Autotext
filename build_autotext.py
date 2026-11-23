@@ -218,8 +218,6 @@ def normalize_template_data(stem: str, title: str, variables: list, template_tex
                 line = body
             else:
                 line = f"- {body}"
-        else:
-            line = line.replace("**", "")
         clean_lines.append(line.rstrip())
 
     template_text = "\n".join(clean_lines)
