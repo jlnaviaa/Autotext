@@ -662,6 +662,41 @@
                 overflow: visible;
             }
 
+            #print-content.print-size-compact {
+                font-size: 9.5pt;
+                line-height: 1.38;
+            }
+
+            #print-content.print-size-compact .print-doc-title {
+                font-size: 10.5pt;
+            }
+
+            #print-content.print-size-compact .print-section-title {
+                font-size: 9.2pt;
+                margin-top: 6px;
+                margin-bottom: 2px;
+            }
+
+            #print-content.print-size-standard {
+                font-size: 10.5pt;
+                line-height: 1.48;
+            }
+
+            #print-content.print-size-large {
+                font-size: 12pt;
+                line-height: 1.56;
+            }
+
+            #print-content.print-size-large .print-doc-title {
+                font-size: 13pt;
+            }
+
+            #print-content.print-size-large .print-section-title {
+                font-size: 11.2pt;
+                margin-top: 11px;
+                margin-bottom: 4px;
+            }
+
             .print-doc-header {
                 display: flex;
                 justify-content: space-between;
@@ -843,12 +878,20 @@
                         <button id="copy-btn" class="btn btn-primary" title="Copia el texto editado en formato normal / minúscula para Historia Clínica (Alt+C)">📋 Copiar minúscula</button>
                         <button id="copy-upper-btn" class="btn" title="Copia el texto editado en MAYÚSCULA para Historia Clínica (Alt+M)">🔠 Copiar MAYÚSCULA</button>
                         <button id="print-btn" class="btn" style="border-color: var(--primary-color); color: var(--primary-color);" title="Imprime con marca de agua personal y formato clínico (Alt+P)">🖨️ Imprimir Documento</button>
-                        <div style="display: flex; gap: 12px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 2px;">
                             <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <input type="checkbox" id="print-header-chk" checked> Encabezado y fecha
                             </label>
                             <label style="display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
-                                <input type="checkbox" id="print-sign-chk" checked> Firma médica al imprimir
+                                <input type="checkbox" id="print-sign-chk" checked> Firma médica
+                            </label>
+                            <label style="display: inline-flex; align-items: center; gap: 4px;" title="Tamaño de letra al imprimir (9.5pt para consentimientos compactos, 10.5pt estándar, 12pt lectura mayor para pacientes)">
+                                <span>🔎 Letra:</span>
+                                <select id="print-font-size" style="font-size: 0.73rem; padding: 1px 4px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; color: var(--text-main);">
+                                    <option value="compact">Compacto (9.5pt)</option>
+                                    <option value="standard" selected>Estándar (10.5pt)</option>
+                                    <option value="large">Lectura Mayor (12pt)</option>
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -887,6 +930,8 @@
 
     <div class="toast-msg" id="toast-msg">Mensaje de notificación</div>
 
+    
+    <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->
     
     <!-- CATÁLOGO DE PLANTILLAS PARA EDICIÓN EN AUTOTEXT -->
     
@@ -1124,6 +1169,7 @@ Recuerde que es un control postoperatorio y el horario es flexible. Debe present
             printBtn: document.getElementById('print-btn'),
             printHeaderChk: document.getElementById('print-header-chk'),
             printSignChk: document.getElementById('print-sign-chk'),
+            printFontSize: document.getElementById('print-font-size'),
             printContent: document.getElementById('print-content'),
             saveAppBtn: document.getElementById('save-app-btn'),
             toastMsg: document.getElementById('toast-msg'),
@@ -2183,6 +2229,8 @@ Recuerde que es un control postoperatorio y el horario es flexible. Debe present
                 alert('No hay texto generado para imprimir.');
                 return;
             }
+            const sizeMode = (elements.printFontSize && elements.printFontSize.value) ? elements.printFontSize.value : 'standard';
+            elements.printContent.className = `print-size-${sizeMode}`;
             elements.printContent.innerHTML = formatTextForPrint(elements.resultText);
             window.print();
         }

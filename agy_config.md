@@ -5,8 +5,8 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 
 ## Estado Actual (snapshot)
 - **Fase**: produccion
-- **Ultimo cambio**: 2026-11-21
-- **Proximo paso**: Compilar nuevas plantillas clinicas desde borradores `.txt` o usar flujo hibrido (`#s=...`) en consulta
+- **Ultimo cambio**: 2026-11-22
+- **Proximo paso**: Iniciar `template-assistant` en LEGION (`template-assistant -SyncOpenClaw`) o usar las 17 plantillas con formato enriquecido de impresion en consulta
 - **Bloqueadores**: ninguno
 - **Conversacion activa**: [42609aa9](conversation://42609aa9-6e21-4c95-bc82-00b507701799)
 
