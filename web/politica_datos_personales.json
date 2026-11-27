@@ -1,0 +1,7 @@
+{
+  "_description": "Politica de datos personales (nombre, documento/ID, fecha) por plantilla. Orden: --personal yes|no > deny_stems > allow_stems > allow_content_regex > por defecto NO.",
+  "personal_label_regex": "paciente|nombre|documento|c[eé]dula|identificaci|tel[eé]fono|celular|direcci[oó]n|correo|e-?mail|nacimiento|historia cl|\\bhc\\b|\\bcc\\b|fecha",
+  "deny_stems": ["ADULTO", "CONSENTIMIENTO", "LACTANTE", "NEONATO", "PEDIATRICO"],
+  "allow_stems": ["RECOMENDACION", "RECETA", "FORMULA", "PRESCRIPCION"],
+  "allow_content_regex": "receta|f[oó]rmula\\s+(m[eé]dica|de|oft)|prescripci[oó]n|recomendaciones|\\bRp\\b"
+}
