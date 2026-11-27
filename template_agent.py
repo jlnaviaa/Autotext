@@ -46,7 +46,7 @@ VALID_TYPES = {"text", "textarea", "number", "date", "select"}
 
 PII_LABEL_RE = re.compile(
     r"paciente|nombre|documento|c[eé]dula|identificaci|tel[eé]fono|celular|direcci[oó]n|"
-    r"correo|e-?mail|nacimiento|historia cl|\bhc\b|\bcc\b",
+    r"correo|e-?mail|nacimiento|historia cl|\bhc\b",
     re.I,
 )
 PII_VALUE_PATTERNS = [

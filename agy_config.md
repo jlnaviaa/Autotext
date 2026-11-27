@@ -5,10 +5,10 @@ description: Generador de Plantillas de Texto HTML Autocontenidas para documenta
 
 ## Estado Actual (snapshot)
 - **Fase**: produccion
-- **Ultimo cambio**: 2026-11-22
-- **Proximo paso**: Iniciar `template-assistant` en LEGION (`template-assistant -SyncOpenClaw`) o usar las 17 plantillas con formato enriquecido de impresion en consulta
+- **Ultimo cambio**: 2026-11-26
+- **Proximo paso**: Tutorial paso a paso para interactuar con template-agent (-local) en LEGION para crear y editar plantillas
 - **Bloqueadores**: ninguno
-- **Conversacion activa**: [42609aa9](conversation://42609aa9-6e21-4c95-bc82-00b507701799)
+- **Conversacion activa**: [3aa52be1](conversation://3aa52be1-3610-48d8-9942-e5b73c1b3870)
 
 ## Flujo de Trabajo
 1. Usuario aporta borrador en `.txt` o edita en `Autotext_Final.html`.

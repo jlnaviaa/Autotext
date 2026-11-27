@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # test-quality.ps1 - Chequeo Automático de Calidad, Sintaxis y Seguridad (0 Tokens)
 # Gauntlet Gate Automático: Ejecuta validaciones estáticas locales sin costo de IA.
 # =============================================================================
@@ -38,7 +38,7 @@ $allFiles = Get-ChildItem -Path $TargetDir -Recurse -File -ErrorAction SilentlyC
     Where-Object { $_.FullName -notmatch '\\(\.git|vendor|node_modules|__pycache__)\\' }
 
 # 1. Validación de Sintaxis PowerShell (.ps1)
-Write-Host "[1/5] Validando sintaxis de scripts PowerShell (.ps1)..." -ForegroundColor White
+Write-Host "[1/6] Validando sintaxis de scripts PowerShell (.ps1)..." -ForegroundColor White
 $psScripts = $allFiles | Where-Object { $_.Extension -eq ".ps1" }
 
 foreach ($script in $psScripts) {
@@ -58,7 +58,7 @@ foreach ($script in $psScripts) {
 
 # 2. Validación de Archivos JSON (.json)
 Write-Host ""
-Write-Host "[2/5] Validando formato de archivos JSON (.json)..." -ForegroundColor White
+Write-Host "[2/6] Validando formato de archivos JSON (.json)..." -ForegroundColor White
 $jsonFiles = $allFiles | Where-Object { $_.Extension -eq ".json" }
 
 foreach ($jsonFile in $jsonFiles) {
@@ -74,7 +74,7 @@ foreach ($jsonFile in $jsonFiles) {
 
 # 3. Auditoría de Seguridad (Búsqueda de Secretos en texto plano en código y Markdown)
 Write-Host ""
-Write-Host "[3/5] Auditando presencia de secretos y credenciales..." -ForegroundColor White
+Write-Host "[3/6] Auditando presencia de secretos y credenciales..." -ForegroundColor White
 $sensitivePatterns = @(
     '(?i)password\s*=\s*["''][^"'']{4,}["'']',
     '(?i)api[_-]?key\s*=\s*["''][^"'']{8,}["'']',
@@ -107,7 +107,7 @@ if ($secretViolations -eq 0) {
 
 # 4. Verificación de Límites de Contexto (Tokens Saver: AGENTS.md, agy_config.md, snapshot <= 8 líneas)
 Write-Host ""
-Write-Host "[4/5] Verificando límites de contexto (Economía de Tokens)..." -ForegroundColor White
+Write-Host "[4/6] Verificando límites de contexto (Economía de Tokens)..." -ForegroundColor White
 
 $agentsPath = Join-Path $TargetDir "AGENTS.md"
 if (Test-Path $agentsPath) {
@@ -149,7 +149,7 @@ if (Test-Path $agyConfigPath) {
 
 # 5. Compatibilidad ARM64 en Docker (NAS)
 Write-Host ""
-Write-Host "[5/5] Verificando compatibilidad de contenedores Docker (NAS ARM64)..." -ForegroundColor White
+Write-Host "[5/6] Verificando compatibilidad de contenedores Docker (NAS ARM64)..." -ForegroundColor White
 $dockerFiles = $allFiles | Where-Object { $_.Name -like "*docker-compose*.yml" }
 
 foreach ($dFile in $dockerFiles) {
@@ -161,6 +161,71 @@ foreach ($dFile in $dockerFiles) {
     } else {
         Write-TestResult "Docker Arch: $relPath" $true
     }
+}
+
+# 6. Plantillas AutoText: variables definidas/usadas y politica de datos personales
+Write-Host ""
+Write-Host "[6/6] Validando plantillas AutoText (variables y politica de datos personales)..." -ForegroundColor White
+$webDir = Join-Path $TargetDir "web"
+$policyPath = Join-Path $webDir "politica_datos_personales.json"
+$policy = $null
+if (Test-Path $policyPath) {
+    $policy = Get-Content -Path $policyPath -Raw -Encoding utf8 | ConvertFrom-Json
+} else {
+    Write-TestWarn "Politica de datos personales ausente" "No existe web\politica_datos_personales.json; se omite la verificacion de politica"
+}
+
+$tplFiles = @()
+if (Test-Path $webDir) {
+    $tplFiles = Get-ChildItem -Path $webDir -Filter *.html -File | Where-Object { $_.Name -notin @("Autotext_Final.html", "index.html") }
+}
+$tplChecked = 0
+foreach ($tpl in $tplFiles) {
+    $raw = Get-Content -Path $tpl.FullName -Raw -Encoding utf8
+    $mVars = [regex]::Match($raw, '(?s)<script id="variables-data" type="application/json">(.*?)</script>')
+    $mText = [regex]::Match($raw, '(?s)<script id="template-text-data" type="text/plain">(.*?)</script>')
+    if (-not $mVars.Success -or -not $mText.Success) { continue }
+    $tplChecked++
+    $stem = [IO.Path]::GetFileNameWithoutExtension($tpl.Name)
+    $text = [System.Net.WebUtility]::HtmlDecode($mText.Groups[1].Value)
+    try {
+        $vars = @($mVars.Groups[1].Value | ConvertFrom-Json -ErrorAction Stop)
+    } catch {
+        Write-TestResult "Plantilla ${stem}: JSON de variables" $false $_.Exception.Message
+        continue
+    }
+    $ids = @($vars | ForEach-Object { $_.id })
+
+    # 6a. Variables duplicadas, usadas-sin-definir y definidas-sin-usar
+    $dups = @($ids | Group-Object | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
+    $used = @([regex]::Matches($text, '\{\{([A-Za-z0-9_]+)\}\}') | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique)
+    $undefined = @($used | Where-Object { $ids -notcontains $_ })
+    $unused = @($ids | Where-Object { $used -notcontains $_ })
+    if ($dups.Count -gt 0) { Write-TestResult "Plantilla ${stem}: ids unicos" $false ("Duplicadas: " + ($dups -join ", ")) }
+    if ($undefined.Count -gt 0) { Write-TestResult "Plantilla ${stem}: variables definidas" $false ("Usadas sin definir: " + ($undefined -join ", ")) }
+    if ($unused.Count -gt 0) { Write-TestWarn "Plantilla ${stem}" ("Variables definidas pero no usadas: " + ($unused -join ", ")) }
+
+    # 6b. Politica de datos personales (nombre / ID / fecha)
+    if ($null -ne $policy) {
+        $s = ($stem -replace '[^A-Za-z0-9]', '').ToUpper()
+        $denied = $false; $allowed = $false
+        foreach ($k in @($policy.deny_stems)) { if ($s -like "*$k*") { $denied = $true } }
+        if (-not $denied) {
+            foreach ($k in @($policy.allow_stems)) { if ($s -like "*$k*") { $allowed = $true } }
+            if (-not $allowed -and $policy.allow_content_regex -and ($text -match "(?i)$($policy.allow_content_regex)")) { $allowed = $true }
+        }
+        if (-not $allowed) {
+            $personal = @($vars | Where-Object { "$($_.id) $($_.label)" -match "(?i)$($policy.personal_label_regex)" } | ForEach-Object { $_.id })
+            if ($personal.Count -gt 0) {
+                $msg = "Variables personales en plantilla sin receta/recomendaciones: " + ($personal -join ", ")
+                if ($denied) { Write-TestResult "Politica datos personales: $stem" $false $msg }
+                else { Write-TestWarn "Politica datos personales: $stem" $msg }
+            }
+        }
+    }
+}
+if ($tplChecked -gt 0 -and $errorsFound -eq 0) {
+    Write-TestResult "Plantillas AutoText validadas ($tplChecked)" $true
 }
 
 # Resumen Final

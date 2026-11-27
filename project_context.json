@@ -3,14 +3,16 @@
   "context_language": "en",
   "project_name": "Autotext",
   "phase": "production",
-  "updated_at": "2026-11-22",
-  "active_conversation_id": "42609aa9-6e21-4c95-bc82-00b507701799",
+  "updated_at": "2026-11-26",
+  "active_conversation_id": "3aa52be1-3610-48d8-9942-e5b73c1b3870",
   "global_context_ref": "\\\\NAS-760025\\Desarrollo\\context_global.json",
-  "purpose": "Self-contained HTML clinical template generator for ophthalmology (v12 engine, 17 active templates) with automated CLI compiler (build_autotext.py), self-learning local agent (template_assistant.py -> LEGION Ollama + OpenClaw), rich print formatting toolbar (bold, italic, underline, bullets, numbering, font size selector 9.5pt/10.5pt/12pt) preserving 100% plain text on EHR copy, and index.html catalog for GitHub Pages.",
+  "purpose": "Self-contained HTML clinical template generator for ophthalmology (v12 engine, 17 active templates) with automated CLI compiler (build_autotext.py), self-learning local agent (template_assistant.py -> LEGION Ollama + OpenClaw), interactive template-agent (CLI + OpenClaw WebUI, personal-data policy), rich print formatting toolbar preserving 100% plain text on EHR copy, and index.html catalog for GitHub Pages.",
   "key_files": {
     "master_app": "Autotext_Final.html",
     "builder_cli": "build_autotext.py",
     "learning_agent": "template_assistant.py",
+    "interactive_agent": "template_agent.py",
+    "personal_data_policy": "web/politica_datos_personales.json",
     "portal_index": "index.html",
     "technical_context": "CONTEXT.md",
     "validator_zero_token": "test-quality.ps1"
@@ -18,6 +20,7 @@
   "canonical_commands": {
     "build_portal": "python .\\build_autotext.py",
     "import_draft_txt": "python .\\build_autotext.py --from-txt <draft.txt>",
+    "template_agent_cli": "python .\\template_agent.py --import <URL|file|->",
     "learn_from_edits": "python .\\template_assistant.py --learn",
     "translate_english_guideline_bilingual": "slm-translate --file <guideline.md>",
     "gauntlet_check": "pwsh -ExecutionPolicy Bypass -File .\\test-quality.ps1"
@@ -28,6 +31,6 @@
     "STRAT-08: Offline Parity & GitHub Pages Dual Push"
   ],
   "next_steps": [
-    "Launch template-assistant on LEGION (template-assistant -SyncOpenClaw) or use the 17 clinical templates with rich print formatting and font size selector in consultation"
+    "Step-by-step tutorial to interact with template-agent (-local) in LEGION to create and edit templates"
   ]
 }
